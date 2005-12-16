@@ -1,0 +1,257 @@
+GLOBAL {
+    PAGELENGTH  0;
+    COMMENTS    3;
+};
+
+#RANGE { START $0900; END $6000; TYPE Code; };
+RANGE { START $0900; END $16B8; TYPE Code; };
+RANGE { START $16B9; END $16CC; Type ADDRTABLE; NAME "main_menu_vectors"; };
+RANGE { START $16CD; END $2FFF; TYPE Code; };
+RANGE { START $3000; END $3077; Type ADDRTABLE; };
+RANGE { START $3078; END $4000; Type BYTETABLE; };
+RANGE { START $B100; END $B4FF; Type BYTETABLE; };
+RANGE { START $B500; END $B56B; Type Code; };
+RANGE { START $B56C; END $B57C; Type BYTETABLE; };
+RANGE { START $B57D; END $BFFF; Type Code; };
+
+LABEL { NAME "start";       ADDR $0B00; };
+LABEL { NAME "sst_start";   ADDR $0C00; };
+LABEL { NAME "sst";         ADDR $0C18; };
+LABEL { NAME "print_saltine_message";   ADDR $0C50; };
+LABEL { NAME "print_track_message";     ADDR $0C55; };
+LABEL { NAME "print_main_menu";         ADDR $0C5F; };
+
+
+LABEL { NAME "read_key_quit_chk";   ADDR $0D22;
+        COMMENT "Check for ESC then read key into A"; };
+LABEL { NAME "read_key";        ADDR $0D28; COMMENT "Read key into A"; };
+LABEL { NAME "wait_for_key";    ADDR $0D4B; COMMENT "Key code & 0xDF in 0xB274"; };
+LABEL { NAME "check_esc";       ADDR $0D92; };
+LABEL { NAME "handle_fs_key";   ADDR $0D9C; };
+LABEL { NAME "swap_drives";     ADDR $0D9F; };
+LABEL { NAME "beep";            ADDR $0DD5; };
+
+LABEL { NAME "do_menu"; ADDR $0F4F;
+        COMMENT "Menu selection (zero-based) in x, menu selection * 2 in y"; };
+
+LABEL { NAME "setup_zpage";         ADDR $11B0;
+        COMMENT "A = $CF for original, A = $C4 for duplicate"; };
+LABEL { NAME "setup_for_dup";       ADDR $11C7; };
+LABEL { NAME "get_track_info_step_0_50";  ADDR $122C; };
+LABEL { NAME "get_track_info_step_1_00";  ADDR $1230; };
+LABEL { NAME "get_track_info";      ADDR $1232; };
+LABEL { NAME "get_start_track";     ADDR $1244; };
+LABEL { NAME "get_end_track";       ADDR $125B; };
+LABEL { NAME "get_track_from_kbd";  ADDR $1290; };
+LABEL { NAME "get_sync_flag";       ADDR $1323; };
+LABEL { NAME "get_bit_copy";        ADDR $132C; };
+LABEL { NAME "read_yes_no_from_kbd"; ADDR $1336; };
+LABEL { NAME "inc_track_by_step";   ADDR $1376;
+        COMMENT "Returns track in A, carry set on error."; };
+LABEL { NAME "print_drive_status";  ADDR $13C0; };
+LABEL { NAME "return_error";        ADDR $13A3; };
+LABEL { NAME "clear_status";        ADDR $140F; };
+LABEL { NAME "update_status";       ADDR $1435; };
+LABEL { NAME "print_message";       ADDR $1505; };
+LABEL { NAME "copy_finished";       ADDR $15Bc; };
+LABEL { NAME "print_char";          ADDR $1623; };
+LABEL { NAME "fix_screen";          ADDR $154A; };
+LABEL { NAME "clear_buffers";       ADDR $1573; };
+LABEL { NAME "fill_buffers";        ADDR $1583;
+        COMMENT "Fill $7800 buffer with A, $9400 buffer with Y"; };
+LABEL { NAME "check_read_preq";     ADDR $1702;
+        COMMENT "Checks read disk is write proteced and for EDD plus card"; };
+LABEL { NAME "check_wprotect";      ADDR $170E; };
+LABEL { NAME "disk_protected";      ADDR $174F; };
+LABEL { NAME "drive_on";            ADDR $1785; };
+LABEL { NAME "drive_off";           ADDR $179C; };
+LABEL { NAME "reset_params";        ADDR $17D8; };
+LABEL { NAME "change_param";        ADDR $1807; };
+LABEL { NAME "status_char";         ADDR $1923; };
+LABEL { NAME "edd_copy";            ADDR $1929; };
+LABEL { NAME "copy_track";          ADDR $1964; };
+LABEL { NAME "read_track";          ADDR $1977; };
+LABEL { NAME "write_track";         ADDR $199A; };
+LABEL { NAME "READ";                ADDR $19C0; };
+LABEL { NAME "WRITE";               ADDR $1A04; };
+LABEL { NAME "get_nibble_count";    ADDR $1A54; };
+LABEL { NAME "print_track_detail";  ADDR $1AA0; };
+LABEL { NAME "print_track_data";    ADDR $1B87; };
+LABEL { NAME "print_hex_byte";      ADDR $1BD4;
+        COMMENT "Y determines attribute?  00-Normal 01-Inverse 02-Flash?"; };
+LABEL { NAME "print_hex_nibble";    ADDR $1BE3; };
+LABEL { NAME "print_hex_digit_inv"; ADDR $1BF1; COMMENT "Print 0-9"; };
+LABEL { NAME "print_hex_alpha_inv"; ADDR $1BF5; };
+LABEL { NAME "print_hex_alpha";     ADDR $1BF7; COMMENT "Print A-F"; };
+LABEL { NAME "analyze_track";       ADDR $2600; };
+LABEL { NAME "analyze_track1";      ADDR $2631; };
+
+LABEL { NAME "DOS33_PREUNPACK";     ADDR $5100; };
+LABEL { NAME "RWTS_PREUNPACK";      ADDR $5600; };
+LABEL { NAME "XCHANGE_PREUNPACK";   ADDR $5900; };
+
+
+LABEL { NAME "CURKEY";  ADDR $B274; };
+LABEL { NAME "ORSLT";   ADDR $B280; COMMENT "Original slot"; };
+LABEL { NAME "ORDRV";   ADDR $B281; Comment "Original drive"; };
+LABEL { NAME "DPSLT";   ADDR $B282; COMMENT "Duplicate slot"; };
+LABEL { NAME "DPDRV";   ADDR $B283; COMMENT "Duplicate drive"; };
+LABEL { NAME "DCOUNT";  ADDR $B285; COMMENT "Disk count"; };
+LABEL { NAME "ORTRK";   ADDR $B286; COMMENT "Initialized to $FF?"; };
+LABEL { NAME "DPTRK";   ADDR $B287; };
+LABEL { NAME "TBEG";    ADDR $B288; };
+LABEL { NAME "TEND";    ADDR $B289; };
+LABEL { NAME "TSTEP";   ADDR $B28A; };
+LABEL { NAME "CURTRK";  ADDR $B28B; };
+LABEL { NAME "SYNFLG";  ADDR $B28C; };
+LABEL { NAME "NIBFLG";  ADDR $B28D; };
+LABEL { NAME "BITCPY";  ADDR $B28E; };
+
+LABEL { NAME "trksthi";     ADDR $B2C1; };
+LABEL { NAME "trkstlo";     ADDR $B2C2;
+        COMMENT "Also low byte of sync buffer"; };
+LABEL { NAME "syncsthi";    ADDR $B2C3; COMMENT "Page of sync buffer"; };
+LABEL { NAME "trklenhi";    ADDR $B2C7; };
+LABEL { name "trklenlo";    ADDR $B2C8; };
+
+LABEL { NAME "preanalyze_parameters"; ADDR $B000; };
+LABEL { NAME "prewrite_parameters"; ADDR $B100; };
+LABEL { NAME "parameters";          ADDR $B300; };
+LABEL { NAME "default_parameters";  ADDR $B400; };
+
+LABEL { NAME "ZPSL16";  ADDR $10; COMMENT "Slot * 16"; };
+LABEL { NAME "ZPDRV";   ADDR $11; };
+LABEL { NAME "ZPTRK";   ADDR $12; };
+
+LABEL { NAME "CHOOSE";  ADDR $1FAD; COMMENT "This isn't the real code"; };
+LABEL { NAME "SST_CH";      ADDR $B500;
+        COMMENT "Called by Pirate a Disk main menu"; };
+LABEL { NAME "IN";      ADDR $B50D; };
+LABEL { NAME "R";       ADDR $B517; COMMENT "Hijacked read routine"; };
+LABEL { NAME "W";       ADDR $B51D; COMMENT "Hijacked write routine"; };
+LABEL { NAME "LEAVE";   ADDR $B523; };
+LABEL { NAME "MOVE";    ADDR $B527;
+        COMMENT "Swaps RAM and banked-switch RAM"; };
+LABEL { NAME "XCH1";    ADDR $B539; };
+LABEL { NAME "XCH2";    ADDR $B541; };
+LABEL { NAME "MREAD";   ADDR $B560; };
+LABEL { NAME "MWRITE";  ADDR $B566; };
+
+LABEL { NAME "VAR1";    ADDR $B56C; };
+LABEL { NAME "VAR2";    ADDR $B56D; };
+LABEL { NAME "VAR3";    ADDR $B56E; };
+LABEL { NAME "FLAG";    ADDR $B56F; };
+LABEL { NAME "ORSLT1";  ADDR $B570; };
+LABEL { NAME "DPSLT1";  ADDR $B571; };
+LABEL { NAME "ORDRV1";  ADDR $B572; };
+LABEL { NAME "DPDRV1";  ADDR $B573; };
+LABEL { NAME "DCOUNT1"; ADDR $B574; };
+LABEL { NAME "TBEG1";   ADDR $B575; };
+LABEL { NAME "TEND1";   ADDR $B576; };
+LABEL { NAME "TSTEP1";  ADDR $B577; };
+LABEL { NAME "NIBFLG1"; ADDR $B578; };
+LABEL { NAME "SYNFLG1"; ADDR $B579; };
+LABEL { NAME "SIDE";    ADDR $B57A; };
+LABEL { NAME "TRK1";    ADDR $B57B; };
+LABEL { NAME "NUMBER";  ADDR $B57C; };
+
+LABEL { NAME "read_track_fix_sync";  ADDR $B700;
+        COMMENT "Reads a track, fixing sync bytes to common value"; };
+LABEL { NAME "read_track_nibbles";  ADDR $B703; };
+LABEL { NAME "position_head";       ADDR $B70C; };
+LABEL { NAME "read_track_raw";          ADDR $B71E;
+        COMMENT "Read track, not fixing sync bytes"; };
+LABEL { NAME "read_track_raw1";         ADDR $B72A; };
+LABEL { NAME "read_track_fix_sync1";    ADDR $B800; };
+LABEL { NAME "read_track_nibbles1"; ADDR $B834; };
+LABEL { NAME "read_track_nibbles2"; ADDR $B836; };
+LABEL { NAME "read_disk_nibble";    ADDR $B842; };
+LABEL { NAME "read_normal_nibble";  ADDR $B867; };
+LABEL { NAME "read_sync_nibble";    ADDR $B871;
+        COMMENT "Clear high bit ($02 contains $7F)"; };
+
+# Main menu vectors
+LABEL { NAME "change_parameters";   ADDR $17C6; };
+LABEL { NAME "check_drive_speed";   ADDR $2103; };
+LABEL { NAME "disk_scan";           ADDR $1D03; };
+LABEL { NAME "certify_erase_disk";  ADDR $1D00; };
+LABEL { NAME "change_slots_drive";  ADDR $0CAF; };
+LABEL { NAME "examine_drives";      ADDR $2100; };
+LABEL { NAME "clear_track_data";    ADDR $0CA7; };
+LABEL { NAME "sync_value";          ADDR $B309; };
+
+LABEL { NAME "message_table";  ADDR $3000; };
+LABEL { NAME "msg_01";  ADDR $320D; };
+LABEL { NAME "msg_02";  ADDR $32A0; };
+LABEL { NAME "msg_03";  ADDR $32D0; };
+LABEL { NAME "msg_04";  ADDR $33D4; };
+LABEL { NAME "msg_05";  ADDR $3868; };
+LABEL { NAME "msg_06";  ADDR $38E1; };
+LABEL { NAME "msg_07";  ADDR $3958; };
+LABEL { NAME "msg_08";  ADDR $39BD; };
+LABEL { NAME "msg_09";  ADDR $33F6; };
+LABEL { NAME "msg_18";  ADDR $3C88; };
+LABEL { NAME "msg_19";  ADDR $3B6F; };
+LABEL { NAME "msg_1a";  ADDR $3CB0; };
+LABEL { NAME "msg_1e";  ADDR $352B; };
+LABEL { NAME "msg_1f";  ADDR $353F; };
+LABEL { NAME "msg_20";  ADDR $3553; };
+LABEL { NAME "msg_21";  ADDR $323A; };
+LABEL { NAME "msg_22";  ADDR $328B; };
+LABEL { NAME "msg_23";  ADDR $3567; };
+LABEL { NAME "msg_2b";  ADDR $3582; };
+LABEL { NAME "msg_2c";  ADDR $3D89; };
+LABEL { NAME "msg_2d";  ADDR $35B2; };
+LABEL { NAME "msg_2e";  ADDR $34B0; };
+LABEL { NAME "msg_2f";  ADDR $34DA; };
+LABEL { NAME "msg_30";  ADDR $3502; };
+LABEL { NAME "msg_31";  ADDR $35E4; };
+LABEL { NAME "msg_32";  ADDR $37BF; };
+LABEL { NAME "msg_33";  ADDR $37DD; };
+LABEL { NAME "msg_34";  ADDR $37FB; };
+LABEL { NAME "msg_35";  ADDR $36B6; };
+LABEL { NAME "msg_36";  ADDR $3819; };
+LABEL { NAME "msg_37";  ADDR $3DAC; };
+LABEL { NAME "msg_38";  ADDR $3DCF; };
+LABEL { NAME "msg_39";  ADDR $3DEF; };
+LABEL { NAME "msg_3a";  ADDR $3A42; };
+LABEL { NAME "msg_3b";  ADDR $3E33; };
+
+LABEL { NAME "save_axps";       ADDR $15CE; };
+LABEL { NAME "restore_axps";    ADDR $15E0; };
+
+LABEL { NAME "WNDLFT";  ADDR $20; };
+LABEL { NAME "WNDWDTH"; ADDR $21; };
+LABEL { NAME "WNDTOP";  ADDR $22; };
+LABEL { NAME "WNDBTM";  ADDR $23; };
+LABEL { NAME "CH";      ADDR $24; };
+LABEL { NAME "CV";      ADDR $25; };
+
+
+LABEL { NAME "KBD";     ADDR $C000; };
+LABEL { NAME "KBDSTRB"; ADDR $C010; };
+LABEL { NAME "TAPEOUT"; ADDR $C020; };
+LABEL { NAME "SPKR";    ADDR $C030; };
+LABEL { NAME "TXTCLR";  ADDR $C050; };
+LABEL { NAME "TXTSET";  ADDR $C051; };
+LABEL { NAME "MIXCLR";  ADDR $C052; };
+LABEL { NAME "MIXSET";  ADDR $C053; };
+LABEL { NAME "LOWSCR";  ADDR $C054; };
+
+#LABEL { NAME "READBSR2";    ADDR $C080; };
+#LABEL { NAME "WRITEBSR2";   ADDR $C081; };
+#LABEL { NAME "OFFBSR2";     ADDR $C082; };
+#LABEL { NAME "RDWRBSR2";    ADDR $C083; };
+LABEL { NAME "READBSR1";    ADDR $C088; };
+#LABEL { NAME "WRITEBSR2";   ADDR $C089; };
+LABEL { NAME "OFFBSR1";     ADDR $C08A; };
+LABEL { NAME "RDWRBSR1";    ADDR $C08B; };
+LABEL { NAME "BSRBANK2";    ADDR $C011; };
+LABEL { NAME "BSRREADRAM";  ADDR $C012; };
+
+LABEL { NAME "VTAB";    ADDR $FC22; };
+LABEL { NAME "HOME";    ADDR $FC58; };
+LABEL { NAME "COUT";    ADDR $FDED; };
+LABEL { NAME "SETKBD";  ADDR $FE89; };
+LABEL { NAME "SETVID";  ADDR $FE93; };
+LABEL { NAME "OLDRST";  ADDR $FF59; };

@@ -1,0 +1,20 @@
+00_files.txt            - This file.
+SSTHack.dsk             - Disk image containing relocated parts of SST.
+catalog                 - Catalog of SSTHack.dsk disk.
+Makefile                - File used to generate disassemblies.
+decode_txt.rb           - Ruby script to decode text in disassemblies.
+edd19.asm               - Original SST source code.
+SST                     - Raw SST data from $0B00 - $5FFF.
+SST.asm                 - Disassembly SST.
+SST.info                - da65 info file used by SST, SST_B00, and SST_B000.
+SST_B00                 - Raw SST data from $0B00 - $3FFF.
+SST_B00.asm             - Disassembly of SST_B00.
+SST_B000                - Raw SST data from $B000 - $BFFF.
+SST_B000.asm            - Disassembly of SST_B000.
+SST_D700                - Raw SST data from $D700 - $E6FF.
+SST_D700.asm            - Disassembly of SST_D700.
+SST_D700.info           - da65 info use by SST_D700.
+sst_doc.markdown        - SST techinical documentation in Markdown markup.
+sst_doc.html            - SST techinical documentatino in HTML.
+images/*                - Images used bye the sst_doc.html file.
+sst_unpack.rb           - Ruby script to unpack 2 SST .DSK files into a .NIB.

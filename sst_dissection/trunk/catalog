@@ -1,0 +1,10 @@
+
+Catalog Disk                                                     Slot 6 Drive 2
+Disk volume 254                                               
+   A 002 HELLO                                L2  (L$0002)
+   B 055 SST_B00                              A2816, L13568  (A$0B00, L$3500)
+   B 018 SST_B000                             A45056, L4096  (A$B000, L$1000)
+   B 018 SST_D700                             A55040, L4096  (A$D700, L$1000)
+   B 087 SST                                  A2816, L21760  (A$0B00, L$5500)
+
+Sectors Free:331  Used:229   Total:560

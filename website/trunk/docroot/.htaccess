@@ -1,0 +1,5 @@
+# Deny files that should not be shown
+<Files ~ "^\.|^_|RCS|CVS|,|~|#">
+    Order Deny,Allow
+    Deny from All
+</Files>

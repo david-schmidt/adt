@@ -11,8 +11,8 @@ void DosReceiver::execute(Serial & serial, AdtPlatform & platform)
 {
     mReceivedWithErrors = false;
     mFileName = serial.receiveString();
-    serial.putc(0x00);
-    while (serial.getc() != ACK)
+    serial.sendByte(0x00);
+    while (serial.receiveByte() != ACK)
     {
         // Limit number of retries?
     }

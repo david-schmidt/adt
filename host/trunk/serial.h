@@ -11,9 +11,9 @@ class Serial
   public:
     virtual ~Serial();
     
-    virtual void putc(Uint8 ch) = 0;
+    virtual void sendByte(Uint8 byte) = 0;
     
-    virtual int getc() = 0;
+    virtual int receiveByte() = 0;
     
     static const unsigned PACKET_SIZE = 256;
 

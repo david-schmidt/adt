@@ -10,19 +10,19 @@ TestSerial::TestSerial(istream & inputStream, ostream & outputStream)
 {
 }
 
-int TestSerial::getc()
+int TestSerial::receiveByte()
 {
-    char ch;
-    mInputStream.read(&ch, 1);
+    char byte;
+    mInputStream.read(&byte, 1);
     int len = mInputStream.gcount();
     if (len != 1)
     {
         return -1;
     }
-    return ch;
+    return byte;
 }
 
-void TestSerial::putc(Uint8 ch)
+void TestSerial::sendByte(Uint8 byte)
 {
-    mOutputStream.write((char *)&ch, 1);
+    mOutputStream.write((char *)&byte, 1);
 }

@@ -20,7 +20,7 @@ bool Serial::receiveDataPacket(string & packet)
     string::size_type byte;
     for (byte = 0; byte < PACKET_SIZE;)
     {
-        Uint8 data = getc();
+        Uint8 data = receiveByte();
         if (data != 0)
         {
             previous += data;
@@ -29,7 +29,7 @@ bool Serial::receiveDataPacket(string & packet)
         }
         else
         {
-            data = getc();
+            data = receiveByte();
             do
             {
                 packet.append(1, previous);
@@ -38,8 +38,8 @@ bool Serial::receiveDataPacket(string & packet)
         }
     }
     CXX_ASSERT(packet.length() == PACKET_SIZE);
-    Uint8 crcLo = getc();
-    Uint8 crcHi = getc();
+    Uint8 crcLo = receiveByte();
+    Uint8 crcHi = receiveByte();
     Uint16 receivedCrc = crcHi << 8 | crcLo;
     Uint16 computedCrc = Crc16::calculateCrc(packet);
     return (receivedCrc == computedCrc);
@@ -51,7 +51,7 @@ string Serial::receiveString()
     while(true)
     {
         // Set high bit to low
-        Uint8 data = getc() & 0x7F;
+        Uint8 data = receiveByte() & 0x7F;
         if (data == 0x00)
             break;
         aString.append(1, data);
@@ -69,17 +69,17 @@ void Serial::sendDataPacket(const string & packet)
         Uint8 newPrevious = packet[byte];
         Uint8 data = newPrevious - previous;
         previous = newPrevious;
-        putc(data);
+        sendByte(data);
         if (data != 0)
             byte++;
         else
         {
             while ((byte < PACKET_SIZE) && (packet[byte] == newPrevious))
                 byte++;
-            putc(byte & 0xFF);  // 256 becomes 0
+            sendByte(byte & 0xFF);  // 256 becomes 0
         }
     }
     Uint16 crc = Crc16::calculateCrc(packet);
-    putc(crc & 0xFF);
-    putc(crc >> 8);
+    sendByte(crc & 0xFF);
+    sendByte(crc >> 8);
 }

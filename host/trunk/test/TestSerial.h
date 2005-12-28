@@ -12,9 +12,9 @@ class TestSerial : public Serial
   public:
     TestSerial(std::istream & inputStream, std::ostream & outputStream);
     
-    int getc();
+    int receiveByte();
     
-    void putc(Uint8 ch);
+    void sendByte(Uint8 ch);
     
   private:
     std::istream & mInputStream;

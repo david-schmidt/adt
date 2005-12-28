@@ -1,4 +1,4 @@
-COMMON_SRC = crc.cpp dosdisk.cpp serial.cpp
+COMMON_SRC = crc.cpp dosdisk.cpp serial.cpp dosxfer.cpp
 COMMON_OBJ = $(COMMON_SRC:.cpp=.o)
 
 TEST_SRC = $(wildcard test/*.cpp)

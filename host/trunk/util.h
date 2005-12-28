@@ -37,6 +37,8 @@ template <class type>
     return out;
 }
 
+typedef std::auto_ptr<std::istream> istreamAPtr;
+
 void inline cxx_assert(bool condition, std::string message)
 {
     if (!condition)

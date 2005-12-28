@@ -26,6 +26,11 @@ class Serial
     bool receiveDataPacket(std::string & packet);
     
     /**
+     * Receive a null terminated ASCII string.
+     */
+    std::string receiveString();
+    
+    /**
      * Sends one data packet using RLE compression.  The data is
      * protected with a CRC.
      */

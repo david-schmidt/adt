@@ -45,6 +45,20 @@ bool Serial::receiveDataPacket(string & packet)
     return (receivedCrc == computedCrc);
 }
 
+string Serial::receiveString()
+{
+    string aString;
+    while(true)
+    {
+        // Set high bit to low
+        Uint8 data = getc() & 0x7F;
+        if (data == 0x00)
+            break;
+        aString.append(1, data);
+    }
+    return aString;
+}
+
 void Serial::sendDataPacket(const string & packet)
 {
     CXX_ASSERT(packet.length() == PACKET_SIZE);

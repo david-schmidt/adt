@@ -18,21 +18,11 @@
 #include <fstream>
 #include <iomanip>
 #include "test/testUtil.h"
+#include "dosdisk.h"
 
 using namespace adt;
 // using namespace adt::util;
-using std::string;
-using std::ifstream;
-using std::vector;
-using std::endl;
-using std::ostream;
-using std::ostringstream;
-using std::ios;
-using std::ios_base;
-using std::setw;
-using std::setfill;
-using std::hex;
-using std::dec;
+using namespace std;
 
 #define NS adt
 
@@ -104,7 +94,23 @@ void NS::checkMemEquals(void * expected, void * actual, size_t length,
     }
 }
 
-#if 0
+void NS::checkDiskEquals(const DosDisk & expected, const DosDisk & actual,
+                         CPPUNIT_NS::SourceLine sourceLine)
+{
+    unsigned track;
+    unsigned sector;
+    for (track = 0; track < DosDisk::TRACKS; track++)
+    {
+        for (sector = 0; sector < DosDisk::SECTORS; sector++)
+        {
+            string expectedSector = expected.readSector(track, sector);
+            string actualSector = actual.readSector(track, sector);
+            checkDataEquals(expectedSector, actualSector, sourceLine,
+                str_stream() << "Track: " << track << ", sector: " << sector);
+        }
+    }
+}
+
 static string sResourceRoot(".");
 
 void NS::setResourceRoot(string resourceRoot)
@@ -112,18 +118,19 @@ void NS::setResourceRoot(string resourceRoot)
     sResourceRoot = resourceRoot;
 }
 
-istreamPtr NS::getResource(string resourceName, ios_base::openmode mode)
+istreamAPtr NS::getResource(string resourceName, ios_base::openmode mode)
 {
-    string fileName = sResourceRoot + "/project/librets/test/src/resources/" +
+    string fileName = sResourceRoot + "/test/resources/" +
         resourceName;
-    ifstreamPtr inputStream(new ifstream(fileName.c_str(), mode));
+    istreamAPtr inputStream(new ifstream(fileName.c_str(), mode));
     if (!(*inputStream))
     {
-        throw failure("Could not open file: " + fileName);
+        throw runtime_error("Could not open file: " + fileName);
     }
     return inputStream;
 }
 
+#if 0
 void NS::checkVectorEquals(const vector<string> & expected,
                            const vector<string> & actual,
                            CPPUNIT_NS::SourceLine sourceLine)

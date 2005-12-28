@@ -1,48 +1,13 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <sstream>
-#include "test/testUtil.h"
+#include "testUtil.h"
+#include "TestSerial.h"
 #include "serial.h"
 #include "crc.h"
 #include "util.h"
 
 using namespace adt;
 using namespace std;
-
-class TestSerial : public Serial
-{
-  public:
-    TestSerial(istream & inputStream, ostream & outputStream);
-    
-    int getc();
-    
-    void putc(Uint8 ch);
-    
-  private:
-    istream & mInputStream;
-    ostream & mOutputStream;
-};
-
-TestSerial::TestSerial(istream & inputStream, ostream & outputStream)
-    : mInputStream(inputStream), mOutputStream(outputStream)
-{
-}
-
-int TestSerial::getc()
-{
-    char ch;
-    mInputStream.read(&ch, 1);
-    int len = mInputStream.gcount();
-    if (len != 1)
-    {
-        return -1;
-    }
-    return ch;
-}
-
-void TestSerial::putc(Uint8 ch)
-{
-    mOutputStream.write((char *)&ch, 1);
-}
 
 #define CLASS SerialTest
 
@@ -56,6 +21,7 @@ class CLASS : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(testReceiveDataPacketOfAscending);
     CPPUNIT_TEST(testReceiveDataPacketOfZeros);
     CPPUNIT_TEST(testReceiveDataPacketBadCrc);
+    CPPUNIT_TEST(testReceiveString);
     CPPUNIT_TEST_SUITE_END();
 
   protected:
@@ -66,6 +32,7 @@ class CLASS : public CPPUNIT_NS::TestFixture
     void testReceiveDataPacketOfAscending();
     void testReceiveDataPacketOfZeros();
     void testReceiveDataPacketBadCrc();
+    void testReceiveString();
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CLASS);
@@ -192,9 +159,20 @@ void CLASS::testReceiveDataPacketBadCrc()
     ostringstream output;
     TestSerial serial(input, output);
     
-    string expected(Serial::PACKET_SIZE, 0x00);
-
     string packet;
     CPPUNIT_ASSERT(!serial.receiveDataPacket(packet));
+    string expected(Serial::PACKET_SIZE, 0x00);
     ASSERT_DATA_EQUAL(expected, packet);
+}
+
+void CLASS::testReceiveString()
+{
+    string inputData;
+    // Set high bit on each character
+    inputData.append(1, 'h' | 0x80).append(1, 'i' | 0x80).append(1, '\0');
+    istringstream input(inputData);
+    ostringstream output;
+    TestSerial serial(input, output);
+    
+    ASSERT_DATA_EQUAL("hi", serial.receiveString());
 }

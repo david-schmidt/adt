@@ -17,31 +17,31 @@ void DosDisk::erase()
     memset(mImage, 0, TOTAL_BYTES);
 }
 
-Uint8 * DosDisk::getSector(unsigned track, unsigned sector)
+Uint8 * DosDisk::getSector(int track, int sector)
 {
     return &mImage[TRACK_SIZE * track + SECTOR_SIZE * sector];
 }
 
-const Uint8 * DosDisk::getSector(unsigned track, unsigned sector) const
+const Uint8 * DosDisk::getSector(int track, int sector) const
 {
     return &mImage[TRACK_SIZE * track + SECTOR_SIZE * sector];
 }
 
-void DosDisk::writeSector(unsigned track, unsigned sector, const string & data)
+void DosDisk::writeSector(int track, int sector, const string & data)
 {
-    CXX_ASSERT(data.length() == SECTOR_SIZE);
+    CXX_ASSERT(int(data.length()) == SECTOR_SIZE);
     Uint8 * sectorBuffer = getSector(track, sector);
     memcpy(sectorBuffer, data.data(), data.length());
 }
 
-void DosDisk::readSector(unsigned track, unsigned sector, string & data) const
+void DosDisk::readSector(int track, int sector, string & data) const
 {
     const Uint8 * sectorBuffer = getSector(track, sector);
     data.assign((const char *) sectorBuffer, SECTOR_SIZE);
-    CXX_ASSERT(data.length() == SECTOR_SIZE);
+    CXX_ASSERT(int(data.length()) == SECTOR_SIZE);
 }
 
-string DosDisk::readSector(unsigned track, unsigned sector) const
+string DosDisk::readSector(int track, int sector) const
 {
     string data;
     readSector(track, sector, data);

@@ -97,8 +97,8 @@ void NS::checkMemEquals(void * expected, void * actual, size_t length,
 void NS::checkDiskEquals(const DosDisk & expected, const DosDisk & actual,
                          CPPUNIT_NS::SourceLine sourceLine)
 {
-    unsigned track;
-    unsigned sector;
+    int track;
+    int sector;
     for (track = 0; track < DosDisk::TRACKS; track++)
     {
         for (sector = 0; sector < DosDisk::SECTORS; sector++)

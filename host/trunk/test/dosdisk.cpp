@@ -45,8 +45,8 @@ void CLASS::testWriteEmpty()
 void CLASS::testWritePattern()
 {
     DosDisk disk;
-    unsigned track;
-    unsigned sector;
+    int track;
+    int sector;
     for (track = 0; track < DosDisk::TRACKS; track++)
     {
         for (sector = 0; sector < DosDisk::SECTORS; sector++)
@@ -73,8 +73,8 @@ void CLASS::testWritePattern()
 
 void CLASS::testRead()
 {
-    unsigned track;
-    unsigned sector;
+    int track;
+    int sector;
     stringstream expected;
     for (track = 0; track < DosDisk::TRACKS; track++)
     {

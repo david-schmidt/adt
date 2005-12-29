@@ -3,6 +3,7 @@ module DosDisk
   @@SECTORS = 16
   @@TRACKS = 35
   @@TOTAL_SECTORS = @@SECTORS * @@TRACKS
+  @@SECTOR_SIZE = 256
 end
 
 class IO

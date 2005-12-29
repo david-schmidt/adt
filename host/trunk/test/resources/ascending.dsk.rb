@@ -14,5 +14,10 @@ sector_data = StringIO.new
 (0 .. 255).each { |b| sector_data.bin(b) }
 
 File.open(file, "w") do |file|
-  file.bin sector_data.string * @@TOTAL_SECTORS
+  @@TRACKS.times do |track|
+    @@SECTORS.times do |sector|
+      value = (track << 4 | sector) & 0xFF
+      file.bin value.chr * @@SECTOR_SIZE
+    end
+  end
 end

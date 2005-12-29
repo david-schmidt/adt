@@ -15,11 +15,18 @@ sector_data.bin 0x00
 0x100.times { sector_data.bin(0x01) }
 sector_data.bin 0x55, 0x7E
 
+sector_map = (0..15).to_a.reverse
+
 File.open(file, "w") do |file|
   file.bin "file.dsk", 0x00
   file.bin @@ACK
-  @@TOTAL_SECTORS.times do
-    file.bin sector_data.string
+  @@TRACKS.times do |track|
+    @@SECTORS.times do |sector|
+      value = (track << 4 | sector_map[sector]) & 0xff
+      file.bin value if value != 0
+      file.bin 0x00, 0x00
+      file.bin 0x00, 0x00
+    end
   end
   file.bin 0x00
 end

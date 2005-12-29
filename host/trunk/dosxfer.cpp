@@ -16,14 +16,15 @@ void DosReceiver::execute(Serial & serial, AdtPlatform & platform)
     {
         // Limit number of retries?
     }
-    unsigned track;
-    unsigned sector;
+    int track;
+    int sector;
     for (track = 0; track < DosDisk::TRACKS; track++)
     {
-        for (sector = 0; sector < DosDisk::SECTORS; sector++)
+        for (sector = DosDisk::SECTORS - 1; sector >= 0; sector--)
         {
             string packet;
             serial.receiveDataPacket(packet);
+            serial.sendByte(ACK);
             mDisk.writeSector(track, sector, packet);
         }
     }

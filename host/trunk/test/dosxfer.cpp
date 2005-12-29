@@ -40,7 +40,9 @@ void CLASS::testReceiveDosDisk()
     ASSERT_DISK_EQUAL(expectedDisk, actualDisk);
 
     string expectedOutput;
-    // One lone null character
+    // One null character
     expectedOutput.append(1, 0x00);
+    // Plus one ACK for every sector
+    expectedOutput.append(DosDisk::TOTAL_SECTORS, DiskTransfer::ACK);
     ASSERT_DATA_EQUAL(expectedOutput, output.str());
 }

@@ -22,7 +22,7 @@ class AdtSmarty extends Smarty {
     $this->config_dir = APP_SMARTY_DATA . 'configs/';
     $this->compile_dir = APP_SMARTY_DATA . 'templates_c/';
     $this->cache_dir = APP_SMARTY_DATA . 'cache/';
-    $plugins_dir = APPß_SMARTY_DATA . 'plugins/';
+    $plugins_dir = APP_SMARTY_DATA . 'plugins/';
     array_unshift($this->plugins_dir, $plugins_dir);
 
     // $this->caching = true;

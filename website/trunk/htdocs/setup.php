@@ -1,5 +1,8 @@
 <?php
 
+// ini_set('display_errors', On);
+// ini_set('error_reporting', E_ALL & ~E_NOTICE);
+
 $self = $_SERVER["PHP_SELF"];
 $script = realpath($_SERVER["SCRIPT_FILENAME"]);
 $file = realpath(__FILE__);

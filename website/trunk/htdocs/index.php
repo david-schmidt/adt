@@ -1,8 +1,9 @@
-<html>
-  <head>
-    <title>Apple Disk Transfer</title>
-  </head>
-  <body>
-    <h1>Apple Disk Transfer</h1>
-  </body>
-</html>
+<?php
+
+require('setup.php');
+
+$smarty = createSmarty();
+$smarty->assign('title', "Apple Disk Transfer");
+$smarty->layout('index.tpl');
+
+?>

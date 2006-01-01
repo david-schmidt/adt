@@ -11,9 +11,9 @@ COM port with each computer running ADT.
 News
 ====
 
-**31 Dec 2005**: ADT now has a new home page at
+**31 Dec 2005**: ADT now has a new home at
 [BerliOS](http://developer.berlios.de/). BerliOS provides web hosting, a
-download repository, and a Subversion source code repository. See the [project
+download service, and a Subversion source code repository. See the [project
 page](http://developer.berlios.de/projects/adt/) for all the goodies.
 
 Setting Up and Using ADT
@@ -46,20 +46,20 @@ Apple II Side
   disks from PC to an Apple IIgs. It uses the the built-in IIgs modem 
   serial port and firmware. (Version beta .91)
 
-Users new to ADT will need to transfer one of the Apple II-side ADT programs
-to the Apple II. How to do the transfer, setting up a NULL modem connection,
-and more is discussed in the included Text documentation files. Also see the
+You will need to transfer one of the Apple II-side ADT programs to the Apple
+II. How to do the transfer, setting up a NULL modem connection, and more is
+discussed in the included Text documentation files. Also see the
 [comp.sys.apple2](news:comp.sys.apple2) Apple II FAQs
 [Telecom-1](http://home.swbell.net/rubywand/Csa2T1TCOM.html) page and feel
 free to ask questions on the newsgroup.
 
-If you already have an Apple II-side ADT installed and running well from a DOS
-3.3 diskette, there is no need to change it.
-
-The ADT\_2005 distribution allows running ADT under Windows or from the MS_DOS
+The ADT\_2005 distribution allows running ADT under Windows or from the MS-DOS
 prompt. To start the Win32 version, double-click `adt.exe` or run it from a
 Command Prompt.
 
 ---
 
-<a href="http://developer.berlios.de" title="BerliOS Developer"> <img src="http://developer.berlios.de/bslogo.php?group_id=5617" width="124px" height="32px" border="0" alt="BerliOS Developer Logo"></a>
+<a href="http://developer.berlios.de" title="BerliOS Developer">
+    <img src="http://developer.berlios.de/bslogo.php?group_id=5617"
+        width="124px" height="32px" border="0" alt="BerliOS Developer Logo" />
+</a>

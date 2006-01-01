@@ -1,5 +1,5 @@
-SST Technical Documentation
-===========================
+SST Dissection
+==============
 
 Saltine's Super Transcopy (SST) is a hacked version of the Essential Data
 Duplicator (EDD) bit copy program. The intent is to take the nibble image of a

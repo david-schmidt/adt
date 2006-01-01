@@ -19,9 +19,9 @@ page](http://developer.berlios.de/projects/adt/) for all the goodies.
 Setting Up and Using ADT
 ========================
 
-Download [ADT\_2005.zip](http://download.berlios.de/adt/ADT_2005.zip) and
-unzip the archive. The result is a folder named "ADT_2005". This includes a
-Windows and MS-DOS program, as well as the three most popular Apple II-side
+Download [ADT\_2005\_2.zip](http://download.berlios.de/adt/ADT_2005_2.zip) and
+unzip the archive. The result is a folder named "ADT\_2005\_2". This includes
+a Windows and MS-DOS program, as well as the three most popular Apple II-side
 programs.
 
 PC Side

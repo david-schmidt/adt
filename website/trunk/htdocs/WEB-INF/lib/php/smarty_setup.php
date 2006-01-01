@@ -25,7 +25,7 @@ class AdtSmarty extends Smarty {
     $plugins_dir = APP_SMARTY_DATA . 'plugins/';
     array_unshift($this->plugins_dir, $plugins_dir);
 
-    // $this->caching = true;
+    $this->caching = true;
   }
    
   function layout($template)
@@ -35,7 +35,8 @@ class AdtSmarty extends Smarty {
       $this->load_filter('output', 'markdown');
     }
     $this->assign('tpl_name', $template);
-    $this->display('layout.tpl');
+    // Use $template as cache_id
+    $this->display('layout.tpl', $template);
   }
 }
 

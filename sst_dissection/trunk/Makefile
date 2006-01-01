@@ -2,6 +2,7 @@
 INFO = SST.info
 
 DA65 = da65 -i $(INFO)
+C3 = --comments 3
 DECODE_TXT = ./decode_txt.rb
 DEP = $(INFO) $(DECODE_TXT) Makefile
 MARKDOWN = markdown
@@ -13,16 +14,16 @@ all: disassembly doc sst
 disassembly: $(GENERATED_SRC)
 
 SST.asm: SST_B00 $(DEP)
-	$(DA65) -S 0xB00 SST | $(DECODE_TXT) > SST.asm
+	$(DA65) $(C3) -S 0xB00 SST | $(DECODE_TXT) > SST.asm
 
 SST_B00.asm: SST_B00 $(DEP)
-	$(DA65) -S 0xB00 SST_B00 | $(DECODE_TXT) > SST_B00.asm
+	$(DA65) $(C3) -S 0xB00 SST_B00 | $(DECODE_TXT) > SST_B00.asm
 
 SST_B000.asm: SST_B000 $(INFO)
-	$(DA65) -o SST_B000.asm -S 0xB000 SST_B000
+	$(DA65) $(C3) -o SST_B000.asm -S 0xB000 SST_B000
 
 SST_D700.asm: SST_D700 SST_D700.info $(DEP)
-	da65 --comments 3 -i SST_D700.info -S 0x1400 SST_D700 | $(DECODE_TXT) > SST_D700.asm
+	da65 $(C3) -i SST_D700.info -S 0x1400 SST_D700 | $(DECODE_TXT) > SST_D700.asm
 
 SST_DD00.asm: SST_DD00 SST_D700.info $(DEP)
 	da65 -i SST_D700.info -S 0x1D00 SST_DD00 | $(DECODE_TXT) > SST_DD00.asm

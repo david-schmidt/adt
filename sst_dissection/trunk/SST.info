@@ -1,6 +1,5 @@
 GLOBAL {
     PAGELENGTH  0;
-    COMMENTS    3;
 };
 
 #RANGE { START $0900; END $6000; TYPE Code; };

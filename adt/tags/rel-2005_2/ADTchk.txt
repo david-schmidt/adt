@@ -1,0 +1,112 @@
+ADTCK (ADT Transfer Checker) November 2005 update
+based on July 2000 Update
+
+     Usually, the transfer of the Apple II ADT program from
+the PC-- the transfer you do at 300 baud-- will go fine and
+ADT will get BSAVED and work like it should.
+
+     In case ADT does not seem to be working correctly, you
+may want to check that the transferred program was not 
+corrupted. ADTCK is a short program you can type in and run
+to check that you have a good copy of ADT on your Apple II.
+
+     Type in one of the programs listed below and save it as
+ADTCK on the same disk as the ADT you've transferred. Then, 
+RUN ADTCK and check the numbers you get against the checksums
+listed after the program. (The program displays intermediate
+sums and a final sum.)
+
+Note: Changing the saved default parameters of ADT via an 
+ADTConfig program, etc. will change the checksum and render
+the checksum test invalid.
+
+
+ADTCK for ADT v1.21, ADT v1.22, ADTGS (v.90), ADTgs (v.91)
+see below for v1.23 
+
+ 10  TEXT : HOME
+ 20  PRINT  CHR$ (4)"BLOAD ADT,A$4000"
+ 40  FOR I = 0 TO 2579
+ 50 Z = Z +  PEEK (16384 + I)
+ 55  IF I / 500 =  INT (I / 500) THEN  PRINT "CURRENT SUM= ";Z
+ 60  NEXT I
+ 70  PRINT "CHECKSUM= ";Z
+
+
+Checksums
+
+ADTssc v1.21     ADTssc v1.22    for 8-bit A2's using SSC 
+76               76             
+53958            53958          
+101079           101079         
+158919           158919         
+224503           224504        
+307268           307117         
+313020           312869  <-- final sums
+
+
+ADTGS (v.90)     ADTgs (v.91)   for Apple IIgs
+76               76
+39865            48588
+89559            97886
+142200           151354
+206728           201728
+289377           284376
+295079           290904  <-- final sums
+
+
+ADTCK for ADT v1.23 SSC
+Unfortunately the size has changed from v1.22 to v1.23 so
+line 40 needs to be changed. The size is now 2661 bytes.
+
+ 10  TEXT : HOME
+ 20  PRINT  CHR$ (4)"BLOAD ADT,A$4000"
+ 40  FOR I = 0 TO 2660
+ 50 Z = Z +  PEEK (16384 + I)
+ 55  IF I / 500 =  INT (I / 500) THEN  PRINT "CURRENT SUM= ";Z
+ 60  NEXT I
+ 70  PRINT "CHECKSUM= ";Z
+
+ADTssc v1.23    for 8-bit A2's using SSC 
+76
+51297
+98343
+153820
+215155
+304070
+318908  <-- final sums
+
+Note: if ADTCK for previous versions, of 2579 bytes, is used the
+final sum is 312695 though this does not give full protection
+
+ADTCK for ADT.CC versions
+
+ 10  TEXT : HOME
+ 20  PRINT  CHR$ (4)"BLOAD ADT.CC,A$4000"
+ 40  FOR I = 0 TO 2566
+ 50 Z = Z +  PEEK (16384 + I)
+ 55  IF I / 500 =  INT (I / 500) THEN  PRINT "CURRENT SUM= ";Z
+ 60  NEXT I
+ 70  PRINT "CHECKSUM= ";Z
+
+
+Checksums
+
+ADT.CC (v1.21) "ADTcomm" for 8-bit A2's with non-SSC interfaces
+
+76
+53477
+100262
+159238
+241547
+326300
+331037  <-- final sum*
+
+*Note: Final sum for the Text dump version originally
+ posted to Csa2 is 331155.
+
+
+
+
+Rubywand
+November 2005 Update by Knut Roll-Lund

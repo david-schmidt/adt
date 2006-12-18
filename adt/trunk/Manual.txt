@@ -100,8 +100,8 @@ section 5.1 "MSVCRT40.DLL".
 ----------------------------
 ]  3.3  SOFTWARE, APPLE SIDE
 
-Boot any DOS 3.3 disk (or compatible, such as David-DOS) that will leave you
-with the familiar Applesoft ']' prompt.  Make sure your disk has at least 12
+
+Boot any DOS 3.3 disk (or compatible, such as David-DOS) that will leave youwith the familiar Applesoft ']' prompt.  Make sure your disk has at least 12
 free blocks, or insert one that does.  Allow 8 more free blocks for the
 configuration utility, if you wish (see below).  Type IN#x, where x is the
 slot your serial card is in (typically, x=2). Set the speed to 300 baud.
@@ -119,7 +119,7 @@ but a straight text upload) the appropriate dump file to the Apple.
     adt_cc.dmp  <-- Apple Communications Card
 
 Alternately, from a Command Prompt enter these two commands:
-    mode com1: baud=30 data=8 parity=u
+    mode com1: baud=300 data=8 parity=n
     type adt_ss.dmp > com1:
 Substitute "com2" for "com1" and "adt_cc.dmp" for "adt_ss.dmp" as necessary.
 

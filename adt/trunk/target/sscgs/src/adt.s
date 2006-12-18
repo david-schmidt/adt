@@ -58,7 +58,7 @@
 ESC      = $9B           ;ESCAPE KEY
 ACK      = $06           ;ACKNOWLEDGE
 NAK      = $15           ;NEGATIVE ACKNOWLEDGE
-PARMNUM  = 8             ;NUMBER OF CONFIGURABLE PARMS
+PARMNUM  = 9             ;NUMBER OF CONFIGURABLE PARMS
 
 ; ZERO PAGE LOCATIONS (ALL UNUSED BY DOS, BASIC & MONITOR)
 
@@ -88,6 +88,7 @@ TABV     = $FB5B         ;SET BASL FROM A
 VTAB     = $FC22         ;SET BASL FROM CV
 RDKEY    = $FD0C         ;CHARACTER INPUT
 NXTCHAR  = $FD75         ;LINE INPUT
+COUT     = $FDED         ;Monitor output
 COUT1    = $FDF0         ;CHARACTER OUTPUT
 CROUT    = $FD8E         ;OUTPUT RETURN
 
@@ -116,13 +117,13 @@ MABOUT   = 38            ;ABOUT ADT...
 MTEST    = 40            ;TESTING DISK FORMAT
 MPCANS   = 42            ;AWAITING ANSWER FROM PC
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;*********************************************************
 
          .ORG $803
 
          JMP START         ;SKIP DEFAULT PARAMETERS
 
-DEFAULT:  .byte 5,0,1,6,1,0,0,0        ;DEFAULT PARM VALUES
+DEFAULT:  .byte 5,0,1,6,1,0,0,0,1      ;DEFAULT PARM VALUES
 
 ;---------------------------------------------------------
 ; START - MAIN PROGRAM
@@ -156,30 +157,31 @@ REDRAW:  JSR TITLE         ;DRAW TITLE SCREEN
 
 MAINLUP: LDY #MPROMPT      ;SHOW MAIN PROMPT
 MAINL:
-RESETIO: jsr $0000	; Pseudo-indirect JSR to rest the IO device
+RESETIO: jsr $0000         ; Pseudo-indirect JSR to rest the IO device
          JSR SHOWMSG       ;AT BOTTOM OF SCREEN
          JSR RDKEY         ;GET ANSWER
          AND #$DF          ;CONVERT TO UPPERCASE
-;MOD0:    BIT $C088         ;CLEAR SSC INPUT REGISTER
 
-         CMP #_'S' | $80    ;SEND?
+         CMP #_'S'         ;SEND?
          BNE KRECV         ;NOPE, TRY RECEIVE
          JSR SEND          ;YES, DO SEND ROUTINE
          JMP MAINLUP
 
-KRECV:   CMP #_'R' | $80    ;RECEIVE?
+KRECV:   CMP #_'R'         ;RECEIVE?
          BNE KDIR          ;NOPE, TRY DIR
          JSR RECEIVE       ;YES, DO RECEIVE ROUTINE
          JMP MAINLUP
 
-KDIR:    CMP #_'D' | $80    ;DIR?
+KDIR:    CMP #_'D'         ;DIR?
          BNE KCONF         ;NOPE, TRY CONFIGURE
          JSR DIR           ;YES, DO DIR ROUTINE
          JMP REDRAW
 
-KCONF:   CMP #_'C' | $80    ;CONFIGURE?
+KCONF:   CMP #_'C'         ;CONFIGURE?
+         beq KCONF2
+         cmp #_'G'         ;Yeah, so, G is as good as C.
          BNE KABOUT        ;NOPE, TRY ABOUT
-         JSR CONFIG        ;YES, DO CONFIGURE ROUTINE
+KCONF2:  JSR CONFIG        ;YES, DO CONFIGURE ROUTINE
          JSR PARMINT       ;AND INTERPRET PARAMETERS
          JMP REDRAW
 
@@ -190,7 +192,7 @@ KABOUT:  CMP #$9F          ;ABOUT MESSAGE? ("?" KEY)
          JSR RDKEY
          JMP MAINLUP
 
-KQUIT:   CMP #_'Q'  | $80   ;QUIT?
+KQUIT:   CMP #_'Q'         ;QUIT?
          BNE MAINLUP       ;NOPE, WAS A BAD KEY
          LDA DOSBYTE       ;YES, RESTORE DOS CHECKSUM CODE
          STA $B92E
@@ -204,7 +206,7 @@ KQUIT:   CMP #_'Q'  | $80   ;QUIT?
 ; PC SENDS 0,1 AFTER PAGES 1..N-1, 0,0 AFTER LAST PAGE
 ;---------------------------------------------------------
 DIR:     JSR HOME          ;CLEAR SCREEN
-         LDA #_'D' | $80    ;SEND DIR COMMAND TO PC
+         LDA #_'D'         ;SEND DIR COMMAND TO PC
          JSR PUTC
 
          LDA PSPEED
@@ -273,6 +275,10 @@ DIRCONT: LDY #MDIRCON      ;SPACE TO CONTINUE, ESC TO STOP
 ; CONFIG - ADT CONFIGURATION
 ;---------------------------------------------------------
 CONFIG:  JSR HOME          ;CLEAR SCREEN
+; No matter what, we put in the default value for 
+; 'save' - always turn it off when showing the config screen.
+         LDA #$01          ; Index for 'NO' save
+         STA PSAVE
          LDY #MCONFIG      ;SHOW CONFIGURATION SCREEN
          JSR SHOWM1
          LDY #MCONFG2
@@ -407,12 +413,68 @@ PARMRST: LDA OLDPARM,Y     ;PARAMETERS AND STOP CONFIGURE
          STA PARMS,Y
          DEY
          BPL PARMRST
-ENDCFG:  RTS
+ENDCFG:
+         LDA PSAVE         ; Did they ask to save parms?
+         BNE NOSAVE
+
+         LDY #PARMNUM-1	; Save previous parameters
+SAVPARM2:
+         LDA PARMS,Y
+         STA DEFAULT,Y
+         DEY
+         BPL SAVPARM2
+         LDA #$00
+         STA CURPARM
+         JSR BSAVE
+NOSAVE:
+         RTS
+
+;---------------------------------------------------------
+; BSAVE - Save a copy of ADT in memory
+;---------------------------------------------------------
+BSAVE:
+	ldx #$00
+:	lda COMMAND,X
+	beq :+
+	jsr COUT
+	inx
+	jmp :-
+:
+;	lda #$00	; Prepare to print message
+;	sta <CH
+;	lda #$15
+;	jsr TABV
+BSAVEDONE:
+	jsr PAUSE
+	rts
 
 LINECNT: .byte 00            ;CURRENT LINE NUMBER
 CURPARM: .byte 00            ;ACTIVE PARAMETER
 CURVAL:  .byte 00            ;VALUE OF ACTIVE PARAMETER
-OLDPARM: .byte $00,$00,$00,$00,$00,$00,$00,$00	; There must be PARMNUM bytes here...
+OLDPARM: .byte $00,$00,$00,$00,$00,$00,$00,$00,$00 ; There must be PARMNUM bytes here...
+COMMAND: .byte $8D,$84
+         asc "BSAVE ADT2,A$0803,L$0700"
+         .byte $8D,00
+
+;---------------------------------------------------------
+; PAUSE - print 'PRESS A KEY TO CONTINUE...' and wait
+;---------------------------------------------------------
+PAUSE:
+	lda #$00
+	sta CH
+	lda #$17
+	jsr TABV
+	jsr CLREOP
+	ldy #MDIRCON
+	jsr SHOWMSG
+	jsr RDKEY
+	cmp #$9B
+	beq PAUSEESC
+	clc
+	rts
+PAUSEESC:
+	sec
+	rts
 
 ;---------------------------------------------------------
 ; PARMINT - INTERPRET PARAMETERS
@@ -420,7 +482,7 @@ OLDPARM: .byte $00,$00,$00,$00,$00,$00,$00,$00	; There must be PARMNUM bytes her
 PARMINT: LDY PDSLOT        ;GET SLOT# (0..6)
          INY               ;NOW 1..7
          TYA
-         ORA #_'0' | $80    ;CONVERT TO ASCII AND PUT
+         ORA #_'0'         ;CONVERT TO ASCII AND PUT
          STA MTSLT         ;INTO TITLE SCREEN
          TYA
          ASL
@@ -435,13 +497,13 @@ PARMINT: LDY PDSLOT        ;GET SLOT# (0..6)
          INY               ;NOW 1..2
          STY IOBDRV        ;STORE IN IOB
          TYA
-         ORA #_'0' | $80    ;CONVERT TO ASCII AND PUT
+         ORA #_'0'         ;CONVERT TO ASCII AND PUT
          STA MTDRV         ;INTO TITLE SCREEN
 
          LDY PSSC          ;GET SSC SLOT# (0..6)
          INY               ;NOW 1..7
          TYA
-         ORA #_'0' | $80    ;CONVERT TO ASCII AND PUT
+         ORA #_'0'         ;CONVERT TO ASCII AND PUT
          STA MTSSC         ;INTO TITLE SCREEN
          TYA
          ASL
@@ -536,7 +598,7 @@ FNAMEOK: LDY #MTEST        ;"TESTING THE DISK"
 
 DISKOK:  LDY #MPCANS       ;"AWAITING ANSWER FROM PC"
          JSR SHOWMSG
-         LDA #_'R' | $80    ;LOAD ACC WITH "R" OR "S"
+         LDA #_'R'         ;LOAD ACC WITH "R" OR "S"
          ADC DIRECTN
          JSR PUTC          ;AND SEND TO PC
          LDX #0
@@ -815,7 +877,7 @@ RWAGAIN: LDA $C000         ;CHECK KEYBOARD
 RWCONT:  LDA #>IOB         ;GET IOB ADDRESS IN REGISTERS
          LDY #<IOB
          JSR $3D9          ;CALL RWTS THROUGH VECTOR
-         LDA #_'.' | $80    ;CARRY CLEAR MEANS NO ERROR
+         LDA #_'.'         ;CARRY CLEAR MEANS NO ERROR
          BCC SECTOK        ;NO ERROR: PUT . IN STATUS
          DEC RETRIES       ;ERROR: SOME PATIENCE LEFT?
          BPL RWAGAIN       ;YES, TRY AGAIN
@@ -1091,7 +1153,8 @@ MSG02:  inv     " ADT CONFIGURATION "
         asccr   "READ RETRIES"
         asccr   "WRITE RETRIES"
         asccr   "USE CHECKSUMS"
-        ascz    "ENABLE SOUND"
+        asccr   "ENABLE SOUND"
+        ascz    "SAVE CONFIG"
 
 MSG03:   asccr "USE ARROWS AND SPACE TO CHANGE VALUES,"
          ascz "RETURN TO ACCEPT, CTRL-D FOR DEFAULTS."
@@ -1141,7 +1204,7 @@ MSG22:   ascz "AWAITING ANSWER FROM PC."
 
 ;----------------------- PARAMETERS ----------------------
 
-PARMSIZ: .byte 7,2,8,7,8,8,2,2        ;#OPTIONS OF EACH PARM
+PARMSIZ: .byte 7,2,8,7,8,8,2,2,2      ;#OPTIONS OF EACH PARM
 
 PARMTXT:
          .byte   _'1',0,_'2',0,_'3',0,_'4',0,_'5',0,_'6',0,_'7',0
@@ -1167,6 +1230,8 @@ PARMTXT:
          ascz "NO"
          ascz "YES"
          ascz "NO"
+         ascz "YES"
+         ascz "NO"
 
 PARMS:
 PDSLOT:  .byte 5             ;DISK SLOT (6)
@@ -1176,6 +1241,7 @@ PSPEED:  .byte 6             ;SSC SPEED (115K)
 PRETRY:  .byte 1,0           ;READ/WRITE MAX RETRIES (1,0)
 PCKSUM:  .byte 0             ;USE RWTS CHECKSUMS? (Y)
 PSOUND:  .byte 0             ;SOUND AT END OF TRANSFER? (Y)
+PSAVE:   .byte 1             ;SAVE? (N)
 PGSSLOT: .byte 1             ;IIgs slot (2)
 
 ;-------------------------- IOB --------------------------

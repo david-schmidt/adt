@@ -4,12 +4,10 @@
 	<property name="versionString" value="1.3.0" />
 	<property name="dosVersionString" value="130" />
 	<property name="dosDistName" value="adt${dosVersionString}" />
-	<property name="projdir" value="." />
 	<property name="builddir" value="${basedir}/build" />
 	<property name="acJar" value="${builddir}/AppleCommander-1.3.4b-ac.jar" />
-	<!-- TODO: build in a dumper
-	<taskdef name="appleDump" classname="AppleDump" classpath="${builddir}"/>
-	-->
+	<property name="proJar" value="${builddir}/ADTPro-0.1.3.jar" />
+	<taskdef name="appleDump" classname="org.adtpro.utilities.AppleDump" classpath="${proJar}"/>
 	<target name="all" depends="clean, assemble, builddsk">
 	</target>
 
@@ -17,13 +15,13 @@
 		<!--
 		Clean up everything
 		-->
-		<delete file="${projdir}/sscgs/src/ADT" />
-		<delete file="${projdir}/sscgs/${dosDistName}.dsk" />
-		<delete file="${projdir}/sscgs/adt.dmp" />
+		<delete file="${basedir}/sscgs/src/adt" />
+		<delete file="${basedir}/sscgs/${dosDistName}.dsk" />
+		<!--<delete file="${basedir}/sscgs/adt.dmp" />-->
 		<delete>
-			<fileset dir="${projdir}/sscgs/src" includes="**/*.o"/>
-			<fileset dir="${projdir}/sscgs/src" includes="**/*.map"/>
-			<fileset dir="${projdir}/sscgs/src" includes="**/*.lst"/>
+			<fileset dir="${basedir}/sscgs/src" includes="**/*.o"/>
+			<fileset dir="${basedir}/sscgs/src" includes="**/*.map"/>
+			<fileset dir="${basedir}/sscgs/src" includes="**/*.lst"/>
 		</delete>
 	</target>
 
@@ -31,24 +29,24 @@
 		<!--
 		Assemble and link the ADT source
 		-->
-		<exec dir="${projdir}/sscgs/src" executable="${assemblerPath}/cl65">
+		<exec dir="${basedir}/sscgs/src" executable="${assemblerPath}/cl65">
 			<arg line="-l -t none adt.s" />
 		</exec>
 		<!--
 		Make a dumpable version
-		<appleDump infilename="${builddir}/ADT" outfilename="${builddir}/adt.dmp" applename="ADT" startaddrhex="803" numbyteswide="8" />
 		-->
+		<appleDump infilename="${basedir}/sscgs/src/adt" outfilename="${basedir}/sscgs/adt.dmp" applename="ADT" startaddrhex="803" numbyteswide="8" />
 	</target>
 
 	<target name="builddsk">
 		<!--
 		Start a .dsk image containing the release number
 		-->
-		<copy file="${builddir}/ADTBase.dsk" tofile="${projdir}/sscgs/${dosDistName}.dsk" />
+		<copy file="${builddir}/ADTBase.dsk" tofile="${basedir}/sscgs/${dosDistName}.dsk" />
 		<!--
 		Put the assembled DOS ADT program on the .dsk image
 		-->
-		<exec dir="${projdir}/sscgs" executable="java" input="${projdir}/sscgs/src/ADT">
+		<exec dir="${basedir}/sscgs" executable="java" input="${basedir}/sscgs/src/ADT">
 			<arg line="-jar ${acJar} -p ADT bin 2051 ${dosDistName}.dsk" />
 		</exec>
 	</target>

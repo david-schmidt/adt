@@ -6,7 +6,7 @@
 ; PG@SFF.NET (ALL IN LOWER CASE)
 ; DISTRIBUTE FREELY
 ;--------------------------------
-;        LST OFF
+	.LIST	ON
 
 ; THIS PROGRAM TRANSFERS A 16-SECTOR DISK
 ; TO A 140K MS-DOS FILE AND BACK. THE FILE
@@ -19,7 +19,7 @@
 ; VERSION 1.30 November 2006
 ; David Schmidt
 ; - Added native IIgs (SCC) support
-;
+
 ; VERSION 1.23 November 2005
 ; Knut Roll-Lund and Ed Eastman
 ; - Added 115200b rate for SSC card
@@ -55,388 +55,412 @@
 
 ; CONSTANTS
 
-ESC      = $9B           ;ESCAPE KEY
-ACK      = $06           ;ACKNOWLEDGE
-NAK      = $15           ;NEGATIVE ACKNOWLEDGE
-PARMNUM  = 9             ;NUMBER OF CONFIGURABLE PARMS
+esc	= $9b                   ;ESCAPE KEY
+ack	= $06                   ;ACKNOWLEDGE
+nak	= $15                   ;NEGATIVE ACKNOWLEDGE
+parmnum	= 9                     ;NUMBER OF CONFIGURABLE PARMS
 
 ; ZERO PAGE LOCATIONS (ALL UNUSED BY DOS, BASIC & MONITOR)
 
-MSGPTR   = $6            ;POINTER TO MESSAGE TEXT (2B)
-SECPTR   = $8            ;POINTER TO SECTOR DATA  (2B)
-TRKCNT   = $1E           ;COUNTS SEVEN TRACKS     (1B)
-CRC      = $EB           ;TRACK CRC-16            (2B)
-PREV     = $ED           ;PREVIOUS BYTE FOR RLE   (1B)
-YSAVE    = $EE           ;TEMP STORAGE            (1B)
+msgptr	= $6                    ;POINTER TO MESSAGE TEXT (2B)
+secptr	= $8                    ;POINTER TO SECTOR DATA  (2B)
+trkcnt	= $1e                   ;COUNTS SEVEN TRACKS     (1B)
+crc	= $eb						;TRACK CRC-16            (2B)
+prev	= $ed                   ;PREVIOUS BYTE FOR RLE   (1B)
+ysave	= $ee                   ;TEMP STORAGE            (1B)
 
 ; BIG FILES
 
-TRACKS   = $2000         ;7 TRACKS AT 2000-8FFF (28KB)
-CRCTBLL  = $9000         ;CRC LOW TABLE         (256B)
-CRCTBLH  = $9100         ;CRC HIGH TABLE        (256B)
+tracks  = $2000                 ;7 TRACKS AT 2000-8FFF (28KB)
+crctbll = $9000                 ;CRC LOW TABLE         (256B)
+crctblh = $9100                 ;CRC HIGH TABLE        (256B)
 
 ; MONITOR STUFF
 
-CH       = $24           ;CURSOR HORIZONTAL POSITION
-CV       = $25           ;CURSOR VERTICAL POSITION
-BASL     = $28           ;BASE LINE ADDRESS
-INVFLG   = $32           ;INVERSE FLAG
-CLREOL   = $FC9C         ;CLEAR TO END OF LINE
-CLREOP   = $FC42         ;CLEAR TO END OF SCREEN
-HOME     = $FC58         ;CLEAR WHOLE SCREEN
-TABV     = $FB5B         ;SET BASL FROM A
-VTAB     = $FC22         ;SET BASL FROM CV
-RDKEY    = $FD0C         ;CHARACTER INPUT
-NXTCHAR  = $FD75         ;LINE INPUT
-COUT     = $FDED         ;Monitor output
-COUT1    = $FDF0         ;CHARACTER OUTPUT
-CROUT    = $FD8E         ;OUTPUT RETURN
+ch      = $24                   ;CURSOR HORIZONTAL POSITION
+cv      = $25                   ;CURSOR VERTICAL POSITION
+basl    = $28                   ;BASE LINE ADDRESS
+invflg  = $32                   ;INVERSE FLAG
+clreol  = $fc9c                 ;CLEAR TO END OF LINE
+clreop  = $fc42                 ;CLEAR TO END OF SCREEN
+home    = $fc58                 ;CLEAR WHOLE SCREEN
+tabv    = $fb5b                 ;SET BASL FROM A
+vtab    = $fc22                 ;SET BASL FROM CV
+rdkey   = $fd0c                 ;CHARACTER INPUT
+nxtchar = $fd75                 ;LINE INPUT
+cout	= $fded         ;Monitor output
+cout1   = $fdf0                 ;CHARACTER OUTPUT
+crout   = $fd8e                 ;OUTPUT RETURN
 
 ; MESSAGES
 
-MTITLE   = 0             ;TITLE SCREEN
-MCONFIG  = 2             ;CONFIGURATION TOP OF SCREEN
-MCONFG2  = 4             ;CONFIGURATION BOTTOM OF SCREEN
-MPROMPT  = 6             ;MAIN PROMPT
-MDIRCON  = 8             ;CONTINUED DIRECTORY PROMPT
-MDIREND  = 10            ;END OF DIRECTORY PROMPT
-MFRECV   = 12            ;FILE TO RECEIVE:_
-MFSEND   = 14            ;FILE TO SEND:_
-MRECV    = 16            ;RECEIVING FILE_    (_ = SPACE)
-MSEND    = 18            ;SENDING FILE_
-MCONFUS  = 20            ;NONSENSE FROM PC
-MNOT16   = 22            ;NOT A 16 SECTOR DISK
-MERROR   = 24            ;ERROR: FILE_
-MCANT    = 26            ;|CAN'T BE OPENED.     (| = CR)
-MEXISTS  = 28            ;|ALREADY EXISTS.
-MNOT140  = 30            ;|IS NOT A 140K IMAGE.
-MFULL    = 32            ;|DOESN'T FIT ON DISK.
-MANYKEY  = 34            ;__ANY KEY:_
-MDONT    = 36            ;<- DO NOT CHANGE
-MABOUT   = 38            ;ABOUT ADT...
-MTEST    = 40            ;TESTING DISK FORMAT
-MPCANS   = 42            ;AWAITING ANSWER FROM PC
+mtitle  = 0                     ;TITLE SCREEN
+mconfig = 2                     ;CONFIGURATION TOP OF SCREEN
+mconfg2 = 4                     ;CONFIGURATION BOTTOM OF SCREEN
+mprompt = 6                     ;MAIN PROMPT
+mdircon = 8                     ;CONTINUED DIRECTORY PROMPT
+mdirend = 10                    ;END OF DIRECTORY PROMPT
+mfrecv  = 12                    ;FILE TO RECEIVE:_
+mfsend  = 14                    ;FILE TO SEND:_
+mrecv   = 16                    ;RECEIVING FILE_    (_ = SPACE)
+msend   = 18                    ;SENDING FILE_
+mconfus = 20                    ;NONSENSE FROM PC
+mnot16  = 22                    ;NOT A 16 SECTOR DISK
+merror  = 24                    ;ERROR: FILE_
+mcant   = 26                    ;|CAN'T BE OPENED.     (| = CR)
+mexists = 28                    ;|ALREADY EXISTS.
+mnot140 = 30                    ;|IS NOT A 140K IMAGE.
+mfull   = 32                    ;|DOESN'T FIT ON DISK.
+manykey = 34                    ;__ANY KEY:_
+mdont   = 36                    ;<- DO NOT CHANGE
+mabout  = 38                    ;ABOUT ADT...
+mtest   = 40                    ;TESTING DISK FORMAT
+mpcans  = 42                    ;AWAITING ANSWER FROM PC
 
 ;*********************************************************
 
-         .ORG $803
+	.ORG    $803
+main:
 
-         JMP START         ;SKIP DEFAULT PARAMETERS
+	jmp     start           ;SKIP DEFAULT PARAMETERS
 
-DEFAULT:  .byte 5,0,1,6,1,0,0,0,1      ;DEFAULT PARM VALUES
+default:
+	.byte   5,0,1,5,1,0,0,0,1 ;DEFAULT PARM VALUES
 
 ;---------------------------------------------------------
 ; START - MAIN PROGRAM
 ;---------------------------------------------------------
-START:   CLD               ;BINARY MODE
-         JSR $FE84         ;NORMAL TEXT
-         JSR $FB2F         ;TEXT MODE, FULL WINDOW
-         JSR $FE89         ;INPUT FROM KEYBOARD
-         JSR $FE93         ;OUTPUT TO 40-COL SCREEN
+start:	cld                     ;BINARY MODE
+	jsr	$fe84           ;NORMAL TEXT
+	jsr	$fb2f           ;TEXT MODE, FULL WINDOW
+	jsr	$fe89           ;INPUT FROM KEYBOARD
+	jsr	$fe93           ;OUTPUT TO 40-COL SCREEN
 
-         LDA #0
-         STA SECPTR        ;SECPTR ALWAYS PAGE-ALIGNED
+	lda	#0
+	sta	secptr          ;SECPTR ALWAYS PAGE-ALIGNED
 
-         STA STDDOS        ;ASSUME STANDARD DOS INITIALLY
-         LDA $B92E         ;SAVE CONTENTS OF DOS
-         STA DOSBYTE       ;CHECKSUM BYTES
-         CMP #$13
-         BEQ DOSOK1        ;AND DECREMENT STDDOS (MAKING
-         DEC STDDOS        ;IT NONZERO) IF THE CORRECT
-DOSOK1:  LDA $B98A         ;BYTES AREN'T THERE
-         STA DOSBYTE+1
-         CMP #$B7
-         BEQ DOSOK2
-         DEC STDDOS
+	sta	stddos          ;ASSUME STANDARD DOS INITIALLY
+	lda	$b92e           ;SAVE CONTENTS OF DOS
+	sta	dosbyte         ;CHECKSUM BYTES
+	cmp	#$13
+	beq     dosok1          ;AND DECREMENT STDDOS (MAKING
+	dec     stddos          ;IT NONZERO) IF THE CORRECT
+dosok1: lda     $b98a           ;BYTES AREN'T THERE
+	sta     dosbyte+1
+	cmp     #$b7
+	beq     dosok2
+	dec     stddos
 
-DOSOK2:  JSR MAKETBL       ;MAKE CRC-16 TABLES
-         JSR PARMDFT       ;RESET PARAMETERS TO DEFAULTS
-         JSR PARMINT       ;INTERPRET PARAMETERS
+dosok2: jsr     maketbl         ;MAKE CRC-16 TABLES
+	jsr     parmdft         ;RESET PARAMETERS TO DEFAULTS
+	jsr     parmint         ;INTERPRET PARAMETERS
 
-REDRAW:  JSR TITLE         ;DRAW TITLE SCREEN
+redraw: jsr     title           ;DRAW TITLE SCREEN
 
-MAINLUP: LDY #MPROMPT      ;SHOW MAIN PROMPT
-MAINL:
-RESETIO: jsr $0000         ; Pseudo-indirect JSR to rest the IO device
-         JSR SHOWMSG       ;AT BOTTOM OF SCREEN
-         JSR RDKEY         ;GET ANSWER
-         AND #$DF          ;CONVERT TO UPPERCASE
+mainlup:
+	ldy     #mprompt        ;SHOW MAIN PROMPT
+mainl:
+resetio:
+	jsr	$0000		;Pseudo-indirect JSR to reset the IO device
+	jsr     showmsg         ;AT BOTTOM OF SCREEN
+	jsr     rdkey           ;GET ANSWER
+	and     #$df            ;CONVERT TO UPPERCASE
 
-         CMP #_'S'         ;SEND?
-         BNE KRECV         ;NOPE, TRY RECEIVE
-         JSR SEND          ;YES, DO SEND ROUTINE
-         JMP MAINLUP
+	cmp     #_'S'           ;SEND?
+	bne     krecv           ;NOPE, TRY RECEIVE
+	jsr     send            ;YES, DO SEND ROUTINE
+	jmp     mainlup
 
-KRECV:   CMP #_'R'         ;RECEIVE?
-         BNE KDIR          ;NOPE, TRY DIR
-         JSR RECEIVE       ;YES, DO RECEIVE ROUTINE
-         JMP MAINLUP
+krecv:  cmp     #_'R'           ;RECEIVE?
+	bne     kdir            ;NOPE, TRY DIR
+	jsr     receive         ;YES, DO RECEIVE ROUTINE
+	jmp     mainlup
 
-KDIR:    CMP #_'D'         ;DIR?
-         BNE KCONF         ;NOPE, TRY CONFIGURE
-         JSR DIR           ;YES, DO DIR ROUTINE
-         JMP REDRAW
+kdir:   cmp     #_'D'           ;DIR?
+	bne     kconf           ;NOPE, TRY CONFIGURE
+	jsr     dir             ;YES, DO DIR ROUTINE
+	jmp     redraw
 
-KCONF:   CMP #_'C'         ;CONFIGURE?
-         beq KCONF2
-         cmp #_'G'         ;Yeah, so, G is as good as C.
-         BNE KABOUT        ;NOPE, TRY ABOUT
-KCONF2:  JSR CONFIG        ;YES, DO CONFIGURE ROUTINE
-         JSR PARMINT       ;AND INTERPRET PARAMETERS
-         JMP REDRAW
+kconf:  cmp     #_'C'           ;CONFIGURE?
+	beq     kconf2
+	cmp     #_'G'           ;Yeah, so, G is as good as C.
+	bne     kabout          ;NOPE, TRY ABOUT
+kconf2: jsr     config          ;YES, DO CONFIGURE ROUTINE
+	jsr     parmint         ;AND INTERPRET PARAMETERS
+	jmp     redraw
 
-KABOUT:  CMP #$9F          ;ABOUT MESSAGE? ("?" KEY)
-         BNE KQUIT         ;NOPE, TRY QUIT
-         LDY #MABOUT       ;YES, SHOW MESSAGE, WAIT
-         JSR SHOWMSG       ;FOR KEY, AND RETURN
-         JSR RDKEY
-         JMP MAINLUP
+kabout: cmp     #$9f            ;ABOUT MESSAGE? ("?" KEY)
+	bne     kquit           ;NOPE, TRY QUIT
+	ldy     #mabout         ;YES, SHOW MESSAGE, WAIT
+	jsr     showmsg         ;FOR KEY, AND RETURN
+	jsr     rdkey
+	jmp     mainlup
 
-KQUIT:   CMP #_'Q'         ;QUIT?
-         BNE MAINLUP       ;NOPE, WAS A BAD KEY
-         LDA DOSBYTE       ;YES, RESTORE DOS CHECKSUM CODE
-         STA $B92E
-         LDA DOSBYTE+1
-         STA $B98A
-         JMP $3D0          ;AND QUIT TO DOS
+kquit:  cmp     #_'Q'           ;QUIT?
+	bne     mainlup         ;NOPE, WAS A BAD KEY
+	lda     dosbyte         ;YES, RESTORE DOS CHECKSUM CODE
+	sta     $b92e
+	lda     dosbyte+1
+	sta     $b98a
+	jmp     $3d0            ;AND QUIT TO DOS
 
 
 ;---------------------------------------------------------
 ; DIR - GET DIRECTORY FROM THE PC AND PRINT IT
 ; PC SENDS 0,1 AFTER PAGES 1..N-1, 0,0 AFTER LAST PAGE
 ;---------------------------------------------------------
-DIR:     JSR HOME          ;CLEAR SCREEN
-         LDA #_'D'         ;SEND DIR COMMAND TO PC
-         JSR PUTC
+dir:    jsr     home            ;CLEAR SCREEN
+	lda     #_'D'           ;SEND DIR COMMAND TO PC
+	jsr     putc
 
-         LDA PSPEED
-         CMP #6
-         BNE DIRLOOP
+	lda     pspeed
+	cmp     #6
+	bne     dirloop
 
-         LDA #>TRACKS      ;GET BUFFER POINTER HIGHBYTE
-         STA SECPTR+1      ;SET SECTOR BUFFER POINTER
-         LDY #0            ;COUNTER
-DIRBUFF: JSR GETC          ;GET SERIAL CHARACTER
-         PHP               ;SAVE FLAGS
-         STA (SECPTR),Y    ;STORE BYTE
-         INY               ;BUMP
-         BNE DIRNEXT       ;SKIP
-         INC SECPTR+1      ;NEXT 256 BYTES
-DIRNEXT: PLP               ;RESTORE FLAGS
-         BNE DIRBUFF       ;LOOP UNTIL ZERO
+	lda     #>tracks        ;GET BUFFER POINTER HIGHBYTE
+	sta     secptr+1        ;SET SECTOR BUFFER POINTER
+	ldy     #0              ;COUNTER
+dirbuff:
+	jsr     getc            ;GET SERIAL CHARACTER
+	php                     ;SAVE FLAGS
+	sta     (secptr),y      ;STORE BYTE
+	iny                     ;BUMP
+	bne     dirnext         ;SKIP
+	inc     secptr+1        ;NEXT 256 BYTES
+dirnext:
+	plp                     ;RESTORE FLAGS
+	bne     dirbuff         ;LOOP UNTIL ZERO
 
-         JSR GETC          ;GET CONTINUATION CHARACTER
-         STA (SECPTR),Y    ;STORE CONTINUATION BYTE TOO
+	jsr     getc            ;GET CONTINUATION CHARACTER
+	sta     (secptr),y      ;STORE CONTINUATION BYTE TOO
 
-         LDA #>TRACKS      ;GET BUFFER POINTER HIGHBYTE
-         STA SECPTR+1      ;SET SECTOR BUFFER POINTER
-         LDY #0            ;COUNTER
-DIRDISP: LDA (SECPTR),Y    ;GET BYTE FROM BUFFER
-         PHP               ;SAVE FLAGS
-         INY               ;BUMP
-         BNE DIRMORE       ;SKIP
-         INC SECPTR+1      ;NEXT 256 BYTES
-DIRMORE: PLP               ;RESTORE FLAGS
-         BEQ DIRPAGE       ;PAGE OR DIR END
-         ORA #$80
-         JSR COUT1         ;DISPLAY
-         JMP DIRDISP       ;LOOP
+	lda     #>tracks        ;GET BUFFER POINTER HIGHBYTE
+	sta     secptr+1        ;SET SECTOR BUFFER POINTER
+	ldy     #0              ;COUNTER
+dirdisp:
+	lda     (secptr),y      ;GET BYTE FROM BUFFER
+	php                     ;SAVE FLAGS
+	iny                     ;BUMP
+	bne     dirmore         ;SKIP
+	inc     secptr+1        ;NEXT 256 BYTES
+dirmore:
+	plp                     ;RESTORE FLAGS
+	beq     dirpage         ;PAGE OR DIR END
+	ora     #$80
+	jsr     cout1           ;DISPLAY
+	jmp     dirdisp         ;LOOP
 
-DIRPAGE: LDA (SECPTR),Y    ;GET BYTE FROM BUFFER
-         BNE DIRCONT
+dirpage:
+	lda     (secptr),y      ;GET BYTE FROM BUFFER
+	bne     dircont
 
-         LDY #MDIREND      ;NO MORE FILES, WAIT FOR KEY
-         JSR SHOWMSG       ;AND RETURN
-         JSR RDKEY
-         RTS
+	ldy     #mdirend        ;NO MORE FILES, WAIT FOR KEY
+	jsr     showmsg         ;AND RETURN
+	jsr     rdkey
+	rts
 
-DIRLOOP: JSR GETC          ;PRINT PC OUTPUT EXACTLY AS
-         BEQ DIRSTOP       ;IT ARRIVES (PC IS RESPONSIBLE
-         ORA #$80          ;FOR FORMATTING), UNTIL 00
-         JSR COUT1         ;RECEIVED
-         JMP DIRLOOP
+dirloop:
+	jsr     getc            ;PRINT PC OUTPUT EXACTLY AS
+	beq     dirstop         ;IT ARRIVES (PC IS RESPONSIBLE
+	ora     #$80            ;FOR FORMATTING), UNTIL 00
+	jsr     cout1           ;RECEIVED
+	jmp     dirloop
 
-DIRSTOP: JSR GETC          ;GET CONTINUATION CHARACTER
-         BNE DIRCONT       ;NOT 00, THERE'S MORE
+dirstop:
+	jsr     getc            ;GET CONTINUATION CHARACTER
+	bne     dircont         ;NOT 00, THERE'S MORE
 
-         LDY #MDIREND      ;NO MORE FILES, WAIT FOR KEY
-         JSR SHOWMSG       ;AND RETURN
-         JSR RDKEY
-         RTS
+	ldy     #mdirend        ;NO MORE FILES, WAIT FOR KEY
+	jsr     showmsg         ;AND RETURN
+	jsr     rdkey
+	rts
 
-DIRCONT: LDY #MDIRCON      ;SPACE TO CONTINUE, ESC TO STOP
-         JSR SHOWMSG
-         JSR RDKEY
-         EOR #ESC          ;NOT ESCAPE, CONTINUE NORMALLY
-         BNE DIR           ;BY SENDING A "D" TO PC
-         JMP PUTC          ;ESCAPE, SEND 00 AND RETURN
+dircont:
+	ldy     #mdircon        ;SPACE TO CONTINUE, ESC TO STOP
+	jsr     showmsg
+	jsr     rdkey
+	eor     #esc            ;NOT ESCAPE, CONTINUE NORMALLY
+	bne     dir             ;BY SENDING A "D" TO PC
+	jmp     putc            ;ESCAPE, SEND 00 AND RETURN
 
 ;---------------------------------------------------------
 ; CONFIG - ADT CONFIGURATION
 ;---------------------------------------------------------
-CONFIG:  JSR HOME          ;CLEAR SCREEN
+config: jsr     home            ;CLEAR SCREEN
 ; No matter what, we put in the default value for 
 ; 'save' - always turn it off when showing the config screen.
-         LDA #$01          ; Index for 'NO' save
-         STA PSAVE
-         LDY #MCONFIG      ;SHOW CONFIGURATION SCREEN
-         JSR SHOWM1
-         LDY #MCONFG2
-         JSR SHOWMSG       ;IN 2 PARTS BECAUSE >256 CHARS
+	lda     #$01            ; Index for 'NO' save
+	sta     psave
+	ldy     #mconfig        ;SHOW CONFIGURATION SCREEN
+	jsr     showm1
+	ldy     #mconfg2
+	jsr     showmsg         ;IN 2 PARTS BECAUSE >256 CHARS
 
-         LDY #PARMNUM-1    ;SAVE PREVIOUS PARAMETERS
-SAVPARM: LDA PARMS,Y       ;IN CASE OF ESCAPE
-         STA OLDPARM,Y
-         DEY
-         BPL SAVPARM
+	ldy     #parmnum-1      ;SAVE PREVIOUS PARAMETERS
+savparm:
+	lda     parms,y         ;IN CASE OF ESCAPE
+	sta     oldparm,y
+	dey
+	bpl     savparm
 
 ;--------------- FIRST PART: DISPLAY SCREEN --------------
 
-REFRESH: LDA #3            ;FIRST PARAMETER IS ON LINE 3
-         JSR TABV
-         LDX #0            ;PARAMETER NUMBER
-         LDY #$FF          ;OFFSET INTO PARAMETER TEXT
+refresh:
+	lda     #3              ;FIRST PARAMETER IS ON LINE 3
+	jsr     tabv
+	ldx     #0              ;PARAMETER NUMBER
+	ldy     #$ff            ;OFFSET INTO PARAMETER TEXT
 
-NXTLINE: STX LINECNT       ;SAVE CURRENT LINE
-         LDA #15
-         STA CH
-         CLC
-         LDA PARMSIZ,X     ;GET CURRENT VALUE (NEGATIVE:
-         SBC PARMS,X       ;LAST VALUE HAS CURVAL=0)
-         STA CURVAL
-         LDA PARMSIZ,X     ;X WILL BE EACH POSSIBLE VALUE
-         TAX               ;STARTING WITH THE LAST ONE
-         DEX
+nxtline:
+	stx     linecnt         ;SAVE CURRENT LINE
+	lda     #15
+	sta     ch
+	clc
+	lda     parmsiz,x       ;GET CURRENT VALUE (NEGATIVE:
+	sbc     parms,x         ;LAST VALUE HAS CURVAL=0)
+	sta     curval
+	lda     parmsiz,x       ;X WILL BE EACH POSSIBLE VALUE
+	tax                     ;STARTING WITH THE LAST ONE
+	dex
 
-VALLOOP: CPX CURVAL        ;X EQUAL TO CURRENT VALUE?
-         BEQ PRINTIT       ;YES, PRINT IT
-SKIPCHR: INY               ;NO, SKIP IT
-         LDA PARMTXT,Y
-         BNE SKIPCHR
-         BEQ ENDVAL
+valloop:
+	cpx     curval          ;X EQUAL TO CURRENT VALUE?
+	beq     printit         ;YES, PRINT IT
+skipchr:
+	iny                     ;NO, SKIP IT
+	lda     parmtxt,y
+	bne     skipchr
+	beq     endval
 
-PRINTIT: LDA LINECNT       ;IF WE'RE ON THE ACTIVE LINE,
-         CMP CURPARM       ;THEN PRINT VALUE IN INVERSE
-         BNE PRTVAL        ;ELSE PRINT IT NORMALLY
-         LDA #$3F
-         STA INVFLG
+printit:
+	lda     linecnt         ;IF WE'RE ON THE ACTIVE LINE,
+	cmp     curparm         ;THEN PRINT VALUE IN INVERSE
+	bne     prtval          ;ELSE PRINT IT NORMALLY
+	lda     #$3f
+	sta     invflg
 
-PRTVAL:  LDA #$A0          ;SPACE BEFORE & AFTER VALUE
-         JSR COUT1
-PRTLOOP: INY               ;PRINT VALUE
-         LDA PARMTXT,Y
-         BEQ ENDPRT
-         JSR COUT1
-         JMP PRTLOOP
-ENDPRT:  LDA #$A0
-         JSR COUT1
-         LDA #$FF          ;BACK TO NORMAL
-         STA INVFLG
-ENDVAL:  DEX
-         BPL VALLOOP       ;PRINT REMAINING VALUES
+prtval: lda     #$a0            ;SPACE BEFORE & AFTER VALUE
+	jsr     cout1
+prtloop:
+	iny                     ;PRINT VALUE
+	lda     parmtxt,y
+	beq     endprt
+	jsr     cout1
+	jmp     prtloop
+endprt: lda     #$a0
+	jsr     cout1
+	lda     #$ff            ;BACK TO NORMAL
+	sta     invflg
+endval: dex
+	bpl     valloop         ;PRINT REMAINING VALUES
 
-         STY YSAVE         ;CLREOL USES Y
-         JSR CLREOL        ;REMOVE GARBAGE AT EOL
-         JSR CROUT
-         LDY YSAVE
-         LDX LINECNT       ;INCREMENT CURRENT LINE
-         INX
-         CPX #PARMNUM
-         BCC NXTLINE       ;LOOP 8 TIMES
+	sty     ysave           ;CLREOL USES Y
+	jsr     clreol          ;REMOVE GARBAGE AT EOL
+	jsr     crout
+	ldy     ysave
+	ldx     linecnt         ;INCREMENT CURRENT LINE
+	inx
+	cpx     #parmnum
+	bcc     nxtline         ;LOOP 8 TIMES
 
-         LDA STDDOS        ;IF NON-STANDARD DOS, WRITE
-         BEQ GETCMD        ;"DO NOT CHANGE" ON SCREEN
-         LDA #9            ;NEXT TO THE CHECKSUMS OPTION
-         JSR TABV
-         LDY #23
-         STY CH
-         LDY #MDONT
-         JSR SHOWM1
+	lda     stddos          ;IF NON-STANDARD DOS, WRITE
+	beq     getcmd          ;"DO NOT CHANGE" ON SCREEN
+	lda     #9              ;NEXT TO THE CHECKSUMS OPTION
+	jsr     tabv
+	ldy     #23
+	sty     ch
+	ldy     #mdont
+	jsr     showm1
 
 ;--------------- SECOND PART: CHANGE VALUES --------------
 
-GETCMD:  LDA $C000         ;WAIT FOR NEXT COMMAND
-         BPL GETCMD
-         BIT $C010
-         LDX CURPARM       ;CURRENT PARAMETER IN X
+getcmd: lda     $c000           ;WAIT FOR NEXT COMMAND
+	bpl     getcmd
+	bit     $c010
+	ldx     curparm         ;CURRENT PARAMETER IN X
 
-         CMP #$88
-         BNE NOTLEFT
-         DEC PARMS,X       ;LEFT ARROW PUSHED
-         BPL LEFTOK        ;DECREMENT CURRENT VALUE
-         LDA PARMSIZ,X
-         SBC #1
-         STA PARMS,X
-LEFTOK:  JMP REFRESH
+	cmp     #$88
+	bne     notleft
+	dec     parms,x         ;LEFT ARROW PUSHED
+	bpl     leftok          ;DECREMENT CURRENT VALUE
+	lda     parmsiz,x
+	sbc     #1
+	sta     parms,x
+leftok: jmp     refresh
 
-NOTLEFT: CMP #$95
-         BNE NOTRGT
-         LDA PARMS,X       ;RIGHT ARROW PUSHED
-         ADC #0            ;INCREMENT CURRENT VALUE
-         CMP PARMSIZ,X
-         BCC RIGHTOK
-         LDA #0
-RIGHTOK: STA PARMS,X
-         JMP REFRESH
+notleft:
+	cmp     #$95
+	bne     notrgt
+	lda     parms,x         ;RIGHT ARROW PUSHED
+	adc     #0              ;INCREMENT CURRENT VALUE
+	cmp     parmsiz,x
+	bcc     rightok
+	lda     #0
+rightok:
+	sta     parms,x
+	jmp     refresh
 
-NOTRGT:  CMP #$8B
-         BNE NOTUP
-         DEX               ;UP ARROW PUSHED
-         BPL UPOK          ;DECREMENT PARAMETER
-         LDX #PARMNUM-1
-UPOK:    STX CURPARM
-         JMP REFRESH
+notrgt: cmp     #$8b
+	bne     notup
+	dex                     ;UP ARROW PUSHED
+	bpl     upok            ;DECREMENT PARAMETER
+	ldx     #parmnum-1
+upok:   stx     curparm
+	jmp     refresh
 
-NOTUP:   CMP #$8A
-         BEQ ISDOWN
-         CMP #$A0
-         BNE NOTDOWN
-ISDOWN:  INX               ;DOWN ARROW OR SPACE PUSHED
-         CPX #PARMNUM      ;INCREMENT PARAMETER
-         BCC DOWNOK
-         LDX #0
-DOWNOK:  STX CURPARM
-         JMP REFRESH
+notup:  cmp     #$8a
+	beq     isdown
+	cmp     #$a0
+	bne     notdown
+isdown: inx                     ;DOWN ARROW OR SPACE PUSHED
+	cpx     #parmnum        ;INCREMENT PARAMETER
+	bcc     downok
+	ldx     #0
+downok: stx     curparm
+	jmp     refresh
 
-NOTDOWN: CMP #$84
-         BNE NOTCTLD
-         JSR PARMDFT       ;CTRL-D PUSHED, RESTORE DEFAULT
-NOTESC:  JMP REFRESH       ;PARAMETERS
+notdown:
+	cmp     #$84
+	bne     notctld
+	jsr     parmdft         ;CTRL-D PUSHED, RESTORE DEFAULT
+notesc: jmp     refresh         ;PARAMETERS
 
-NOTCTLD: CMP #$8D
-         BEQ ENDCFG        ;RETURN PUSHED, STOP CONFIGURE
+notctld:
+	cmp     #$8d
+	beq     endcfg          ;RETURN PUSHED, STOP CONFIGURE
 
-         CMP #ESC
-         BNE NOTESC
-         LDY #PARMNUM-1    ;ESCAPE PUSHED, RESTORE OLD
-PARMRST: LDA OLDPARM,Y     ;PARAMETERS AND STOP CONFIGURE
-         STA PARMS,Y
-         DEY
-         BPL PARMRST
-ENDCFG:
-         LDA PSAVE         ; Did they ask to save parms?
-         BNE NOSAVE
+	cmp     #esc
+	bne     notesc
+	ldy     #parmnum-1      ;ESCAPE PUSHED, RESTORE OLD
+parmrst:
+	lda     oldparm,y       ;PARAMETERS AND STOP CONFIGURE
+	sta     parms,y
+	dey
+	bpl     parmrst
+endcfg:
+	lda	psave		; Did they ask to save parms?
+	bne     nosave
 
-         LDY #PARMNUM-1	; Save previous parameters
-SAVPARM2:
-         LDA PARMS,Y
-         STA DEFAULT,Y
-         DEY
-         BPL SAVPARM2
-         LDA #$00
-         STA CURPARM
-         JSR BSAVE
-NOSAVE:
-         RTS
+	ldy	#parmnum-1	; Save previous parameters
+savparm2:
+	lda	parms,y
+	sta	default,y
+	dey
+	bpl	savparm2
+	lda	#$00
+	sta	curparm
+	jsr	bsave
+nosave:
+	rts
 
 ;---------------------------------------------------------
 ; BSAVE - Save a copy of ADT in memory
 ;---------------------------------------------------------
-BSAVE:
+bsave:
 	ldx #$00
-:	lda COMMAND,X
+:	lda command,x
 	beq :+
-	jsr COUT
+	jsr cout
 	inx
 	jmp :-
 :
@@ -444,472 +468,496 @@ BSAVE:
 ;	sta <CH
 ;	lda #$15
 ;	jsr TABV
-BSAVEDONE:
-	jsr PAUSE
+bsavedone:
+	jsr pause
 	rts
 
-LINECNT: .byte 00            ;CURRENT LINE NUMBER
-CURPARM: .byte 00            ;ACTIVE PARAMETER
-CURVAL:  .byte 00            ;VALUE OF ACTIVE PARAMETER
-OLDPARM: .byte $00,$00,$00,$00,$00,$00,$00,$00,$00 ; There must be PARMNUM bytes here...
-COMMAND: .byte $8D,$84
-         asc "BSAVE ADT2,A$0803,L$0700"
-         .byte $8D,00
+linecnt:
+	.byte   $00             ;CURRENT LINE NUMBER
+curparm:
+	.byte   $00             ;ACTIVE PARAMETER
+curval: .byte   $00             ;VALUE OF ACTIVE PARAMETER
+oldparm:
+	.res    parmnum         ;OLD PARAMETERS SAVED HERE
+command:
+	.byte $8D,$84
+	asc "BSAVE ADT2,A$0803,L$0700"
+	.byte $8D,00
 
 ;---------------------------------------------------------
 ; PAUSE - print 'PRESS A KEY TO CONTINUE...' and wait
 ;---------------------------------------------------------
-PAUSE:
+pause:
 	lda #$00
-	sta CH
+	sta ch
 	lda #$17
-	jsr TABV
-	jsr CLREOP
-	ldy #MDIRCON
-	jsr SHOWMSG
-	jsr RDKEY
+	jsr tabv
+	jsr clreop
+	ldy #mdircon
+	jsr showmsg
+	jsr rdkey
 	cmp #$9B
-	beq PAUSEESC
+	beq pauseesc
 	clc
 	rts
-PAUSEESC:
+pauseesc:
 	sec
 	rts
-
 ;---------------------------------------------------------
 ; PARMINT - INTERPRET PARAMETERS
 ;---------------------------------------------------------
-PARMINT: LDY PDSLOT        ;GET SLOT# (0..6)
-         INY               ;NOW 1..7
-         TYA
-         ORA #_'0'         ;CONVERT TO ASCII AND PUT
-         STA MTSLT         ;INTO TITLE SCREEN
-         TYA
-         ASL
-         ASL
-         ASL
-         ASL               ;NOW $S0
-         STA IOBSLT        ;STORE IN IOB
-         ADC #$89          ;NOW $89+S0
-         STA MOD5+1        ;SELF-MOD FOR "DRIVES ON"
+parmint:
+	ldy     pdslot          ;GET SLOT# (0..6)
+	iny                     ;NOW 1..7
+	tya
+	ora     #_'0'           ;CONVERT TO ASCII AND PUT
+	sta     mtslt           ;INTO TITLE SCREEN
+	tya
+	asl
+	asl
+	asl
+	asl                     ;NOW $S0
+	sta     iobslt          ;STORE IN IOB
+	adc     #$89            ;NOW $89+S0
+	sta     mod5+1          ;SELF-MOD FOR "DRIVES ON"
 
-         LDY PDRIVE        ;GET DRIVE# (0..1)
-         INY               ;NOW 1..2
-         STY IOBDRV        ;STORE IN IOB
-         TYA
-         ORA #_'0'         ;CONVERT TO ASCII AND PUT
-         STA MTDRV         ;INTO TITLE SCREEN
+	ldy     pdrive          ;GET DRIVE# (0..1)
+	iny                     ;NOW 1..2
+	sty     iobdrv          ;STORE IN IOB
+	tya
+	ora     #_'0'           ;CONVERT TO ASCII AND PUT
+	sta     mtdrv           ;INTO TITLE SCREEN
 
-         LDY PSSC          ;GET SSC SLOT# (0..6)
-         INY               ;NOW 1..7
-         TYA
-         ORA #_'0'         ;CONVERT TO ASCII AND PUT
-         STA MTSSC         ;INTO TITLE SCREEN
-         TYA
-         ASL
-         ASL
-         ASL
-         ASL               ;NOW $S0
-         ADC #$88
-         TAX
-         LDY PSPEED        ;CONTROL: 8 DATA BITS, 1 STOP
-         TYA               ;GET SPEED (0..6)
-         ASL
-         ASL
-         ADC PSPEED        ;6;SPEED IN Y, NOW COPY
-         TAY               ;FIVE CHARACTERS INTO
-         LDX #4            ;TITLE SCREEN
-PUTSPD:  LDA SPDTXT,Y
-         STA MTSPD,X
-         INY
-         DEX
-         BPL PUTSPD
+	ldy     pssc            ;GET SSC SLOT# (0..6)
+	iny                     ;NOW 1..7
+	tya
+	ora     #_'0'           ;CONVERT TO ASCII AND PUT
+	sta     mtssc           ;INTO TITLE SCREEN
+	tya
+	asl
+	asl
+	asl
+	asl                     ;NOW $S0
+	adc     #$88
+	tax
+	ldy     pspeed          ;CONTROL: 8 DATA BITS, 1 STOP
+	tya                     ;GET SPEED (0..6)
+	asl
+	asl
+	adc     pspeed          ;6*SPEED IN Y, NOW COPY
+	tay                     ;FIVE CHARACTERS INTO
+	ldx     #4              ;TITLE SCREEN
+putspd: lda     spdtxt,y
+	sta     mtspd,x
+	iny
+	dex
+	bpl     putspd
 
-         LDY #1            ;CONVERT RETRIES FROM 0..7
-TRYLUP:  LDX PRETRY,Y      ;TO 0..5,10,128
-         LDA TRYTBL,X
-         STA REALTRY,Y
-         DEY
-         BPL TRYLUP
+	ldy     #1              ;CONVERT RETRIES FROM 0..7
+trylup: ldx     pretry,y        ;TO 0..5,10,128
+	lda     trytbl,x
+	sta     realtry,y
+	dey
+	bpl     trylup
 
-         LDX #0            ;IF PCKSUM IS 'NO', WE PATCH
-         LDY #0            ;DOS TO IGNORE ADDRESS AND
-         LDA PCKSUM        ;DATA CHECKSUM ERRORS
-         BNE RWTSMOD
-         LDX DOSBYTE+1
-         LDY DOSBYTE
-RWTSMOD: STX $B98A         ;IS THERE AN APPLE II TODAY
-         STY $B92E         ;THAT DOESN'T HAVE >=48K RAM?
-                           ;(YES
+	ldx     #0              ;IF PCKSUM IS 'NO', WE PATCH
+	ldy     #0              ;DOS TO IGNORE ADDRESS AND
+	lda     pcksum          ;DATA CHECKSUM ERRORS
+	bne     rwtsmod
+	ldx     dosbyte+1
+	ldy     dosbyte
+rwtsmod:
+	stx	$b98a		;IS THERE AN APPLE II TODAY
+	sty	$b92e		;THAT DOESN'T HAVE >=48K RAM?
+				;(YES)
+	ldy	pssc		;GET SLOT# (0..6)
+	iny			;NOW 1..7
+	tya
+	cmp	#$08
+	bpl	iigs
+	jmp	initssc		; Y holds slot number
 
-         LDY PSSC          ;GET SLOT# (0..6)
-         INY               ;NOW 1..7
-         TYA
-         cmp #$08
-         bpl IIGS
-         jmp INITSSC	; Y holds slot number
+iigs:
+	lda	#$02
+	sta	pgsslot
+	jmp	initzgs
+	rts
 
-IIGS:
-         lda #$02
-         sta PGSSLOT
-         jmp INITZGS
-
-         RTS               ;(YES)
-
-SPDTXT:  asc "  003 0021 0042 0084 006900291 K511"
-BPSCTRL: .byte $16,$18,$1A,$1C,$1E,$1F,$10
-TRYTBL:  .byte 0,1,2,3,4,5,10,99
+spdtxt: asc     "  003 0021 0042 0084 006900291 K511"
+bpsctrl:
+	.byte   $16,$18,$1a,$1c,$1e,$1f,$10
+trytbl: .byte   0,1,2,3,4,5,10,99
 
 
 ;---------------------------------------------------------
 ; GETNAME - GET FILENAME AND SEND TO PC
 ;---------------------------------------------------------
-GETNAME: STX DIRECTN       ;TFR DIRECTION (0=RECV, 1=SEND)
-         LDY PRMPTBL,X
-         JSR SHOWMSG       ;ASK FILENAME
-         LDX #0            ;GET ANSWER AT $200
-         JSR NXTCHAR
-         LDA #0            ;NULL-TERMINATE IT
-         STA $200,X
-         TXA
-         BNE FNAMEOK
-         JMP ABORT         ;ABORT IF NO FILENAME
+getname:
+	stx     directn         ;TFR DIRECTION (0=RECV, 1=SEND)
+	ldy     prmptbl,x
+	jsr     showmsg         ;ASK FILENAME
+	ldx     #0              ;GET ANSWER AT $200
+	jsr     nxtchar
+	lda     #0              ;NULL-TERMINATE IT
+	sta     $200,x
+	txa
+	bne     fnameok
+	jmp     abort           ;ABORT IF NO FILENAME
 
-FNAMEOK: LDY #MTEST        ;"TESTING THE DISK"
-         JSR SHOWMSG
-         LDA #>TRACKS      ;READ TRACK 1 SECTOR 1
-         STA IOBBUF+1      ;TO SEE IF THERE'S A 16-SECTOR
-         LDA #1            ;DISK IN THE DRIVE
-         STA IOBCMD
-         STA IOBTRK
-         STA IOBSEC
-         LDA #>IOB
-         LDY #<IOB
-         JSR $3D9
-         BCC DISKOK        ;READ SUCCESSFUL
+fnameok:
+	ldy     #mtest          ;"TESTING THE DISK"
+	jsr     showmsg
+	lda     #>tracks        ;READ TRACK 1 SECTOR 1
+	sta     iobbuf+1        ;TO SEE IF THERE'S A 16-SECTOR
+	lda     #1              ;DISK IN THE DRIVE
+	sta     iobcmd
+	sta     iobtrk
+	sta     iobsec
+	lda     #>iob
+	ldy     #<iob
+	jsr     $3d9
+	bcc     diskok          ;READ SUCCESSFUL
 
-         LDY #MNOT16       ;NOT 16-SECTOR DISK
-         JSR SHOWMSG
-         LDY #MANYKEY      ;APPEND PROMPT
-         JSR SHOWM1
-         JSR AWBEEP
-         JSR RDKEY         ;WAIT FOR KEY
-         JMP ABORT         ;AND ABORT
+	ldy     #mnot16         ;NOT 16-SECTOR DISK
+	jsr     showmsg
+	ldy     #manykey        ;APPEND PROMPT
+	jsr     showm1
+	jsr     awbeep
+	jsr     rdkey           ;WAIT FOR KEY
+	jmp     abort           ;AND ABORT
 
-DISKOK:  LDY #MPCANS       ;"AWAITING ANSWER FROM PC"
-         JSR SHOWMSG
-         LDA #_'R'         ;LOAD ACC WITH "R" OR "S"
-         ADC DIRECTN
-         JSR PUTC          ;AND SEND TO PC
-         LDX #0
-FNLOOP:  LDA $200,X        ;SEND FILENAME TO PC
-         JSR PUTC
-         BEQ GETANS        ;STOP AT NULL
-         INX
-         BNE FNLOOP
+diskok: ldy     #mpcans         ;"AWAITING ANSWER FROM PC"
+	jsr     showmsg
+	lda     #_'R'           ;LOAD ACC WITH "R" OR "S"
+	adc     directn
+	jsr     putc            ;AND SEND TO PC
+	ldx     #0
+fnloop: lda     $200,x          ;SEND FILENAME TO PC
+	jsr     putc
+	beq     getans          ;STOP AT NULL
+	inx
+	bne     fnloop
 
-GETANS:  JSR GETC          ;ANSWER FROM PC SHOULD BE 0
-         BNE PCERROR       ;THERE'S A PROBLEM
+getans: jsr     getc            ;ANSWER FROM PC SHOULD BE 0
+	bne     pcerror         ;THERE'S A PROBLEM
 
-         JSR TITLE         ;CLEAR STATUS
-         LDX DIRECTN
-         LDY TFRTBL,X
-         JSR SHOWMSG       ;SHOW TRANSFER MESSAGE
+	jsr     title           ;CLEAR STATUS
+	ldx     directn
+	ldy     tfrtbl,x
+	jsr     showmsg         ;SHOW TRANSFER MESSAGE
 
-SHOWFN:  LDA #2            ;AND ADD FILENAME
-         STA MSGPTR+1
-         LDA #0
-         STA MSGPTR
-         TAY
-         JMP MSGLOOP       ;AND RETURN THROUGH SHOWMSG
+showfn: lda     #2              ;AND ADD FILENAME
+	sta     msgptr+1
+	lda     #0
+	sta     msgptr
+	tay
+	jmp     msgloop         ;AND RETURN THROUGH SHOWMSG
 
-PCERROR: PHA               ;SAVE ERROR NUMBER
-         LDY #MERROR       ;SHOW "ERROR: FILE "
-         JSR SHOWMSG       ;SHOW FILENAME
-         JSR SHOWFN
-         PLA
-         TAY
-         JSR SHOWM1        ;SHOW ERROR MESSAGE
-         LDY #MANYKEY      ;APPEND PROMPT
-         JSR SHOWM1
-         JSR AWBEEP
-         JSR RDKEY         ;WAIT FOR KEY
-         JMP ABORT         ;AND RESTART
+pcerror:
+	pha                     ;SAVE ERROR NUMBER
+	ldy     #merror         ;SHOW "ERROR: FILE "
+	jsr     showmsg         ;SHOW FILENAME
+	jsr     showfn
+	pla
+	tay
+	jsr     showm1          ;SHOW ERROR MESSAGE
+	ldy     #manykey        ;APPEND PROMPT
+	jsr     showm1
+	jsr     awbeep
+	jsr     rdkey           ;WAIT FOR KEY
+	jmp     abort           ;AND RESTART
 
-DIRECTN: .byte 00
-PRMPTBL: .byte MFRECV,MFSEND
-TFRTBL:  .byte MRECV,MSEND
+directn:
+	.byte   $00
+prmptbl:
+	.byte   mfrecv,mfsend
+tfrtbl: .byte   mrecv,msend
 
 
 ;---------------------------------------------------------
 ; RECEIVE - MAIN RECEIVE ROUTINE
 ;---------------------------------------------------------
-RECEIVE: LDX #0            ;DIRECTION = PC-->APPLE
-         JSR GETNAME       ;ASK FOR FILENAME & SEND TO PC
-         LDA #ACK          ;1ST MESSAGE ALWAYS ACK
-         STA MESSAGE
-         LDA #0            ;START ON TRACK 0
-         STA IOBTRK
-         STA ERRORS        ;NO DISK ERRORS YET
+receive:
+	ldx     #0              ;DIRECTION = PC-->APPLE
+	jsr     getname         ;ASK FOR FILENAME & SEND TO PC
+	lda     #ack            ;1ST MESSAGE ALWAYS ACK
+	sta     message
+	lda     #0              ;START ON TRACK 0
+	sta     iobtrk
+	sta     errors          ;NO DISK ERRORS YET
 
-RECVLUP: STA SAVTRK        ;SAVE CURRENT TRACK
-         LDX #1
-         JSR SR7TRK        ;RECEIVE 7 TRACKS FROM PC
-         LDX #2
-         JSR RW7TRK        ;WRITE 7 TRACKS TO DISK
-         LDA IOBTRK
-         CMP #$23          ;REPEAT UNTIL TRACK $23
-         BCC RECVLUP
-         LDA MESSAGE       ;SEND LAST ACK
-         JSR PUTC
-         LDA ERRORS
-         JSR PUTC          ;SEND ERROR FLAG TO PC
-         JMP AWBEEP        ;BEEP AND END
+recvlup:
+	sta     savtrk          ;SAVE CURRENT TRACK
+	ldx     #1
+	jsr     sr7trk          ;RECEIVE 7 TRACKS FROM PC
+	ldx     #2
+	jsr     rw7trk          ;WRITE 7 TRACKS TO DISK
+	lda     iobtrk
+	cmp     #$23            ;REPEAT UNTIL TRACK $23
+	bcc     recvlup
+	lda     message         ;SEND LAST ACK
+	jsr     putc
+	lda     errors
+	jsr     putc            ;SEND ERROR FLAG TO PC
+	jmp     awbeep          ;BEEP AND END
 
 
 ;---------------------------------------------------------
 ; SEND - MAIN SEND ROUTINE
 ;---------------------------------------------------------
-SEND:    LDX #1            ;DIRECTION = APPLE-->PC
-         JSR GETNAME       ;ASK FOR FILENAME & SEND TO PC
-         LDA #ACK          ;SEND INITIAL ACK
-         JSR PUTC
-         LDA #0            ;START ON TRACK 0
-         STA IOBTRK
-         STA ERRORS        ;NO DISK ERRORS YET
+send:   ldx     #1              ;DIRECTION = APPLE-->PC
+	jsr     getname         ;ASK FOR FILENAME & SEND TO PC
+	lda     #ack            ;SEND INITIAL ACK
+	jsr     putc
+	lda     #0              ;START ON TRACK 0
+	sta     iobtrk
+	sta     errors          ;NO DISK ERRORS YET
 
-SENDLUP: STA SAVTRK        ;SAVE CURRENT TRACK
-         LDX #1
-         JSR RW7TRK        ;READ 7 TRACKS FROM DISK
-         LDX #0
-         JSR SR7TRK        ;SEND 7 TRACKS TO PC
-         LDA IOBTRK
-         CMP #$23          ;REPEAT UNTIL TRACK $23
-         BCC SENDLUP
-         LDA ERRORS
-         JSR PUTC          ;SEND ERROR FLAG TO PC
-         JMP AWBEEP        ;BEEP AND END
+sendlup:
+	sta     savtrk          ;SAVE CURRENT TRACK
+	ldx     #1
+	jsr     rw7trk          ;READ 7 TRACKS FROM DISK
+	ldx     #0
+	jsr     sr7trk          ;SEND 7 TRACKS TO PC
+	lda     iobtrk
+	cmp     #$23            ;REPEAT UNTIL TRACK $23
+	bcc     sendlup
+	lda     errors
+	jsr     putc            ;SEND ERROR FLAG TO PC
+	jmp     awbeep          ;BEEP AND END
 
 
 ;---------------------------------------------------------
 ; SR7TRK - SEND (X=0) OR RECEIVE (X=1) 7 TRACKS
 ;---------------------------------------------------------
-SR7TRK:  STX WHAT2DO       ;X=0 FOR SEND, X=1 FOR RECEIVE
-         LDA #7            ;DO 7 TRACKS
-         STA TRKCNT
-         LDA #>TRACKS      ;STARTING HERE
-         STA SECPTR+1
-         JSR HOMECUR       ;RESET CURSOR POSITION
+sr7trk: stx     what2do         ;X=0 FOR SEND, X=1 FOR RECEIVE
+	lda     #7              ;DO 7 TRACKS
+	sta     trkcnt
+	lda     #>tracks        ;STARTING HERE
+	sta     secptr+1
+	jsr     homecur         ;RESET CURSOR POSITION
 
-S7TRK:   LDA #$F           ;COUNT SECTORS FROM F TO 0
-         STA IOBSEC
-S7SEC:   LDX WHAT2DO       ;PRINT STATUS CHARACTER
-         LDA SRCHAR,X
-         JSR CHROVER
+s7trk:  lda     #$f             ;COUNT SECTORS FROM F TO 0
+	sta     iobsec
+s7sec:  ldx     what2do         ;PRINT STATUS CHARACTER
+	lda     srchar,x
+	jsr     chrover
 
-         LDA WHAT2DO       ;EXECUTE SEND OR RECEIVE
-         BNE DORECV        ;ROUTINE
+	lda     what2do         ;EXECUTE SEND OR RECEIVE
+	bne     dorecv          ;ROUTINE
 
 ;------------------------ SENDING ------------------------
 
-         JSR SENDSEC       ;SEND CURRENT SECTOR
-         LDA CRC           ;FOLLOWED BY CRC
-         JSR PUTC
-         LDA CRC+1
-         JSR PUTC
-         JSR GETC          ;GET RESPONSE FROM PC
-         CMP #ACK          ;IS IT ACK?
-         BEQ SROKAY        ;YES, ALL RIGHT
-         CMP #NAK          ;IS IT NAK?
-         BEQ S7SEC         ;YES, SEND AGAIN
+	jsr     sendsec         ;SEND CURRENT SECTOR
+	lda     crc             ;FOLLOWED BY CRC
+	jsr     putc
+	lda     crc+1
+	jsr     putc
+	jsr     getc            ;GET RESPONSE FROM PC
+	cmp     #ack            ;IS IT ACK?
+	beq     srokay          ;YES, ALL RIGHT
+	cmp     #nak            ;IS IT NAK?
+	beq     s7sec           ;YES, SEND AGAIN
 
-         LDY #MCONFUS      ;SOMETHING IS WRONG
-         JSR SHOWMSG       ;TELL BAD NEWS
-         LDY #MANYKEY      ;APPEND PROMPT
-         JSR SHOWM1
-         JSR AWBEEP
-         JSR RDKEY         ;WAIT FOR KEY
-         JMP ABORT         ;AND ABORT
+	ldy     #mconfus        ;SOMETHING IS WRONG
+	jsr     showmsg         ;TELL BAD NEWS
+	ldy     #manykey        ;APPEND PROMPT
+	jsr     showm1
+	jsr     awbeep
+	jsr     rdkey           ;WAIT FOR KEY
+	jmp     abort           ;AND ABORT
 
 ;----------------------- RECEIVING -----------------------
 
-DORECV:  LDY #0            ;CLEAR NEW SECTOR
-         TYA
-CLRLOOP: STA (SECPTR),Y
-         INY
-         BNE CLRLOOP
+dorecv: ldy     #0              ;CLEAR NEW SECTOR
+	tya
+clrloop:
+	sta     (secptr),y
+	iny
+	bne     clrloop
 
-         LDA MESSAGE       ;SEND RESULT OF PREV SECTOR
-         JSR PUTC
-         JSR RECVSEC       ;RECEIVE SECTOR
-         JSR GETC
-         STA PCCRC         ;AND CRC
-         JSR GETC
-         STA PCCRC+1
-         JSR UNDIFF        ;UNCOMPRESS SECTOR
+	lda     message         ;SEND RESULT OF PREV SECTOR
+	jsr     putc
+	jsr     recvsec         ;RECEIVE SECTOR
+	jsr     getc
+	sta     pccrc           ;AND CRC
+	jsr     getc
+	sta     pccrc+1
+	jsr     undiff          ;UNCOMPRESS SECTOR
 
-         LDA CRC           ;CHECK RECEIVED CRC VS
-         CMP PCCRC         ;CALCULATED CRC
-         BNE RECVERR
-         LDA CRC+1
-         CMP PCCRC+1
-         BEQ SROKAY
+	lda     crc             ;CHECK RECEIVED CRC VS
+	cmp     pccrc           ;CALCULATED CRC
+	bne     recverr
+	lda     crc+1
+	cmp     pccrc+1
+	beq     srokay
 
-RECVERR: LDA #NAK          ;CRC ERROR, ASK FOR RESEND
-         STA MESSAGE
-         BNE S7SEC
+recverr:
+	lda     #nak            ;CRC ERROR, ASK FOR RESEND
+	sta     message
+	bne	s7sec
 
 ;------------------ BACK TO COMMON LOOP ------------------
 
-SROKAY:  LDA #ACK          ;WAS SUCCESSFUL
-         STA MESSAGE       ;SEND ACK 
-         JSR CHRREST       ;RESTORE PREVIOUS STATUS CHAR
-         INC SECPTR+1      ;NEXT SECTOR
-         DEC IOBSEC
-         BPL S7SEC         ;TRACK NOT FINISHED
-         LDA TRKCNT
-         CMP #2            ;STARTING LAST TRACK, TURN
-         BNE NOTONE        ;DRIVE ON, EXCEPT IN THE LAST
-         LDA SAVTRK        ;BLOCK
-         CMP #$1C
-         BEQ NOTONE
-MOD5:    BIT $C089
+srokay:
+	lda	#ack		;WAS SUCCESSFUL
+	sta	message       ;SEND ACK 
+ jsr     chrrest         ;RESTORE PREVIOUS STATUS CHAR
+	inc     secptr+1        ;NEXT SECTOR
+	dec     iobsec
+	bpl     s7sec           ;TRACK NOT FINISHED
+	lda     trkcnt
+	cmp     #2              ;STARTING LAST TRACK, TURN
+	bne     notone          ;DRIVE ON, EXCEPT IN THE LAST
+	lda     savtrk          ;BLOCK
+	cmp     #$1c
+	beq     notone
+mod5:   bit     $c089
 
-NOTONE:  DEC TRKCNT
-         BEQ SREND
-         JMP S7TRK         ;LOOP UNTIL 7 TRACKS DONE
-SREND:   RTS
+notone: dec     trkcnt
+	beq     srend
+	jmp     s7trk           ;LOOP UNTIL 7 TRACKS DONE
+srend:  rts
 
-SRCHAR:  asc "OI"       ;STATUS CHARACTERS: OUT/IN
-WHAT2DO: .byte 00
+srchar: asc     "OI"            ;STATUS CHARACTERS: OUT/IN
+what2do:
+	.byte   $00
 
 
 ;---------------------------------------------------------
 ; SENDSEC - SEND CURRENT SECTOR WITH RLE
 ; CRC IS COMPUTED BUT NOT SENT
 ;---------------------------------------------------------
-SENDSEC: LDY #0            ;START AT FIRST BYTE
-         STY CRC           ;ZERO CRC
-         STY CRC+1
-         STY PREV          ;NO PREVIOUS CHARACTER
-SS1:     LDA (SECPTR),Y    ;GET BYTE TO SEND
-         JSR UPDCRC        ;UPDATE CRC
-         TAX               ;KEEP A COPY IN X
-         SEC               ;SUBTRACT FROM PREVIOUS
-         SBC PREV
-         STX PREV          ;SAVE PREVIOUS BYTE
-         JSR PUTC          ;SEND DIFFERENCE
-         BEQ SS3           ;WAS IT A ZERO?
-         INY               ;NO, DO NEXT BYTE
-         BNE SS1           ;LOOP IF MORE TO DO
-         RTS               ;ELSE RETURN
+sendsec:
+	ldy     #0              ;START AT FIRST BYTE
+	sty     crc             ;ZERO CRC
+	sty     crc+1
+	sty     prev            ;NO PREVIOUS CHARACTER
+ss1:    lda     (secptr),y      ;GET BYTE TO SEND
+	jsr     updcrc          ;UPDATE CRC
+	tax                     ;KEEP A COPY IN X
+	sec                     ;SUBTRACT FROM PREVIOUS
+	sbc     prev
+	stx     prev            ;SAVE PREVIOUS BYTE
+	jsr     putc            ;SEND DIFFERENCE
+	beq     ss3             ;WAS IT A ZERO?
+	iny                     ;NO, DO NEXT BYTE
+	bne     ss1             ;LOOP IF MORE TO DO
+	rts                     ;ELSE RETURN
 
-SS2:     JSR UPDCRC
-SS3:     INY               ;ANY MORE BYTES?
-         BEQ SS4           ;NO, IT WAS 00 UP TO END
-         LDA (SECPTR),Y    ;LOOK AT NEXT BYTE
-         CMP PREV
-         BEQ SS2           ;SAME AS BEFORE, CONTINUE
-SS4:     TYA               ;DIFFERENCE NOT A ZERO
-         JSR PUTC          ;SEND NEW ADDRESS
-         BNE SS1           ;AND GO BACK TO MAIN LOOP
-         RTS               ;OR RETURN IF NO MORE BYTES
+ss2:    jsr     updcrc
+ss3:    iny                     ;ANY MORE BYTES?
+	beq     ss4             ;NO, IT WAS 00 UP TO END
+	lda     (secptr),y      ;LOOK AT NEXT BYTE
+	cmp     prev
+	beq     ss2             ;SAME AS BEFORE, CONTINUE
+ss4:    tya                     ;DIFFERENCE NOT A ZERO
+	jsr     putc            ;SEND NEW ADDRESS
+	bne     ss1             ;AND GO BACK TO MAIN LOOP
+	rts                     ;OR RETURN IF NO MORE BYTES
 
 
 ;---------------------------------------------------------
 ; RECVSEC - RECEIVE SECTOR WITH RLE (NO TIME TO UNDIFF)
 ;---------------------------------------------------------
-RECVSEC: LDY #0            ;START AT BEGINNING OF BUFFER
-RC1:     JSR GETC          ;GET DIFFERENCE
-         BEQ RC2           ;IF ZERO, GET NEW INDEX
-         STA (SECPTR),Y    ;ELSE PUT CHAR IN BUFFER
-         INY               ;AND INCREMENT INDEX
-         BNE RC1           ;LOOP IF NOT AT BUFFER END
-         RTS               ;ELSE RETURN
-RC2:     JSR GETC          ;GET NEW INDEX
-         TAY               ;IN Y REGISTER
-         BNE RC1           ;LOOP IF INDEX <> 0
-         RTS               ;ELSE RETURN
+recvsec:
+	ldy     #0              ;START AT BEGINNING OF BUFFER
+rc1:    jsr     getc            ;GET DIFFERENCE
+	beq     rc2             ;IF ZERO, GET NEW INDEX
+	sta     (secptr),y      ;ELSE PUT CHAR IN BUFFER
+	iny                     ;AND INCREMENT INDEX
+	bne     rc1             ;LOOP IF NOT AT BUFFER END
+	rts                     ;ELSE RETURN
+rc2:    jsr     getc            ;GET NEW INDEX
+	tay                     ;IN Y REGISTER
+	bne     rc1             ;LOOP IF INDEX <> 0
+	rts                     ;ELSE RETURN
 
 
 ;---------------------------------------------------------
 ; UNDIFF -  FINISH RLE DECOMPRESSION AND UPDATE CRC
 ;---------------------------------------------------------
-UNDIFF:  LDY #0
-         STY CRC           ;CLEAR CRC
-         STY CRC+1
-         STY PREV          ;INITIAL BASE IS ZERO
-UDLOOP:  LDA (SECPTR),Y    ;GET NEW DIFFERENCE
-         CLC
-         ADC PREV          ;ADD TO BASE
-         JSR UPDCRC        ;UPDATE CRC
-         STA PREV          ;THIS IS THE NEW BASE
-         STA (SECPTR),Y    ;STORE REAL BYTE
-         INY
-         BNE UDLOOP        ;REPEAT 256 TIMES
-         RTS
+undiff: ldy     #0
+	sty     crc             ;CLEAR CRC
+	sty     crc+1
+	sty     prev            ;INITIAL BASE IS ZERO
+udloop: lda     (secptr),y      ;GET NEW DIFFERENCE
+	clc
+	adc     prev            ;ADD TO BASE
+	jsr     updcrc          ;UPDATE CRC
+	sta     prev            ;THIS IS THE NEW BASE
+	sta     (secptr),y      ;STORE REAL BYTE
+	iny
+	bne     udloop          ;REPEAT 256 TIMES
+	rts
 
 
 ;---------------------------------------------------------
 ; RW7TRK - READ (X=1) OR WRITE (X=2) 7 TRACKS
 ; USES A,X,Y. IF ESCAPE, CALLS ABORT
 ;---------------------------------------------------------
-RW7TRK:  STX IOBCMD        ;X=1 FOR READ, X=2 FOR WRITE
-         LDA #7            ;COUNT 7 TRACKS
-         STA TRKCNT
-         LDA #>TRACKS      ;START AT BEGINNING OF BUFFER
-         STA IOBBUF+1
-         JSR HOMECUR       ;RESET CURSOR POSITION
+rw7trk: stx     iobcmd          ;X=1 FOR READ, X=2 FOR WRITE
+	lda     #7              ;COUNT 7 TRACKS
+	sta     trkcnt
+	lda     #>tracks        ;START AT BEGINNING OF BUFFER
+	sta     iobbuf+1
+	jsr     homecur         ;RESET CURSOR POSITION
 
-NEXTTRK: LDA #$F           ;START AT SECTOR F (READ IS
-         STA IOBSEC        ;FASTER THIS WAY)
-NEXTSEC: LDX IOBCMD        ;GET MAX RETRIES FROM
-         LDA REALTRY-1,X   ;PARAMETER DATA
-         STA RETRIES
-         LDA RWCHAR-1,X    ;PRINT STATUS CHARACTER
-         JSR CHROVER
+nexttrk:
+	lda     #$f             ;START AT SECTOR F (READ IS
+	sta     iobsec          ;FASTER THIS WAY)
+nextsec:
+	ldx     iobcmd          ;GET MAX RETRIES FROM
+	lda     realtry-1,x     ;PARAMETER DATA
+	sta     retries
+	lda     rwchar-1,x      ;PRINT STATUS CHARACTER
+	jsr     chrover
 
-RWAGAIN: LDA $C000         ;CHECK KEYBOARD
-         CMP #ESC          ;ESCAPE PUSHED?
-         BNE RWCONT        ;NO, CONTINUE
-         JMP BABORT        ;YES, ABORT
+rwagain:
+	lda     $c000           ;CHECK KEYBOARD
+	cmp     #esc            ;ESCAPE PUSHED?
+	bne     rwcont          ;NO, CONTINUE
+	jmp     babort          ;YES, ABORT
 
-RWCONT:  LDA #>IOB         ;GET IOB ADDRESS IN REGISTERS
-         LDY #<IOB
-         JSR $3D9          ;CALL RWTS THROUGH VECTOR
-         LDA #_'.'         ;CARRY CLEAR MEANS NO ERROR
-         BCC SECTOK        ;NO ERROR: PUT . IN STATUS
-         DEC RETRIES       ;ERROR: SOME PATIENCE LEFT?
-         BPL RWAGAIN       ;YES, TRY AGAIN
-         ROL ERRORS        ;NO, SET ERRORS TO NONZERO
-         JSR CLRSECT       ;FILL SECTOR WITH ZEROS
-         LDA #_';'          ;AND PUT INVERSE ; IN STATUS
+rwcont: lda     #>iob           ;GET IOB ADDRESS IN REGISTERS
+	ldy     #<iob
+	jsr     $3d9            ;CALL RWTS THROUGH VECTOR
+	lda     #_'.'           ;CARRY CLEAR MEANS NO ERROR
+	bcc     sectok          ;NO ERROR: PUT . IN STATUS
+	dec     retries         ;ERROR: SOME PATIENCE LEFT?
+	bpl     rwagain         ;YES, TRY AGAIN
+	rol     errors          ;NO, SET ERRORS TO NONZERO
+	jsr     clrsect         ;FILL SECTOR WITH ZEROS
+	lda     #_I'*'          ;AND PUT INVERSE * IN STATUS
 
-SECTOK:  JSR CHRADV        ;PRINT SECTOR STATUS & ADVANCE
-         INC IOBBUF+1      ;NEXT PAGE IN BUFFER
-         DEC IOBSEC        ;NEXT SECTOR
-         BPL NEXTSEC       ;LOOP UNTIL END OF TRACK
-         INC IOBTRK        ;NEXT TRACK
-         DEC TRKCNT        ;LOOP UNTIL 7 TRACKS DONE
-         BNE NEXTTRK
-         RTS
+sectok: jsr     chradv          ;PRINT SECTOR STATUS & ADVANCE
+	inc     iobbuf+1        ;NEXT PAGE IN BUFFER
+	dec     iobsec          ;NEXT SECTOR
+	bpl     nextsec         ;LOOP UNTIL END OF TRACK
+	inc     iobtrk          ;NEXT TRACK
+	dec     trkcnt          ;LOOP UNTIL 7 TRACKS DONE
+	bne     nexttrk
+	rts
 
-RWCHAR:  asc "RW"       ;STATUS CHARACTERS: READ/WRITE
-RETRIES: .byte 00
-REALTRY: .byte 00,00       ;REAL NUMBER OF RETRIES
+rwchar: asc     "RW"            ;STATUS CHARACTERS: READ/WRITE
+retries:
+	.byte   $00
+realtry:
+	.byte   $00,$00         ;REAL NUMBER OF RETRIES
 
 
 ;---------------------------------------------------------
 ; CLRSECT - CLEAR CURRENT SECTOR
 ;---------------------------------------------------------
-CLRSECT: LDA IOBBUF+1      ;POINT TO CORRECT SECTOR
-         STA CSLOOP+2
-         LDY #0            ;AND FILL 256 ZEROS
-         TYA
-CSLOOP:  STA $FF00,Y
-         INY
-         BNE CSLOOP
-         RTS
+clrsect:
+	lda     iobbuf+1        ;POINT TO CORRECT SECTOR
+	sta     csloop+2
+	ldy     #0              ;AND FILL 256 ZEROS
+	tya
+csloop: sta     $ff00,y
+	iny
+	bne     csloop
+	rts
 
 
 ;---------------------------------------------------------
@@ -919,297 +967,293 @@ CSLOOP:  STA $FF00,Y
 ; ADVANCE - JUST ADVANCE CURSOR
 ; CHROVER - JUST WRITE NEW CONTENTS
 ;---------------------------------------------------------
-HOMECUR: LDY SAVTRK
-         INY               ;CURSOR ON 0TH COLUMN
-         STY CH
-         JSR TOPNEXT       ;TOP OF 1ST COLUMN
-         JMP CHRSAVE       ;SAVE 1ST CHARACTER
+homecur:
+	ldy     savtrk
+	iny                     ;CURSOR ON 0TH COLUMN
+	sty     ch
+	jsr     topnext         ;TOP OF 1ST COLUMN
+	jmp     chrsave         ;SAVE 1ST CHARACTER
 
-CHRREST: LDA SAVCHR        ;RESTORE OLD CHARACTER
-CHRADV:  JSR CHROVER       ;OVERWRITE STATUS CHAR
-         JSR ADVANCE       ;ADVANCE CURSOR
-CHRSAVE: LDY CH
-         LDA (BASL),Y      ;SAVE NEW CHARACTER
-         STA SAVCHR
-         RTS
+chrrest:
+	lda     savchr          ;RESTORE OLD CHARACTER
+chradv: jsr     chrover         ;OVERWRITE STATUS CHAR
+	jsr     advance         ;ADVANCE CURSOR
+chrsave:
+	ldy     ch
+	lda     (basl),y        ;SAVE NEW CHARACTER
+	sta     savchr
+	rts
 
-ADVANCE: INC CV            ;CURSOR DOWN
-         LDA CV
-         CMP #21           ;STILL IN DISPLAY?
-         BCC NOWRAP        ;YES, WE'RE DONE
-TOPNEXT: INC CH            ;NO, GO TO TOP OF NEXT
-         LDA #5            ;COLUMN
-NOWRAP:  JMP TABV          ;VALIDATE BASL,H
+advance:
+	inc     cv              ;CURSOR DOWN
+	lda     cv
+	cmp     #21             ;STILL IN DISPLAY?
+	bcc     nowrap          ;YES, WE'RE DONE
+topnext:
+	inc     ch              ;NO, GO TO TOP OF NEXT
+	lda     #5              ;COLUMN
+nowrap: jmp     tabv            ;VALIDATE BASL,H
 
-CHROVER: LDY CH
-         STA (BASL),Y
-         RTS
+chrover:
+	ldy     ch
+	sta     (basl),y
+	rts
 
 
 ;---------------------------------------------------------
 ; UPDCRC - UPDATE CRC WITH CONTENTS OF ACCUMULATOR
 ;---------------------------------------------------------
-UPDCRC:  PHA
-         EOR CRC+1
-         TAX
-         LDA CRC
-         EOR CRCTBLH,X
-         STA CRC+1
-         LDA CRCTBLL,X
-         STA CRC
-         PLA
-         RTS
+updcrc: pha
+	eor     crc+1
+	tax
+	lda     crc
+	eor     crctblh,x
+	sta     crc+1
+	lda     crctbll,x
+	sta     crc
+	pla
+	rts
 
 
 ;---------------------------------------------------------
 ; MAKETBL - MAKE CRC-16 TABLES
 ;---------------------------------------------------------
-MAKETBL: LDX #0
-         LDY #0
-CRCBYTE: STX CRC           ;LOW BYTE = 0
-         STY CRC+1         ;HIGH BYTE = INDEX
+maketbl:
+	ldx     #0
+	ldy     #0
+crcbyte:
+	stx     crc             ;LOW BYTE = 0
+	sty     crc+1           ;HIGH BYTE = INDEX
 
-         LDX #8            ;FOR EACH BIT
-CRCBIT:  LDA CRC
-CRCBIT1: ASL               ;SHIFT CRC LEFT
-         ROL CRC+1
-         BCS CRCFLIP
-         DEX               ;HIGH BIT WAS CLEAR, DO NOTHING
-         BNE CRCBIT1
-         BEQ CRCSAVE
-CRCFLIP: EOR #$21          ;HIGH BIT WAS SET, FLIP BITS
-         STA CRC           ;0, 5, AND 12
-         LDA CRC+1
-         EOR #$10
-         STA CRC+1
-         DEX
-         BNE CRCBIT
+	ldx     #8              ;FOR EACH BIT
+crcbit: lda     crc
+crcbit1:
+	asl                     ;SHIFT CRC LEFT
+	rol     crc+1
+	bcs     crcflip
+	dex                     ;HIGH BIT WAS CLEAR, DO NOTHING
+	bne     crcbit1
+	beq     crcsave
+crcflip:
+	eor     #$21            ;HIGH BIT WAS SET, FLIP BITS
+	sta     crc             ;0, 5, AND 12
+	lda     crc+1
+	eor     #$10
+	sta     crc+1
+	dex
+	bne     crcbit
 
-         LDA CRC           ;STORE CRC IN TABLES
-CRCSAVE: STA CRCTBLL,Y
-         LDA CRC+1
-         STA CRCTBLH,Y
-         INY
-         BNE CRCBYTE       ;DO NEXT BYTE
-         RTS
+	lda     crc             ;STORE CRC IN TABLES
+crcsave:
+	sta     crctbll,y
+	lda     crc+1
+	sta     crctblh,y
+	iny
+	bne     crcbyte         ;DO NEXT BYTE
+	rts
 
 
 ;---------------------------------------------------------
 ; PARMDFT - RESET PARAMETERS TO DEFAULT VALUES (USES AX)
 ;---------------------------------------------------------
-PARMDFT: LDX #PARMNUM-1
-DFTLOOP: LDA DEFAULT,X
-         STA PARMS,X
-         DEX
-         BPL DFTLOOP
-         RTS
+parmdft:
+	ldx     #parmnum-1
+dftloop:
+	lda     default,x
+	sta     parms,x
+	dex
+	bpl     dftloop
+	rts
 
 
 ;---------------------------------------------------------
 ; AWBEEP - CUTE TWO-TONE BEEP (USES AXY)
 ;---------------------------------------------------------
-AWBEEP:  LDA PSOUND        ;IF SOUND OFF, RETURN NOW
-         BNE NOBEEP
-         LDA #$80          ;STRAIGHT FROM APPLE WRITER ][
-         JSR BEEP1         ;(CANNIBALISM IS THE SINCEREST
-         LDA #$A0          ;FORM OF FLATTERY)
-BEEP1:   LDY #$80
-BEEP2:   TAX
-BEEP3:   DEX
-         BNE BEEP3
-         BIT $C030         ;WHAP SPEAKER
-         DEY
-         BNE BEEP2
-NOBEEP:  RTS
+awbeep: lda     psound          ;IF SOUND OFF, RETURN NOW
+	bne     nobeep
+	lda     #$80            ;STRAIGHT FROM APPLE WRITER ][
+	jsr     beep1           ;(CANNIBALISM IS THE SINCEREST
+	lda     #$a0            ;FORM OF FLATTERY)
+beep1:  ldy     #$80
+beep2:  tax
+beep3:  dex
+	bne     beep3
+	bit     $c030           ;WHAP SPEAKER
+	dey
+	bne     beep2
+nobeep: rts
 
 
 ;---------------------------------------------------------
 ; PUTC - SEND ACC OVER THE SERIAL LINE (AXY UNCHANGED)
 ;---------------------------------------------------------
-PUTC:	jmp $0000	; Pseudo-indirect JSR - self-modified
-GETC:	jmp $0000	; Pseudo-indirect JSR - self-modified
+putc:	jmp $0000	; Pseudo-indirect JSR - self-modified
 
-;PUTC:    PHA
-;PUTC1:   LDA $C000
-;         CMP #ESC          ;ESCAPE = ABORT
-;         BEQ SABORT
-;MOD1:    LDA $C089         ;CHECK STATUS BITS
-;         AND #$70
-;         CMP #$10
-;         BNE PUTC1         ;OUTPUT REG FULL, LOOP
-;         PLA
-;MOD2:    STA $C088         ;PUT CHARACTER
-;         RTS
-;
-;
 ;---------------------------------------------------------
 ; GETC - GET A CHARACTER FROM SERIAL LINE (XY UNCHANGED)
 ;---------------------------------------------------------
-;GETC:    LDA $C000
-;         CMP #ESC          ;ESCAPE = ABORT
-;         BEQ SABORT
-;MOD3:    LDA $C089         ;CHECK STATUS BITS
-;         AND #$68
-;         CMP #$8
-;         BNE GETC          ;INPUT REG EMPTY, LOOP
-;MOD4:    LDA $C088         ;GET CHARACTER
-;         RTS
+getc:	jmp $0000	; Pseudo-indirect JSR - self-modified
 
 ;---------------------------------------------------------
 ; ABORT - STOP EVERYTHING (CALL SABORT TO BEEP ALSO)
 ;---------------------------------------------------------
-BABORT:  JSR AWBEEP        ;BEEP
-ABORT:   LDX #$FF          ;POP GOES THE STACKPTR
-         TXS
-         BIT $C010         ;STROBE KEYBOARD
-         JMP REDRAW        ;AND RESTART
+babort: jsr     awbeep          ;BEEP
+abort:  ldx     #$ff            ;POP GOES THE STACKPTR
+	txs
+	bit     $c010           ;STROBE KEYBOARD
+	jmp     redraw          ;AND RESTART
 
 
 ;---------------------------------------------------------
 ; TITLE - SHOW TITLE SCREEN
 ;---------------------------------------------------------
-TITLE:   JSR HOME          ;CLEAR SCREEN
-         LDY #MTITLE
-         JSR SHOWM1        ;SHOW TOP PART OF TITLE SCREEN
+title:  jsr     home            ;CLEAR SCREEN
+	ldy     #mtitle
+	jsr     showm1          ;SHOW TOP PART OF TITLE SCREEN
 
-         LDX #15           ;SHOW SECTOR NUMBERS
-         LDA #5            ;IN DECREASING ORDER
-         STA CV            ;FROM TOP TO BOTTOM
-SHOWSEC: JSR VTAB
-         LDA #$20
-         LDY #38
-         STA (BASL),Y
-         LDY #0
-         STA (BASL),Y
-         LDA HEXNUM,X
-         INY
-         STA (BASL),Y
-         LDY #37
-         STA (BASL),Y
-         INC CV
-         DEX
-         BPL SHOWSEC
+	ldx     #15             ;SHOW SECTOR NUMBERS
+	lda     #5              ;IN DECREASING ORDER
+	sta     cv              ;FROM TOP TO BOTTOM
+showsec:
+	jsr     vtab
+	lda     #$20
+	ldy     #38
+	sta     (basl),y
+	ldy     #0
+	sta     (basl),y
+	lda     hexnum,x
+	iny
+	sta     (basl),y
+	ldy     #37
+	sta     (basl),y
+	inc     cv
+	dex
+	bpl     showsec
 
-         LDA #$df    ;SHOW LINE OF UNDERLINES
-         LDX #38           ;ABOVE INVERSE TEXT
-SHOWUND: STA $500,X
-         DEX
-         BPL SHOWUND
-         RTS
+	lda     #_'_'           ;SHOW LINE OF UNDERLINES
+	ldx     #38             ;ABOVE INVERSE TEXT
+showund:
+	sta     $500,x
+	dex
+	bpl     showund
+	rts
 
 
 ;---------------------------------------------------------
 ; SHOWMSG - SHOW NULL-TERMINATED MESSAGE #Y AT BOTTOM OF
 ; SCREEN.  CALL SHOWM1 TO SHOW ANYWHERE WITHOUT ERASING
 ;---------------------------------------------------------
-SHOWMSG: STY YSAVE         ;CLREOP USES Y
-         LDA #0
-         STA CH            ;COLUMN 0
-         LDA #22           ;LINE 22
-         JSR TABV
-         JSR CLREOP        ;CLEAR MESSAGE AREA
-         LDY YSAVE
+showmsg:
+	sty     ysave           ;CLREOP USES Y
+	lda     #0
+	sta     ch              ;COLUMN 0
+	lda     #22             ;LINE 22
+	jsr     tabv
+	jsr     clreop          ;CLEAR MESSAGE AREA
+	ldy     ysave
 
-SHOWM1:  LDA MSGTBL,Y      ;CALL HERE TO SHOW ANYWHERE
-         STA MSGPTR
-         LDA MSGTBL+1,Y
-         STA MSGPTR+1
+showm1: lda     msgtbl,y        ;CALL HERE TO SHOW ANYWHERE
+	sta     msgptr
+	lda     msgtbl+1,y
+	sta     msgptr+1
 
-         LDY #0
-MSGLOOP: LDA (MSGPTR),Y
-         BEQ MSGEND
-         JSR COUT1
-         INY
-         BNE MSGLOOP
-MSGEND:  RTS
+	ldy     #0
+msgloop:
+	lda     (msgptr),y
+	beq     msgend
+	jsr     cout1
+	iny
+	bne     msgloop
+msgend: rts
+
 
 ;------------------------ MESSAGES -----------------------
 
-MSGTBL:  .addr  MSG01,MSG02,MSG03,MSG04,MSG05,MSG06,MSG07
-         .addr  MSG08,MSG09,MSG10,MSG11,MSG12,MSG13,MSG14
-         .addr  MSG15,MSG16,MSG17,MSG18,MSG19,MSG20,MSG21
-         .addr  MSG22
+msgtbl: .addr   msg01,msg02,msg03,msg04,msg05,msg06,msg07
+	.addr   msg08,msg09,msg10,msg11,msg12,msg13,msg14
+	.addr   msg15,msg16,msg17,msg18,msg19,msg20,msg21
+	.addr   msg22
 
-MSG01:   asc "SSC:S"
-MTSSC:   asc " ,"
-MTSPD:   asc "      "
-         inv "+ ADT 1.30 +"
-         asc "   DISK:S"
-MTSLT:   asc " ,D"
-MTDRV:   asc " "
-	 .byte   $8d,$8d,$8d
-         invcr   "  00000000000000001111111111111111222  "
-         inv     "  "
-
-HEXNUM:	inv     "0123456789ABCDEF0123456789ABCDEF012  "
+msg01:  asc     "SSC:S"
+mtssc:  asc     " ,"
+mtspd:  asc     "       "
+	inv     "+ ADT 1.30 +"
+	asc     "   DISK:S"
+mtslt:  asc     " ,D"
+mtdrv:  asc     " "
+	.byte   $8d,$8d,$8d
+	invcr   "  00000000000000001111111111111111222  "
+	inv     "  "
+hexnum: inv     "0123456789ABCDEF0123456789ABCDEF012  "
 	.byte   $8d,$00
 
-MSG02:  inv     " ADT CONFIGURATION "
-        .byte   $8d,$8d,$8d
-        asccr   "DISK SLOT"
-        asccr   "DISK DRIVE"
-        asccr   "COMMS DEVICE"
-        asccr   "COMMS SPEED"
-        asccr   "READ RETRIES"
-        asccr   "WRITE RETRIES"
-        asccr   "USE CHECKSUMS"
-        asccr   "ENABLE SOUND"
-        ascz    "SAVE CONFIG"
+msg02:  inv     " ADT CONFIGURATION "
+	.byte   $8d,$8d,$8d
+	asccr   "DISK SLOT"
+	asccr   "DISK DRIVE"
+	asccr   "COMMS DEVICE"
+	asccr   "COMMS SPEED"
+	asccr   "READ RETRIES"
+	asccr   "WRITE RETRIES"
+	asccr   "USE CHECKSUMS"
+	asccr	"ENABLE SOUND"
+	ascz	"SAVE CONFIG"
 
-MSG03:   asccr "USE ARROWS AND SPACE TO CHANGE VALUES,"
-         ascz "RETURN TO ACCEPT, CTRL-D FOR DEFAULTS."
+msg03:  asccr   "USE ARROWS AND SPACE TO CHANGE VALUES,"
+	ascz    "RETURN TO ACCEPT, CTRL-D FOR DEFAULTS."
 
-MSG04:   ascz "SEND, RECEIVE, DIR, CONFIGURE, QUIT? "
-MSG05:   ascz "SPACE TO CONTINUE, ESC TO STOP: "
-MSG06:   ascz "END OF DIRECTORY, TYPE SPACE: "
+msg04:  ascz    "SEND, RECEIVE, DIR, CONFIGURE, QUIT? "
+msg05:  ascz    "SPACE TO CONTINUE, ESC TO STOP: "
+msg06:  ascz    "END OF DIRECTORY, TYPE SPACE: "
 
-MSG07:   ascz "FILE TO RECEIVE: "
-MSG08:   ascz "FILE TO SEND: "
+msg07:  ascz    "FILE TO RECEIVE: "
+msg08:  ascz    "FILE TO SEND: "
 
-MSG09:   ascz "RECEIVING FILE "
-MSG10:   ascz "SENDING FILE "
+msg09:  ascz    "RECEIVING FILE "
+msg10:  ascz    "SENDING FILE "
 
-MSG11:   inv "ERROR:"
-         ascz " NONSENSE FROM PC."
+msg11:  inv     "ERROR:"
+	ascz    " NONSENSE FROM PC."
 
-MSG12:   inv "ERROR:"
-         ascz " NOT A 16-SECTOR DISK."
+msg12:  inv     "ERROR:"
+	ascz    " NOT A 16-SECTOR DISK."
 
-MSG13:   inv "ERROR:"
-         ascz " FILE "
+msg13:  inv     "ERROR:"
+	ascz    " FILE "
 
-MSG14:   .byte $8D
-         ascz "CAN'T BE OPENED."
+msg14:  .byte   $8d
+	ascz    "CAN'T BE OPENED."
 
-MSG15:   .byte $8D
-         ascz "ALREADY EXISTS."
+msg15:  .byte   $8d
+	ascz    "ALREADY EXISTS."
 
-MSG16:   .byte $8D
-         ascz "IS NOT A 140K IMAGE."
+msg16:  .byte   $8d
+	ascz    "IS NOT A 140K IMAGE."
 
-MSG17:   .byte $8D
-         ascz "DOESN'T FIT ON DISK."
+msg17:  .byte   $8d
+	ascz    "DOESN'T FIT ON DISK."
 
-MSG18:   ascz "  ANY KEY: "
+msg18:  ascz    "  ANY KEY: "
 
-MSG19:   ascz "<- DO NOT CHANGE"
+msg19:  ascz    "<- DO NOT CHANGE"
 
-MSG20:   asccr "APPLE DISK TRANSFER 1.30     2006-11-15"
-         ascz "PAUL GUERTIN (SSC AND IIGS COMPATIBLE)"
+msg20:  asccr   "APPLE DISK TRANSFER 1.24     1994-10-13"
+	ascz    "PAUL GUERTIN (SSC COMPAT HDW REQUIRED.)"
 
-MSG21:   ascz "TESTING DISK FORMAT."
+msg21:  ascz    "TESTING DISK FORMAT."
 
-MSG22:   ascz "AWAITING ANSWER FROM PC."
+msg22:  ascz    "AWAITING ANSWER FROM PC."
 
 
 ;----------------------- PARAMETERS ----------------------
 
-PARMSIZ: .byte 7,2,8,7,8,8,2,2,2      ;#OPTIONS OF EACH PARM
+parmsiz:
+	.byte   7,2,8,7,8,8,2,2,2 ;#OPTIONS OF EACH PARM
 
-PARMTXT:
-         .byte   _'1',0,_'2',0,_'3',0,_'4',0,_'5',0,_'6',0,_'7',0
-         .byte   _'1',0,_'2',0
-         ascz "SSC SLOT 1"
+parmtxt:
+	.byte   _'1',0,_'2',0,_'3',0,_'4',0,_'5',0,_'6',0,_'7',0
+	.byte   _'1',0,_'2',0
+	ascz "SSC SLOT 1"
          ascz "SSC SLOT 2"
          ascz "SSC SLOT 3"
          ascz "SSC SLOT 4"
@@ -1233,44 +1277,46 @@ PARMTXT:
          ascz "YES"
          ascz "NO"
 
-PARMS:
-PDSLOT:  .byte 5             ;DISK SLOT (6)
-PDRIVE:  .byte 0             ;DISK DRIVE (1)
-PSSC:    .byte 1             ;SSC SLOT (2)
-PSPEED:  .byte 6             ;SSC SPEED (115K)
-PRETRY:  .byte 1,0           ;READ/WRITE MAX RETRIES (1,0)
-PCKSUM:  .byte 0             ;USE RWTS CHECKSUMS? (Y)
-PSOUND:  .byte 0             ;SOUND AT END OF TRANSFER? (Y)
-PSAVE:   .byte 1             ;SAVE? (N)
-PGSSLOT: .byte 1             ;IIgs slot (2)
+parms:
+pdslot: .byte   5               ;DISK SLOT (6)
+pdrive: .byte   0               ;DISK DRIVE (1)
+pssc:   .byte   1               ;SSC SLOT (2)
+pspeed: .byte   5               ;SSC SPEED (19200)
+pretry: .byte   1,0             ;READ/WRITE MAX RETRIES (1,0)
+pcksum: .byte   0               ;USE RWTS CHECKSUMS? (Y)
+psound: .byte   0               ;SOUND AT END OF TRANSFER? (Y)
+psave:	.byte 1             ;SAVE? (N)
+pgsslot:	.byte 1             ;IIgs slot (2)
 
 ;-------------------------- IOB --------------------------
 
-IOB:     .byte $01            ;IOB TYPE
-IOBSLT:  .byte $60            ;SLOT;$10
-IOBDRV:  .byte $01            ;DRIVE
-         .byte $00            ;VOLUME
-IOBTRK:  .byte $00            ;TRACK
-IOBSEC:  .byte $00            ;SECTOR
-         .addr DCT            ;DEVICE CHAR TABLE POINTER
-IOBBUF:  .addr TRACKS         ;SECTOR BUFFER POINTER
-         .byte $00,$00        ;UNUSED
-IOBCMD:  .byte $01            ;COMMAND (1=READ, 2=WRITE)
-         .byte $00            ;ERROR CODE
-         .byte $FE            ;ACTUAL VOLUME
-         .byte $60            ;PREVIOUS SLOT
-         .byte $01            ;PREVIOUS DRIVE
-DCT:     .byte $00,$01,$EF,$D8   ;DEVICE CHARACTERISTICS TABLE
+iob:    .byte   $01             ;IOB TYPE
+iobslt: .byte   $60             ;SLOT*$10
+iobdrv: .byte   $01             ;DRIVE
+	.byte   $00             ;VOLUME
+iobtrk: .byte   $00             ;TRACK
+iobsec: .byte   $00             ;SECTOR
+	.addr   dct             ;DEVICE CHAR TABLE POINTER
+iobbuf: .addr   tracks          ;SECTOR BUFFER POINTER
+	.byte   $00,$00         ;UNUSED
+iobcmd: .byte   $01             ;COMMAND (1=READ, 2=WRITE)
+	.byte   $00             ;ERROR CODE
+	.byte   $fe             ;ACTUAL VOLUME
+	.byte   $60             ;PREVIOUS SLOT
+	.byte   $01             ;PREVIOUS DRIVE
+dct:    .byte   $00,$01,$ef,$d8 ;DEVICE CHARACTERISTICS TABLE
 
 ;-------------------------- MISC -------------------------
 
-DOSBYTE: .byte $00,$00         ;DOS BYTES CHANGED BY ADT
-STDDOS:  .byte $00            ;ZERO IF "STANDARD" DOS
-SAVTRK:  .byte $00            ;FIRST TRACK OF SEVEN
-SAVCHR:  .byte $00            ;CHAR OVERWRITTEN WITH STATUS
-MESSAGE: .byte $00            ;SECTOR STATUS SENT TO PC
-PCCRC:   .byte $00,$00         ;CRC RECEIVED FROM PC
-ERRORS:  .byte $00            ;NON0 IF AT LEAST 1 DISK ERROR
+dosbyte:
+	.byte   $00,$00         ;DOS BYTES CHANGED BY ADT
+stddos: .byte   $00             ;ZERO IF "STANDARD" DOS
+savtrk: .byte   $00             ;FIRST TRACK OF SEVEN
+savchr: .byte   $00             ;CHAR OVERWRITTEN WITH STATUS
+message:
+	.byte   $00             ;SECTOR STATUS SENT TO PC
+pccrc:  .byte   $00,$00         ;CRC RECEIVED FROM PC
+errors: .byte   $00             ;NON0 IF AT LEAST 1 DISK ERROR
 
 ; Pull in source for IIgs Serial Communications Controller (SCC)
          .include "iigsscc.s"

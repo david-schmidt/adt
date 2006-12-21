@@ -17,7 +17,7 @@
 		-->
 		<delete file="${basedir}/sscgs/src/adt" />
 		<delete file="${basedir}/sscgs/${dosDistName}.dsk" />
-		<!--<delete file="${basedir}/sscgs/adt.dmp" />-->
+		<delete file="${basedir}/sscgs/adt.dmp" />
 		<delete>
 			<fileset dir="${basedir}/sscgs/src" includes="**/*.o"/>
 			<fileset dir="${basedir}/sscgs/src" includes="**/*.map"/>
@@ -48,6 +48,18 @@
 		-->
 		<exec dir="${basedir}/sscgs" executable="java" input="${basedir}/sscgs/src/ADT">
 			<arg line="-jar ${acJar} -p ADT bin 2051 ${dosDistName}.dsk" />
+		</exec>
+		<!--
+		Put a backup DOS ADT program on the .dsk image
+		-->
+		<exec dir="${basedir}/sscgs" executable="java" input="${basedir}/sscgs/src/ADT">
+			<arg line="-jar ${acJar} -p ADT.BACKUP bin 2051 ${dosDistName}.dsk" />
+		</exec>
+		<!--
+		Lock the backup version
+		-->
+		<exec dir="${basedir}/sscgs" executable="java">
+			<arg line="-jar ${acJar} -k ADT.BACKUP ${dosDistName}.dsk" />
 		</exec>
 	</target>
 

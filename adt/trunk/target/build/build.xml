@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ADT" default="all" basedir="..">
 	<property name="assemblerPath" value="C:/dev/xassm/cc65/bin" />
-	<property name="versionString" value="1.3.0" />
-	<property name="dosVersionString" value="130" />
+	<property name="versionString" value="1.3.1" />
+	<property name="dosVersionString" value="131" />
 	<property name="dosDistName" value="adt${dosVersionString}" />
 	<property name="builddir" value="${basedir}/build" />
 	<property name="acJar" value="${builddir}/AppleCommander-1.3.4b-ac.jar" />

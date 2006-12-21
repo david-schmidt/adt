@@ -75,7 +75,7 @@ trkcnt	= $1e			; COUNTS SEVEN TRACKS     (1B)
 crc	= $eb			; TRACK CRC-16            (2B)
 prev	= $ed			; PREVIOUS BYTE FOR RLE   (1B)
 ysave	= $ee			; TEMP STORAGE            (1B)
-
+temp	= $1d
 ; BIG FILES
 
 tracks	= $2000			; 7 TRACKS AT 2000-8FFF (28KB)
@@ -124,6 +124,10 @@ mabout	= 38			; ABOUT ADT...
 mtest	= 40			; TESTING DISK FORMAT
 mpcans	= 42			; AWAITING ANSWER FROM PC
 mpause	= 44			; HIT ANY KEY TO CONTINUE...
+mdoserr	= 46			; DOS ERROR:_
+mdos0a	= 48			; FILE LOCKED
+mdos04	= 50			; WRITE PROTECTED
+mdos08	= 52			; I/O ERROR
 
 ;*********************************************************
 
@@ -143,10 +147,13 @@ start:
 	jsr	$fe84		; Normal text
 	jsr	$fb2f		; Text mode, full window
 	jsr	$fe89		; Input from keyboard
-	lda	#21
+	lda	#$15
 	jsr	cout		; Switch to 40 columns
-	lda	#0
+	lda	#$00
+	sta	$33		; (Un-)set the prompt character
+				; ...so that Ctrl-D commands work
 	sta	secptr		; secptr is always page-aligned
+	sta	temp
 	sta	stddos		; Assume standard DOS initially
 	lda	$b92e		; Save contents of DOS
 	sta	dosbyte		; Checksum bytes
@@ -190,10 +197,10 @@ kdir:	cmp	#_'D'		; DIR?
 	jmp	redraw
 
 kconf:	cmp	#_'C'		; CONFIGURE?
-	beq	kconf2
+	beq	:+
 	cmp	#_'G'		; Yeah, so, G is as good as C.
 	bne	kabout		; NOPE, TRY ABOUT
-kconf2: jsr	config		; YES, DO CONFIGURE ROUTINE
+:	jsr	config		; YES, DO CONFIGURE ROUTINE
 	jsr	parmint		; AND INTERPRET PARAMETERS
 	jmp	redraw
 
@@ -295,9 +302,12 @@ dircont:
 ;---------------------------------------------------------
 ; CONFIG - ADT CONFIGURATION
 ;---------------------------------------------------------
-config: jsr	home		; CLEAR SCREEN
-; No matter what, we put in the default value for 
-; 'save' - always turn it off when showing the config screen.
+config:
+	inc	temp		; UNIT TESTING
+
+	jsr	home		; CLEAR SCREEN
+				; No matter what, we put in the default value for 
+				; 'save' - always turn it off when showing the config screen.
 	lda	#$01		; Index for 'NO' save
 	sta	psave
 	ldy	#mconfig	; SHOW CONFIGURATION SCREEN
@@ -362,10 +372,19 @@ endprt: lda	#$a0
 	sta	invflg
 endval: dex
 	bpl	valloop		; PRINT REMAINING VALUES
-
 	sty	ysave		; CLREOL USES Y
 	jsr	clreol		; REMOVE GARBAGE AT EOL
-	jsr	crout
+	lda #$8d
+	jsr cout
+;	jsr	crout
+
+;	pha
+;	inc cv
+;	jsr tabv
+;	lda #$00
+;	sta ch
+;	pla
+
 	ldy	ysave
 	ldx	linecnt		; INCREMENT CURRENT LINE
 	inx
@@ -450,6 +469,9 @@ endcfg:
 	lda	psave		; Did they ask to save parms?
 	bne	nosave
 
+	lda	#$01		; Index for 'NO' save
+	sta	psave
+
 	ldy	#parmnum-1	; Save previous parameters
 savparm2:
 	lda	parms,y
@@ -460,6 +482,8 @@ savparm2:
 	sta	curparm
 	jsr	bsave
 nosave:
+	lda #$01		; UNIT TESTING
+	sta temp		; UNIT TESTING
 	rts
 
 linecnt:
@@ -526,7 +550,16 @@ bs7:
 bs8:
 	sta nybble4
 
+patch:				; Patch in our "error handler:"
+	lda #$85		; It saves the DOS error code in $DE
+	sta $A6D2
+	lda #$DE		; sta $DE
+	sta $A6D3
+	lda #$60		; rts - return from error
+	sta $A6D4
+
 	ldx #$00
+	stx $DE
 lewp:
 	lda command,X
 	beq :+
@@ -534,12 +567,28 @@ lewp:
 	inx
 	jmp lewp
 :
+	lda $DE
+	beq bsavedone
+err:
+	ldy #mdoserr
+	jsr showm1
+	cmp #$0a		; File locked?
+	bne :+
+	ldy #mdos0a
+	jmp ermsg
+:	cmp #$04		; Write protected?
+	bne :+
+	ldy #mdos04
+	jmp ermsg
+:	ldy #mdos08		; Catch-all: I/O error
+ermsg:	jsr showm1
+
 bsavedone:
 	jsr pause
 	rts
 
 command:
-	.byte $84
+	.byte $8D,$84
 	asc "BSAVE ADT,A$0803,L$"
 nybble1:
 	.byte $00
@@ -1240,7 +1289,7 @@ msgend: rts
 msgtbl: .addr	msg01,msg02,msg03,msg04,msg05,msg06,msg07
 	.addr	msg08,msg09,msg10,msg11,msg12,msg13,msg14
 	.addr	msg15,msg16,msg17,msg18,msg19,msg20,msg21
-	.addr	msg22,msg23
+	.addr	msg22,msg23,msg24,msg25,msg26,msg27
 
 msg01:	asc	"SSC:S"
 mtssc:	asc	" ,"
@@ -1314,6 +1363,13 @@ msg22:	ascz	"AWAITING ANSWER FROM PC."
 
 msg23:	ascz	"HIT ANY KEY TO CONTINUE..."
 
+msg24:	ascz	"DISK ERROR: "
+
+msg25:	ascz	"FILE LOCKED"
+
+msg26:	ascz	"WRITE PROTECTED"
+
+msg27:	ascz	"I/O ERROR"
 
 ;----------------------- PARAMETERS ----------------------
 

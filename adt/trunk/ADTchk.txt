@@ -1,5 +1,4 @@
-ADTCK (ADT Transfer Checker) November 2005 update
-based on July 2000 Update
+ADTCK (ADT Transfer Checker) December 2006 update
 
      Usually, the transfer of the Apple II ADT program from
 the PC-- the transfer you do at 300 baud-- will go fine and
@@ -21,19 +20,37 @@ ADTConfig program, etc. will change the checksum and render
 the checksum test invalid.
 
 
-ADTCK for ADT v1.21, ADT v1.22, ADTGS (v.90), ADTgs (v.91)
-see below for v1.23 
+ADTCK for all ADT versions
 
  10  TEXT : HOME
  20  PRINT  CHR$ (4)"BLOAD ADT,A$4000"
- 40  FOR I = 0 TO 2579
+ 30  BSIZE = PEEK(43616) + 256 * PEEK(43617)
+ 40  FOR I = 0 TO BSIZE
  50 Z = Z +  PEEK (16384 + I)
  55  IF I / 500 =  INT (I / 500) THEN  PRINT "CURRENT SUM= ";Z
  60  NEXT I
  70  PRINT "CHECKSUM= ";Z
 
+ADT v1.31    for A2's using SSC or IIgs
+76
+53502
+107180
+160622
+214127
+296345
+379090
+431830
+434178  <-- final sum
 
-Checksums
+ADTssc v1.23    for 8-bit A2's using SSC 
+76
+51297
+98343
+153820
+215155
+304070
+318908  <-- final sum
+
 
 ADTssc v1.21     ADTssc v1.22    for 8-bit A2's using SSC 
 76               76             
@@ -55,43 +72,6 @@ ADTGS (v.90)     ADTgs (v.91)   for Apple IIgs
 295079           290904  <-- final sums
 
 
-ADTCK for ADT v1.23 SSC
-Unfortunately the size has changed from v1.22 to v1.23 so
-line 40 needs to be changed. The size is now 2661 bytes.
-
- 10  TEXT : HOME
- 20  PRINT  CHR$ (4)"BLOAD ADT,A$4000"
- 40  FOR I = 0 TO 2660
- 50 Z = Z +  PEEK (16384 + I)
- 55  IF I / 500 =  INT (I / 500) THEN  PRINT "CURRENT SUM= ";Z
- 60  NEXT I
- 70  PRINT "CHECKSUM= ";Z
-
-ADTssc v1.23    for 8-bit A2's using SSC 
-76
-51297
-98343
-153820
-215155
-304070
-318908  <-- final sums
-
-Note: if ADTCK for previous versions, of 2579 bytes, is used the
-final sum is 312695 though this does not give full protection
-
-ADTCK for ADT.CC versions
-
- 10  TEXT : HOME
- 20  PRINT  CHR$ (4)"BLOAD ADT.CC,A$4000"
- 40  FOR I = 0 TO 2566
- 50 Z = Z +  PEEK (16384 + I)
- 55  IF I / 500 =  INT (I / 500) THEN  PRINT "CURRENT SUM= ";Z
- 60  NEXT I
- 70  PRINT "CHECKSUM= ";Z
-
-
-Checksums
-
 ADT.CC (v1.21) "ADTcomm" for 8-bit A2's with non-SSC interfaces
 
 76
@@ -110,3 +90,4 @@ ADT.CC (v1.21) "ADTcomm" for 8-bit A2's with non-SSC interfaces
 
 Rubywand
 November 2005 Update by Knut Roll-Lund
+December 2006 Update by David Schmidt

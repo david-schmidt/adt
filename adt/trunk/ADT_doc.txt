@@ -4,7 +4,7 @@ Apple Disk Transfer
 Created by Paul Guertin (pg@sff.net)
 1995 ...
 
-ref: ADT_2005.zip
+ref: ADT_2006.zip
 
 
 What is "ADT"?
@@ -30,7 +30,7 @@ designed to be dumped from PC to an Apple II running DOS 3.3 via a simple
 Text transfer to the monitor which requires no special software on the Apple II.
 
      Once both sides are installed, ADT transfer speed typically ranges from
-9600 baud through 19,200 and 115,200 baud.
+9600 baud through 115,200 baud.
 
      It was thought that 115,200 baud was not possible, but it is. This was
 shown by Ed Eastman's patched ssc version (v1.23) and Knut Roll-Lund's updated
@@ -38,15 +38,15 @@ winADT (v1.23) and dosADT (v1.23). To do the dir command correctly buffering
 had to be added for the 115,200 baudrate (v1.24).
 
 
-The 2005 Distribution
+The 2006 Distribution
 
-This distribution is a rework of the 2004 distribution which collected
-the most popular versions of ADT without changes. In this distribution three
-of the programs are updated to allow higher baudrates.
+This distribution is a rework of the 2005 distribution. Updates include
+a consolidated SSC and IIgs ADT client, replacing the previously separate
+versions.
 
-ADT_2005 includes both the Windows and MS-DOS programs for the PC side
-as well as the three most popular Apple II-side programs:
-
+ADT_2006 includes both the Windows and MS-DOS programs for the PC side
+(unchanged from the 2005 distributions) as well as the two most popular 
+Apple II-side programs:
 
 PC side 
 
@@ -60,23 +60,17 @@ o- MS-DOS version of PC-side program is now adtdos.exe.
 
 Apple II side 
 
-o- ADTssc- This is the original ADT (now at version 1.24). It is
+o- ADT- This is the original ADT (now at version 1.31). It is
 intended for use on an Apple II equipped with Apple's Super Serial
-Card (SSC) or a compatible card.
-ref: ADTssc folder
-dump file to transfer: adt.dmp or adtn.dmp
+Card (SSC) or a compatible card, or the IIgs.
+ref: ADT folder
+dump file to transfer: adt.dmp
 
 o- ADTcc- This is an adaptation of ADT (now at version 1.21) intended
 for use on an Apple II equipped with the Apple Communications Card
 and other, generally older, non-SSC cards.
 ref: ADTcc folder
 dump file to transfer: ADTcc.dmp
-
-o- ADTgs- This is an adaptation of ADT intended only for transferring
-disks from PC to an Apple IIgs. It uses the the built-in IIgs modem
-serial port and firmware. (Version beta .91)
-ref: ADTgs folder
-dump file to transfer: adtgs.dmp
 
 
 Directions for setting up and use of each Apple II side program are

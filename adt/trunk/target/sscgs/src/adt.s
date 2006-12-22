@@ -1,9 +1,9 @@
 	.include "applechr.i"
 
 ;--------------------------------
-; APPLE DISK TRANSFER 1.31
-; BY PAUL GUERTIN
-; PG@SFF.NET (ALL IN LOWER CASE)
+; Apple Disk Transfer 1.31
+; By Paul Guertin
+; pg@sff.net
 ; DISTRIBUTE FREELY
 ;--------------------------------
 	.LIST	ON
@@ -75,7 +75,7 @@ trkcnt	= $1e			; COUNTS SEVEN TRACKS     (1B)
 crc	= $eb			; TRACK CRC-16            (2B)
 prev	= $ed			; PREVIOUS BYTE FOR RLE   (1B)
 ysave	= $ee			; TEMP STORAGE            (1B)
-temp	= $1d
+
 ; BIG FILES
 
 tracks	= $2000			; 7 TRACKS AT 2000-8FFF (28KB)
@@ -153,7 +153,6 @@ start:
 	sta	$33		; (Un-)set the prompt character
 				; ...so that Ctrl-D commands work
 	sta	secptr		; secptr is always page-aligned
-	sta	temp
 	sta	stddos		; Assume standard DOS initially
 	lda	$b92e		; Save contents of DOS
 	sta	dosbyte		; Checksum bytes
@@ -225,13 +224,11 @@ kquit:	cmp	#_'Q'		; QUIT?
 ; DIR - GET DIRECTORY FROM THE PC AND PRINT IT
 ; PC SENDS 0,1 AFTER PAGES 1..N-1, 0,0 AFTER LAST PAGE
 ;---------------------------------------------------------
-dir:	jsr	home		; CLEAR SCREEN
+dir:
+	ldy	#mpcans
+	jsr	showmsg
 	lda	#_'D'		; SEND DIR COMMAND TO PC
 	jsr	putc
-
-	lda	pspeed
-	cmp	#6
-	bne	dirloop
 
 	lda	#>tracks	; GET BUFFER POINTER HIGHBYTE
 	sta	secptr+1	; SET SECTOR BUFFER POINTER
@@ -249,6 +246,7 @@ dirnext:
 
 	jsr	getc		; GET CONTINUATION CHARACTER
 	sta	(secptr),y	; STORE CONTINUATION BYTE TOO
+	jsr	home		; CLEAR SCREEN
 
 	lda	#>tracks	; GET BUFFER POINTER HIGHBYTE
 	sta	secptr+1	; SET SECTOR BUFFER POINTER
@@ -275,22 +273,6 @@ dirpage:
 	jsr	rdkey
 	rts
 
-dirloop:
-	jsr	getc		; PRINT PC OUTPUT EXACTLY AS
-	beq	dirstop		; IT ARRIVES (PC IS RESPONSIBLE
-	ora	#$80		; FOR FORMATTING), UNTIL 00
-	jsr	cout1		; RECEIVED
-	jmp	dirloop
-
-dirstop:
-	jsr	getc		; GET CONTINUATION CHARACTER
-	bne	dircont		; NOT 00, THERE'S MORE
-
-	ldy	#mdirend	; NO MORE FILES, WAIT FOR KEY
-	jsr	showmsg		; AND RETURN
-	jsr	rdkey
-	rts
-
 dircont:
 	ldy	#mdircon	; SPACE TO CONTINUE, ESC TO STOP
 	jsr	showmsg
@@ -303,8 +285,6 @@ dircont:
 ; CONFIG - ADT CONFIGURATION
 ;---------------------------------------------------------
 config:
-	inc	temp		; UNIT TESTING
-
 	jsr	home		; CLEAR SCREEN
 				; No matter what, we put in the default value for 
 				; 'save' - always turn it off when showing the config screen.
@@ -482,8 +462,6 @@ savparm2:
 	sta	curparm
 	jsr	bsave
 nosave:
-	lda #$01		; UNIT TESTING
-	sta temp		; UNIT TESTING
 	rts
 
 linecnt:

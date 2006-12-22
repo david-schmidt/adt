@@ -1,9 +1,8 @@
-
 ADT (ssc + gs)
 
 ADT for Apple II with Super Serial Card or compatible, or IIgs
-version 1.30
-ref: ADTsscgs folder
+version 1.31
+ref: ADT folder
 
 by Paul Guertin (pg@sff.net)
 
@@ -14,29 +13,39 @@ transfer a standard 16-sector Apple II disk to a 140k file on an
 MS-DOS or Windows computer, and transfer a standard disk image
 file to disk on an Apple II.
 
-ADT 1.30 supports Apple II computers with a Super Serial Card or
+ADT 1.31 supports Apple II computers with a Super Serial Card or
 the IIgs modem port.  Also supported are cards that are hardware-
 compatible with SSC, built-in SSC-compatible serial port hardware.
 The IIc+ and //c include SSC-compatible serial ports.
+
+Note that the ADTPro server, written in Java, will service ADT 
+clients while running on a broader range of operating systems.
+See: http://adtpro.sourceforge.net
 
 ADT is freeware.
 
 
                                 * * *
 
+Note: December 2006
 
-Note: April, 2004
+ADT client has been updated to work with both SSC and IIgs
+hardware.  The ability to save the current configuration
+has been built into the ADT program itself, rather than
+depending on a separate BASIC utility.  Also, a protocol
+error discovered by Joseph Oswalt has been corrected.
 
-This package now includes both the MS-DOS and Windows versions
-of the part of ADT which runs on the PC:
+David Schmidt
 
-Windows32 version of PC-side program is adt.exe.
- (by Sean Gugler)
+                                * * *
 
-MS-DOS version of PC-side program is now adtdos.exe.
- (by Paul Guertin; ADT creator)
+Note: December 30th 2005
 
-R/
+Windows version has been updated to allow longer filenames
+Some minor manual and readme corrections.
+
+Knut Roll-Lund
+
                                 * * *
 
 Note: November 2005
@@ -52,54 +61,49 @@ DOS version has been patched to include higher
 The Apple II SSC version was updated by Knut Roll-Lund and EEastman
 
 ee
-                                * * *
-
-Note: December 30th 2005
-
-Windows version has been updated to allow longer filenames
-Some minor manual and readme corrections.
-
-Knut Roll-Lund
 
                                 * * *
 
-Note: December 16th 2006
+Note: April, 2004
 
-ADT client has been updated to work with both SSC and IIgs
-hardware.  A protocol error discovered by Joseph Oswalt has
-been corrected.
+This package now includes both the MS-DOS and Windows versions
+of the part of ADT which runs on the PC:
 
-David Schmidt
+Windows32 version of PC-side program is adt.exe.
+ (by Sean Gugler)
 
-                                * * *
+MS-DOS version of PC-side program is now adtdos.exe.
+ (by Paul Guertin; ADT creator)
 
-Contents of ADTsscgs folder:
-
- readme.txt         -- This file.
- adtn_dmp_info.txt  -- Tells about adtn.dmp
- adt130.dsk         -- Disk image containing ADT 1.30
-
-APPLE II FILES
- adt.asm            -- Source code for ADT (ca65 assembler).
- adt.dmp            -- Object code for ADT (Monitor dump format).
- adtn.dmp           -- Same as adt.dmp but without LineFeed chars
- adtcfg.bas         -- Applesoft program to configure ADT.
-
-PC FILES
- adt.c              -- Source code for adtdos.exe (Turbo C 2.0).
- comm.c             -- Freeware serial port routines for Turbo C.
- comm.h             -- Header file for above.
-
+R/
 
                                 * * *
 
 
-What's new in version 1.30:
+Main contents of ADT distribution:
+ adt.exe            -- Windows server executable
+ manual.txt         -- ADT documentation
+ ADT/adt131.dsk     -- Disk image containing ADT 1.31
+ ADT/adt.dmp        -- Object code for ADT 
+                       (Monitor dump format).
+ ADTcc/ADTcc.dmp    -- Object code for Communications 
+                       Card version of ADT
+
+                                * * *
+
+What's new in version 1.31:
+
+    1. Integrated a configuration save feature, 
+       removed Applesoft configurator
+
+    2. All 'Dir' command processing goes through buffering now
+
+What was new in version 1.30:
 
     1. Merged SSC and IIgs code, both support 115200 baud
 
-    2. Fixed NAK protocol error when PC discovers a bad checksum
-       (Thanks to Joseph Oswalt for finding and correcting this)
+    2. Only distributed as part of ADTPro's built-in 
+       bootstraping support
 
 What was new in version 1.23:
 
@@ -109,7 +113,7 @@ What was new in version 1.23:
 
     3. Windows client updated to allow use of more baud rates
 
-    4. DoS client updated to allow the use of more baud rates
+    4. DOS client updated to allow the use of more baud rates
 
 
 What was new in version 1.22:
@@ -184,9 +188,8 @@ For those upgrading from a previous version of ADT:
 
 Just format a blank disk on your Apple II and use your current ADT
 to transfer the file ADT.DSK. This disk image contains ADT (the
-BRUN-able program) and the RUN-able BASIC program ADT CONFIGURATION.
-On the MS-DOS side, replace your current ADT.EXE with the new one 
-from the .zip archive.
+BRUN-able program).  On the MS-DOS side, replace your current 
+ADT.EXE with the new one from the .zip archive.
 
                                 * * *
 
@@ -400,9 +403,6 @@ the _sending_ computer first. If you first stop the receiving
 computer, it will continue to receive unexpected data and may become
 confused.
 
-ADT CONFIGURATION: use this BASIC program to change the default
-parameter values. Its operation is self-explanatory. Just follow
-the prompts.
 
                                 * * *
 
@@ -479,7 +479,6 @@ other comm programs set SW2-6 on.
 
                                 * * *
 
-I welcome comments, bug reports, suggestions for future versions, etc.
-Send fan mail to pg@sff.net.
+ADT is maintained at http://adt.berlios.de.
 
 =EOF=

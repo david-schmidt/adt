@@ -11,6 +11,11 @@ COM port with each computer running ADT.
 News
 ====
 
+**27 Dec 2006**: ADT 2006 Released.  Some goodies from the [ADTPro project]
+(http://adtpro.sourceforge.net/) have been incorporated into ADT.  See the
+[download](http://developer.berlios.de/project/showfiles.php?group_id=5617)
+page for details and downloads.
+
 **31 Dec 2005**: ADT now has a new home at
 [BerliOS](http://developer.berlios.de/). BerliOS provides web hosting, a
 download service, and a Subversion source code repository. See the [project

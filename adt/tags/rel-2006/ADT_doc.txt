@@ -1,0 +1,221 @@
+ADT
+
+Apple Disk Transfer
+Created by Paul Guertin (pg@sff.net)
+1995 ...
+
+ref: ADT_2006.zip
+
+
+What is "ADT"?
+
+     ADT (Apple Disk Transfer) lets you transfer 5.25" 16-sector disks from
+your Apple II to your PC. It will also transfer standard 5.25" .dsk disk image
+files from the PC to a formatted 5.25" diskette on the Apple II. The connection
+is a fairly simple NULL modem link between serial ports using standard cables
+and adaptors.
+
+     Transferred disks can be DOS 3.3, ProDOS, Pascal, ... . However, ADT will
+not correctly transfer most copy protected disks to the PC.
+
+     ADT is a pair of dedicated telecom transfer programs-- one for Apple II
+running under DOS 3.3 and one for the other computer (almost always a PC; but,
+there is also a version for Mac).  Usually, the Apple II program is named "ADT"
+on the DOS 3.3 disk. The PC program is named "adt.exe" (Windows version) or
+"adtdos.exe" (MS-DOS version).
+
+     There are several versions of the Apple II-side program to fit different
+models and serial interfaces. The program (e.g. adt.dmp) is a block of code
+designed to be dumped from PC to an Apple II running DOS 3.3 via a simple
+Text transfer to the monitor which requires no special software on the Apple II.
+
+     Once both sides are installed, ADT transfer speed typically ranges from
+9600 baud through 115,200 baud.
+
+     It was thought that 115,200 baud was not possible, but it is. This was
+shown by Ed Eastman's patched ssc version (v1.23) and Knut Roll-Lund's updated
+winADT (v1.23) and dosADT (v1.23). To do the dir command correctly buffering
+had to be added for the 115,200 baudrate (v1.24).
+
+
+The 2006 Distribution
+
+This distribution is a rework of the 2005 distribution. Updates include
+a consolidated SSC and IIgs ADT client, replacing the previously separate
+versions.
+
+ADT_2006 includes both the Windows and MS-DOS programs for the PC side
+(unchanged from the 2005 distributions) as well as the two most popular 
+Apple II-side programs:
+
+PC side 
+
+o- Windows32 version of PC-side program is adt.exe.
+   (by Sean Gugler)
+   (now at version 1.23)
+
+o- MS-DOS version of PC-side program is now adtdos.exe.
+   (by Paul Guertin; ADT creator)
+   (now at version 1.23)
+
+Apple II side 
+
+o- ADT- This is the original ADT (now at version 1.31). It is
+intended for use on an Apple II equipped with Apple's Super Serial
+Card (SSC) or a compatible card, or the IIgs.
+ref: ADT folder
+dump file to transfer: adt.dmp
+
+o- ADTcc- This is an adaptation of ADT (now at version 1.21) intended
+for use on an Apple II equipped with the Apple Communications Card
+and other, generally older, non-SSC cards.
+ref: ADTcc folder
+dump file to transfer: ADTcc.dmp
+
+
+Directions for setting up and use of each Apple II side program are
+included in a readme.txt file in the program folder.
+
+Other information sources:
+
+o- Apple II FAQs
+   http://home.swbell.net/rubywand/Csa2T1TCOM.html
+   ftp://ground.ecn.uiowa.edu/apple2/Faqs/Formatted/Csa2T1TCOM.txt
+o- Apple IIc .dsk Archive
+   http://www.chez.com/apple1/Apple2cDskArchive/tech/Transfert.htm
+o- Manual.txt file in this folder
+
+
+
+
+More about the new Windows32 PC Interface for ADT
+
+Apple Disk Transfer Win32 Edition
+Copyright (C) December 1, 2000 by Sean Gugler
+Updated November, 2005 by Knut Roll-Lund with more baudrates
+
+Released as freeware under GPL -- see GPL.TXT for details.
+
+
+Tired of supporting old 8-bit technology with old 16-bit technology?
+Enjoy at last the thrill of 32-bit technology, with the introduction
+of ADTW!  This Win32 port of the beloved Apple Disk Transfer utility
+brings us at last to the modern.
+
+Apple Disk Transfer sends, via serial cable, the full contents of
+a disk from an Apple to an image file on a PC, and vice versa.
+
+If you've never used any previous versions of ADT, please see the
+readme.txt file in the folder for the Apple II-side program you plan
+to use. Also check the information included in the Manual.txt file
+in the main folder (i.e. this folder). 
+
+
+ADTW replaces only the DOS application, the Apple II-side program is
+unchanged.  Improvements are:
+
+  + You can task-switch to another app, even minimize ADT,
+       while it continues working in the background.
+
+  + Supports long file names and lowercase characters, even on
+       the Apple side (if you have //e or greater).
+
+  + Aborted .DSK files (when ESC is pressed) are properly closed and
+       their file handles released (no more sharing violation errors).
+
+  + Aborted .DSK files are padded with 00 instead of random bytes.
+
+  + Don't have to hold down any PC keys during "receive" operation.
+       (The author found that ADT for DOS running under Windows 95 would
+       freeze unless he was holding down some key, even "shift")
+
+  + Tested under Windows 95, but should theoretically work on all
+       32-bit Windows versions (NT, 98, 2000, ME, ...)
+
+Alas, changing directories is still unsupported, you should have any files
+you wish to transfer from the PC in the main ADT folder. Though plenty of
+enhancements are in the works, including ProDos-order images and nybble
+images, full source code is provided for the impatient.
+
+
+
+Installing and Using ADT Win32 Edition
+
+  On the Apple II, you can use your old Apple-side ADT program, if
+you have one installed. If you do not have one installed, pick one
+that fits your setup-- e.g. ADTssc, ADTcc, or ADTgs-- and transfer it.
+
+  Install and run the PC-side program the same way you did for the DOS
+  edition:
+
++ Copy all files into their own directory. (You can uninstall by 
+       deleting the entire directory.)
+
++ Double-click adt.exe or run it from a Command Prompt.
+
+
++ The files MFC40.DLL and MSVCRT40.DLL are required for the Win32
+Edition of ADT.  These files are bundled with Windows NT 4.0,
+Windows 98, and later versions.
+
+Windows 95 owners might see error messages mentioning these files,
+if they haven't been installed by any of the myriad other applications
+that also require them.  Technically, you should obtain them from
+me, and though I can supply them by email I would greatly appreciate
+it if you'd look for them on the web first.  There are plenty of sources,
+though legally I can't recommend any specific one.  Try searching Google:
+http://www.google.com/search?query=mfc40.dll%20msvcrt40.dll%20download
+
+Once obtained, copy both files into your C:\WINDOWS\SYSTEM folder.
+It should not be necessary to restart Windows.
+
++ About box is found through the system menu (icon on top left).
+
++ To use command-line parameters, consider using a Windows Shortcut
+       instead of a batch file (.BAT).  See Windows Help (Start Menu,
+       "Help" item) under the topic "shortcuts" to learn how to do this.
+
+
+
+ACKNOWLEDGEMENTS
+----------------
+Thanks to Rich Williamson for the original SENDDISK,
+Paul Guertin for filling it out into ADT,
+and Paul Schlyter for supporting other serial cards.
+See also the section marked "HISTORY" in ADT.TXT.
+
+Special thanks to all these people for releasing their source
+code so their work could be built upon in perpetuity.
+
+Thanks to all the folks who contributed and maintain the
+comp.sys.apple2 Usenet newsgroups and its FAQs, without
+whom I'd still be deep in the dark.
+
+
+LICENSE
+-------
+The Win32 edition of this program is free software; you can
+redistribute it and/or modify it under the terms of the GNU General
+Public License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
+or visit the web at  http://www.gnu.org/copyleft/gpl.html
+
+
+
+- Sean Gugler, 07-Dec-2000
+
+----------------------------------------------------------------------
+Legal notice: Windows 95, Win32, and other Windows references are
+generally understood to be trademarks of Microsoft, Inc.
+
+
+

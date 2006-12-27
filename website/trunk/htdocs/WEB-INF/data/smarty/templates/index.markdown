@@ -11,8 +11,9 @@ a PC's COM port with each computer running ADT.
 News
 ====
 
-**27 Dec 2006**: ADT 2006 is released.  Some goodies from the [ADTPro project]
-(http://adtpro.sourceforge.net/) have been incorporated into ADT.  See the
+**27 Dec 2006**: ADT 2006 is released.  Some goodies from the 
+[ADTPro project](http://adtpro.sourceforge.net/) have been incorporated
+into ADT.  See the
 [download](http://developer.berlios.de/project/showfiles.php?group_id=5617)
 page for details and downloads.
 
@@ -52,7 +53,9 @@ II. How to do the transfer, setting up a NULL modem connection, and more is
 discussed in the included Text documentation files. Also see the
 [comp.sys.apple2](news:comp.sys.apple2) Apple II FAQs
 [Telecom-1](http://home.swbell.net/rubywand/Csa2T1TCOM.html) page and feel
-free to ask questions on the newsgroup.
+free to ask questions on the newsgroup.  The ADTPro project has a 
+[bootstrapping page](http://adtpro.sourceforge.net/bootstrap.html) that may
+be helpful as well.
 
 The ADT\_2006 distribution allows running ADT under Windows or from the MS-DOS
 prompt. To start the Win32 version, double-click `adt.exe` or run it from a

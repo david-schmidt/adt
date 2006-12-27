@@ -4,14 +4,14 @@ Apple Disk Transfer
 ADT is the "Apple Disk Transfer" utility. Paul Guertin originally developed
 ADT as a way to transfer 5.25" disk image files from PC directly to diskette
 on a 64k or larger Apple II and to send 5.25" diskettes to PC where they are
-saved as .dsk disk image files. A typical ADT setup is an Apple II with a
-serial card or built-in serial port connected via a NULL modem cableto a PC's
-COM port with each computer running ADT.
+saved as .dsk disk image files. A typical ADT setup is an Apple II/IIe/IIc/IIgs
+with a serial card or built-in serial port connected via a NULL modem cable to
+a PC's COM port with each computer running ADT.
 
 News
 ====
 
-**27 Dec 2006**: ADT 2006 Released.  Some goodies from the [ADTPro project]
+**27 Dec 2006**: ADT 2006 is released.  Some goodies from the [ADTPro project]
 (http://adtpro.sourceforge.net/) have been incorporated into ADT.  See the
 [download](http://developer.berlios.de/project/showfiles.php?group_id=5617)
 page for details and downloads.
@@ -24,8 +24,8 @@ page](http://developer.berlios.de/projects/adt/) for all the goodies.
 Setting Up and Using ADT
 ========================
 
-Download [ADT\_2005\_2.zip](http://download.berlios.de/adt/ADT_2005_2.zip) and
-unzip the archive. The result is a folder named "ADT\_2005\_2". This includes
+Download [ADT\_2006.zip](http://download.berlios.de/adt/ADT_2006.zip) and
+unzip the archive. The result is a folder named "ADT\_2006". This includes
 a Windows and MS-DOS program, as well as the three most popular Apple II-side
 programs.
 
@@ -39,18 +39,14 @@ PC Side
 Apple II Side
 -------------
 
-* `ADTssc`: This is the original ADT (now at version 1.23). It is intended for
+* `ADT`: This is the original ADT (now at version 1.31). It is intended for
   use on an Apple II equipped with Apple's Super Serial Card (SSC) or a
-  compatible card.
+  compatible card, or the Apple IIgs.
   
 * `ADTcc`: This is an adaptation of ADT (now at version 1.21) intended 
   for use on an Apple II equipped with the Apple Communications Card 
   and other, generally older, non-SSC cards.
   
-* `ADTgs`:   This is an adaptation of ADT intended only for transferring 
-  disks from PC to an Apple IIgs. It uses the the built-in IIgs modem 
-  serial port and firmware. (Version beta .91)
-
 You will need to transfer one of the Apple II-side ADT programs to the Apple
 II. How to do the transfer, setting up a NULL modem connection, and more is
 discussed in the included Text documentation files. Also see the
@@ -58,7 +54,7 @@ discussed in the included Text documentation files. Also see the
 [Telecom-1](http://home.swbell.net/rubywand/Csa2T1TCOM.html) page and feel
 free to ask questions on the newsgroup.
 
-The ADT\_2005 distribution allows running ADT under Windows or from the MS-DOS
+The ADT\_2006 distribution allows running ADT under Windows or from the MS-DOS
 prompt. To start the Win32 version, double-click `adt.exe` or run it from a
 Command Prompt.
 

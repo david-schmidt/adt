@@ -27,7 +27,7 @@ Setting Up and Using ADT
 
 Download [ADT\_2006.zip](http://download.berlios.de/adt/ADT_2006.zip) and
 unzip the archive. The result is a folder named "ADT\_2006". This includes
-a Windows and MS-DOS program, as well as the three most popular Apple II-side
+a Windows and MS-DOS program, as well as two popular Apple II-side
 programs.
 
 PC Side

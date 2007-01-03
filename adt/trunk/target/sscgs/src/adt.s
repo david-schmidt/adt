@@ -1,7 +1,7 @@
 	.include "applechr.i"
 
 ;--------------------------------
-; Apple Disk Transfer 1.31
+; Apple Disk Transfer 1.3x - unreleased
 ; By Paul Guertin
 ; pg@sff.net
 ; DISTRIBUTE FREELY
@@ -15,6 +15,9 @@
 ; SSC, IIgs or compatible hardware is required.
 
 ; Version History:
+
+; Version 1.3x Unreleased
+; - Managed interrupt disabling/enabling correctly
 
 ; Version 1.31 December 2006
 ; David Schmidt
@@ -463,96 +466,84 @@ oldparm:
 	.res	parmnum		; Old parameters saved here
 
 ;---------------------------------------------------------
-; BSAVE - Save a copy of ADT in memory
+; bsave - Save a copy of ADT in memory
 ;---------------------------------------------------------
 bsave:
-	lda length+1
-	lsr
-	lsr
-	lsr
-	lsr
-	clc
-	cmp #$09
-	bcc bs1			; A is greater than 9
-	adc #$B6
-	jmp bs2
-bs1:
-	ora #$B0
-bs2:
-	sta nybble1
-	lda length+1
-	and #$0F
-	clc
-	cmp #$09
-	bcc bs3			; A is greater than 9
-	adc #$B6
-	jmp bs4
-bs3:
-	ora #$B0
-bs4:
-	sta nybble2
-
-	lda length
-	lsr
-	lsr
-	lsr
-	lsr
-	clc
-	cmp #$09
-	bcc bs5			; A is greater than 9
-	adc #$B6
-	jmp bs6
-bs5:
-	ora #$B0
-bs6:
-	sta nybble3
-	lda length
-	and #$0F
-	clc
-	cmp #$09
-	bcc bs7			; A is greater than 9
-	adc #$B6
-	jmp bs8
-bs7:
-	ora #$B0
-bs8:
-	sta nybble4
+	lda	length+1	; Convert 16-bit length to a hex string
+	pha
+	jsr	tochrhi		; Hi nybble, hi byte
+	sta	nybble1
+	pla
+	jsr	tochrlo		; Lo nybble, hi byte
+	sta	nybble2
+	lda	length
+	pha
+	jsr	tochrhi		; Hi nybble, lo byte
+	sta	nybble3
+	pla
+	jsr	tochrlo		; Lo nybble, lo byte
+	sta	nybble4
 
 patch:				; Patch in our "error handler:"
-	lda #$85		; It saves the DOS error code in $DE
-	sta $A6D2
-	lda #$DE		; sta $DE
-	sta $A6D3
-	lda #$60		; rts - return from error
-	sta $A6D4
+	lda	#$85		; It saves the DOS error code in $DE
+	sta	$A6D2
+	lda	#$DE		; sta $DE
+	sta	$A6D3
+	lda	#$60		; rts - return from error
+	sta	$A6D4
 
-	ldx #$00
-	stx $DE
-lewp:
-	lda command,X
-	beq :+
-	jsr cout
+	ldx	#$00
+	stx	$DE
+
+cmdloop:			; Send BSAVE command to DOS
+	lda	command,X
+	beq	:+
+	jsr	cout
 	inx
-	jmp lewp
+	jmp	cmdloop
 :
-	lda $DE
-	beq bsavedone
+	lda	$DE		; Everything cool?
+	beq	bsavedone	; All done
 err:
-	ldy #mdoserr
-	jsr showm1
-	cmp #$0a		; File locked?
-	bne :+
-	ldy #mdos0a
-	jmp ermsg
-:	cmp #$04		; Write protected?
-	bne :+
-	ldy #mdos04
-	jmp ermsg
-:	ldy #mdos08		; Catch-all: I/O error
-ermsg:	jsr showm1
+	ldy	#mdoserr
+	jsr	showm1
+	cmp	#$0a		; File locked?
+	bne	:+
+	ldy	#mdos0a
+	jmp	ermsg
+:	cmp	#$04		; Write protected?
+	bne	:+
+	ldy	#mdos04
+	jmp	ermsg
+:	ldy	#mdos08		; Catch-all: I/O error
+ermsg:	jsr	showm1
 
 bsavedone:
-	jsr pause
+	jsr	pause
+	rts
+
+;---------------------------------------------------------
+; tochrlo/hi:
+; Convert a nybble in A to a character representing its
+; hex value, returned in A
+;---------------------------------------------------------
+tochrlo:
+	and	#$0f
+	jmp	tochrgo
+tochrhi:
+	lsr
+	lsr
+	lsr
+	lsr
+tochrgo:
+	clc
+	cmp	#$09
+	bcc	gt9		; A is greater than 9
+	adc	#$B6
+	jmp	tochrdone
+gt9:
+	ora	#$B0
+tochrdone:
 	rts
 
 command:
@@ -1262,7 +1253,7 @@ msgtbl: .addr	msg01,msg02,msg03,msg04,msg05,msg06,msg07
 msg01:	asc	"SSC:S"
 mtssc:	asc	" ,"
 mtspd:	asc	"       "
-	inv	"+ ADT 1.31 +"
+	inv	"+ ADT 1.3x +"
 	asc	"   DISK:S"
 mtslt:	asc	" ,D"
 mtdrv:	asc	" "

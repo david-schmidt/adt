@@ -1,7 +1,7 @@
 	.include "applechr.i"
 
 ;--------------------------------
-; Apple Disk Transfer 1.3x - unreleased
+; Apple Disk Transfer - unreleased version
 ; By Paul Guertin
 ; pg@sff.net
 ; DISTRIBUTE FREELY
@@ -16,7 +16,7 @@
 
 ; Version History:
 
-; Version 1.3x Unreleased
+; Version Unreleased
 ; - Managed interrupt disabling/enabling correctly
 
 ; Version 1.31 December 2006
@@ -1253,7 +1253,7 @@ msgtbl: .addr	msg01,msg02,msg03,msg04,msg05,msg06,msg07
 msg01:	asc	"SSC:S"
 mtssc:	asc	" ,"
 mtspd:	asc	"       "
-	inv	"+ ADT 1.3x +"
+	inv	"+UNRELEASED+"
 	asc	"   DISK:S"
 mtslt:	asc	" ,D"
 mtdrv:	asc	" "

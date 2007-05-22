@@ -51,14 +51,13 @@ Apple II Side
 You will need to transfer one of the Apple II-side ADT programs to the Apple
 II.
 
-The ADTPro project has a 
-[bootstrapping page](http://adtpro.sourceforge.net/bootstrap.html#Bootstrapping%20DOS)
-that simplifies the bootstrapping process with a new server, but it does
-require Java on the host computer to run.
-
-The included Text documentation files discuss how to set up a NULL modem
-connection, do the transfer, and more. Also see the
-[comp.sys.apple2](news:comp.sys.apple2) Apple II FAQs
+The ADTPro project has 
+[bootstrapping instructions](http://adtpro.sourceforge.net/bootstrap.html#Bootstrapping%20DOS)
+that simplify and speed up the bootstrapping process with new server
+software, but it does require Java on the host computer to run. 
+Otherwise, the included Text documentation files discuss how to set up a
+NULL modem connection, do the transfer, and more.
+Also see the [comp.sys.apple2](news:comp.sys.apple2) Apple II FAQs
 [Telecom-1](http://home.swbell.net/rubywand/Csa2T1TCOM.html) page and feel
 free to ask questions on the newsgroup.
 

@@ -41,21 +41,26 @@ Apple II Side
 -------------
 
 * `ADT`: This is the original ADT (now at version 1.31). It is intended for
-  use on an Apple II equipped with Apple's Super Serial Card (SSC) or a
+  use on an Apple II equipped with Apple's Super Serial (SSC) or
   compatible card, or the Apple IIgs.
-  
+
 * `ADTcc`: This is an adaptation of ADT (now at version 1.21) intended 
   for use on an Apple II equipped with the Apple Communications Card 
   and other, generally older, non-SSC cards.
-  
+
 You will need to transfer one of the Apple II-side ADT programs to the Apple
-II. How to do the transfer, setting up a NULL modem connection, and more is
-discussed in the included Text documentation files. Also see the
+II.
+
+The ADTPro project has a 
+[bootstrapping page](http://adtpro.sourceforge.net/bootstrap.html#Bootstrapping%20DOS)
+that simplifies the bootstrapping process with a new server, but it does
+require Java on the host computer to run.
+
+The included Text documentation files discuss how to set up a NULL modem
+connection, do the transfer, and more. Also see the
 [comp.sys.apple2](news:comp.sys.apple2) Apple II FAQs
 [Telecom-1](http://home.swbell.net/rubywand/Csa2T1TCOM.html) page and feel
-free to ask questions on the newsgroup.  The ADTPro project has a 
-[bootstrapping page](http://adtpro.sourceforge.net/bootstrap.html) that may
-be helpful as well.
+free to ask questions on the newsgroup.
 
 The ADT\_2006 distribution allows running ADT under Windows or from the MS-DOS
 prompt. To start the Win32 version, double-click `adt.exe` or run it from a

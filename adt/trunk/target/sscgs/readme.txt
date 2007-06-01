@@ -84,8 +84,9 @@ Main contents of ADT distribution:
  adt.exe            -- Windows server executable
  manual.txt         -- ADT documentation
  ADT/adt131.dsk     -- Disk image containing ADT 1.31
- ADT/adt.dmp        -- Object code for ADT 
-                       (Monitor dump format).
+ ADT/adtpc.dmp      -- Monitor dump format of ADT (PC format)
+ ADT/adtmac.dmp     -- ... Mac line ending format
+ ADT/adtunix.dmp    -- ... Unix line ending format
  ADTcc/ADTcc.dmp    -- Object code for Communications 
                        Card version of ADT
 
@@ -215,7 +216,7 @@ three characters "<ctrl-A>6B".
 
 Then, on the PC, start a comm program, set it for 300 baud N81, and
 ASCII-upload (not Xmodem or any other protocol but a straight text
-upload) the file "adt.dmp" to the Apple. (Example: Using HyperTerm
+upload) the file "adtpc.dmp" to the Apple. (Example: Using HyperTerm
 Under Windows 95, you would Send Text.)
 
 During the transfer process, the program will enter itself into

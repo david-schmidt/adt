@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ADT" default="all" basedir="..">
 	<property name="assemblerPath" value="C:/dev/xassm/cc65/bin" />
-	<property name="versionString" value="1.3.1" />
-	<property name="dosVersionString" value="131" />
+	<property name="dosVersionString" value="132" />
 	<property name="dosDistName" value="adt${dosVersionString}" />
 	<property name="builddir" value="${basedir}/build" />
 	<property name="acJar" value="${builddir}/AppleCommander-1.3.4d-ac.jar" />
@@ -17,11 +16,11 @@
 		-->
 		<delete file="${basedir}/sscgs/src/adt" />
 		<delete file="${basedir}/sscgs/${dosDistName}.dsk" />
-		<delete file="${basedir}/sscgs/adt.dmp" />
 		<delete>
 			<fileset dir="${basedir}/sscgs/src" includes="**/*.o"/>
 			<fileset dir="${basedir}/sscgs/src" includes="**/*.map"/>
 			<fileset dir="${basedir}/sscgs/src" includes="**/*.lst"/>
+			<fileset dir="${basedir}/sscgs" includes="**/adtdmp.*"/>
 		</delete>
 	</target>
 
@@ -35,7 +34,14 @@
 		<!--
 		Make a dumpable version
 		-->
-		<appleDump infilename="${basedir}/sscgs/src/adt" outfilename="${basedir}/sscgs/adt.dmp" applename="ADT" startaddrhex="803" numbyteswide="8" />
+		<appleDump infilename="${basedir}/sscgs/src/adt" outfilename="${basedir}/sscgs/adt.dmp" applename="ADT" startaddrhex="803" numbyteswide="12" />
+		<copy file="${basedir}/sscgs/adt.dmp" tofile="${basedir}/sscgs/adtdmp.mac" />
+		<copy file="${basedir}/sscgs/adt.dmp" tofile="${basedir}/sscgs/adtdmp.unix" />
+		<copy file="${basedir}/sscgs/adt.dmp" tofile="${basedir}/sscgs/adtdmp.pc" />
+		<fixcrlf srcdir="${basedir}/sscgs" includes="adtdmp.mac" eol="mac" eof="remove" />
+		<fixcrlf srcdir="${basedir}/sscgs" includes="adtdmp.unix" eol="unix" eof="remove" />
+		<fixcrlf srcdir="${basedir}/sscgs" includes="adtdmp.pc" eol="dos"/>
+		<delete file="${basedir}/sscgs/adt.dmp" />
 	</target>
 
 	<target name="builddsk">

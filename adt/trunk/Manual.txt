@@ -119,13 +119,13 @@ Then, on the PC, start a comm program, set it for 300 baud N81 (no parity,
 8-bit data, 1 stop bit), and ASCII-upload (not Xmodem or any other protocol
 but a straight text upload) the appropriate dump file to the Apple.
 (Example: Using HyperTerm Under Windows 95, you would Send Text.)
-    adt_ss.dmp  <-- Super Serial Card
+    adtpc.dmp   <-- Super Serial Card
     adt_cc.dmp  <-- Apple Communications Card
 
 Alternately, from a Command Prompt enter these two commands:
     mode com1: baud=300 data=8 parity=n
-    type adt_ss.dmp > com1:
-Substitute "com2" for "com1" and "adt_cc.dmp" for "adt_ss.dmp" as necessary.
+    type adtpc.dmp > com1:
+Substitute "com2" for "com1" and "adt_cc.dmp" for "adtpc.dmp" as necessary.
 
     ACKNOWLEDGEMENT:  Thanks to "Delfs" for this tip.  Delfs tested this
     procedure on an AT class PC with MSDOS6 and Win9x, with both Apple //e
@@ -538,6 +538,11 @@ a Windows 32-bit API program of otherwise identical functionality.
 This brings ADT into the world of background multi-tasking, long
 file names, and support for Windows NT and its progeny.
 
+David Schmidt (david__schmidt@users.sourceforge.net) backported
+some enhancements from the ADTPro project back to ADT: converged
+IIgs and SSC support, imbedded configuration saving, slot scanning
+for automatic slot selection.  Release 1.31 came out December 27,
+2006.
 
 ----------------------------
 ]  5.6  CONTACT THE AUTHORS

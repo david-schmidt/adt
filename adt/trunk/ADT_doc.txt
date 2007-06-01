@@ -25,7 +25,7 @@ on the DOS 3.3 disk. The PC program is named "adt.exe" (Windows version) or
 "adtdos.exe" (MS-DOS version).
 
      There are several versions of the Apple II-side program to fit different
-models and serial interfaces. The program (e.g. adt.dmp) is a block of code
+models and serial interfaces. The program (e.g. adtpc.dmp) is a block of code
 designed to be dumped from PC to an Apple II running DOS 3.3 via a simple
 Text transfer to the monitor which requires no special software on the Apple II.
 
@@ -64,7 +64,7 @@ o- ADT- This is the original ADT (now at version 1.31). It is
 intended for use on an Apple II equipped with Apple's Super Serial
 Card (SSC) or a compatible card, or the IIgs.
 ref: ADT folder
-dump file to transfer: adt.dmp
+dump file to transfer: adtpc.dmp
 
 o- ADTcc- This is an adaptation of ADT (now at version 1.21) intended
 for use on an Apple II equipped with the Apple Communications Card
@@ -216,6 +216,3 @@ or visit the web at  http://www.gnu.org/copyleft/gpl.html
 ----------------------------------------------------------------------
 Legal notice: Windows 95, Win32, and other Windows references are
 generally understood to be trademarks of Microsoft, Inc.
-
-
-

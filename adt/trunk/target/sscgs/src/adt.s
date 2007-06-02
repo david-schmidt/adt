@@ -1,7 +1,7 @@
 	.include "applechr.i"
 
 ;--------------------------------
-; Apple Disk Transfer - unreleased version
+; Apple Disk Transfer
 ; By Paul Guertin
 ; pg@sff.net
 ; DISTRIBUTE FREELY
@@ -16,7 +16,7 @@
 
 ; Version History:
 
-; Version 1.32
+; Version 1.32 June 2007
 ; David Schmidt
 ; - Scan slots for initial/default comms device
 ; - Managed interrupt disabling/enabling correctly

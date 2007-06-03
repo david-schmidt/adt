@@ -14,7 +14,7 @@ News
 and detects appropriate serial hardware.  Bootstrapping text files are
 included with different line endings (PC, Unix, Mac) though ADTPro's
 [bootstrapping instructions](http://adtpro.sourceforge.net/bootstrap.html#Bootstrapping%20DOS)
-are simpler.
+are simpler and can even use the cassette ports.
 
 **27 Dec 2006**: ADT 2006 is released.  Some goodies from the 
 [ADTPro project](http://adtpro.sourceforge.net/) have been incorporated
@@ -30,8 +30,8 @@ page](http://developer.berlios.de/projects/adt/) for all the goodies.
 Setting Up and Using ADT
 ========================
 
-Download [ADT\_2006.zip](http://download.berlios.de/adt/ADT_2006.zip) and
-unzip the archive. The result is a folder named "ADT\_2006". This includes
+Download [ADT\_2007.zip](http://download.berlios.de/adt/ADT_2007.zip) and
+unzip the archive. The result is a folder named "ADT\_2007". This includes
 a Windows and MS-DOS program, as well as two popular Apple II-side
 programs.
 
@@ -66,7 +66,7 @@ Also see the [comp.sys.apple2](news:comp.sys.apple2) Apple II FAQs
 [Telecom-1](http://home.swbell.net/rubywand/Csa2T1TCOM.html) page and feel
 free to ask questions on the newsgroup.
 
-The ADT\_2006 distribution allows running ADT under Windows or from the MS-DOS
+This ADT distribution allows running ADT under Windows or from the MS-DOS
 prompt. To start the Win32 version, double-click `adt.exe` or run it from a
 Command Prompt.
 

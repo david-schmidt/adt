@@ -1,8 +1,10 @@
-ADTCK (ADT Transfer Checker) December 2006 update
+ADTCK (ADT Transfer Checker) June 2007 update
 
      Usually, the transfer of the Apple II ADT program from
 the PC-- the transfer you do at 300 baud-- will go fine and
-ADT will get BSAVED and work like it should.
+ADT will get BSAVED and work like it should.  (See the
+ADTPro project for a much faster way to get bootstrapped:
+http://adtpro.sourceforge.net/bootstrap.html )
 
      In case ADT does not seem to be working correctly, you
 may want to check that the transferred program was not 
@@ -31,6 +33,18 @@ ADTCK for all ADT versions
  60  NEXT I
  70  PRINT "CHECKSUM= ";Z
 
+ADT v1.32    for A2's using SSC or IIgs
+120
+52473
+100844
+143362
+197301
+273954
+359118
+410274
+421813  <-- final sum
+
+
 ADT v1.31    for A2's using SSC or IIgs
 76
 53502
@@ -41,6 +55,7 @@ ADT v1.31    for A2's using SSC or IIgs
 379090
 431830
 434178  <-- final sum
+
 
 ADTssc v1.23    for 8-bit A2's using SSC 
 76
@@ -86,8 +101,6 @@ ADT.CC (v1.21) "ADTcomm" for 8-bit A2's with non-SSC interfaces
  posted to Csa2 is 331155.
 
 
-
-
 Rubywand
 November 2005 Update by Knut Roll-Lund
-December 2006 Update by David Schmidt
+June 2006 Update by David Schmidt

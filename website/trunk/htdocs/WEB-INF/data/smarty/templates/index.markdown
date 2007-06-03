@@ -10,6 +10,11 @@ a PC's COM port with each computer running ADT.
 
 News
 ====
+**3 June 2007** ADT 2007 is released.  ADT now automatically scans for
+and detects appropriate serial hardware.  Bootstrapping text files are
+included with different line endings (PC, Unix, Mac) though ADTPro's
+[bootstrapping instructions](http://adtpro.sourceforge.net/bootstrap.html#Bootstrapping%20DOS)
+are simpler.
 
 **27 Dec 2006**: ADT 2006 is released.  Some goodies from the 
 [ADTPro project](http://adtpro.sourceforge.net/) have been incorporated

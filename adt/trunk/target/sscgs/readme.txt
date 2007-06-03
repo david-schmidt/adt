@@ -1,7 +1,7 @@
 ADT (ssc + gs)
 
 ADT for Apple II with Super Serial Card or compatible, or IIgs
-version 1.31
+version 1.32
 ref: ADT folder
 
 by Paul Guertin (pg@sff.net)
@@ -13,10 +13,12 @@ transfer a standard 16-sector Apple II disk to a 140k file on an
 MS-DOS or Windows computer, and transfer a standard disk image
 file to disk on an Apple II.
 
-ADT 1.31 supports Apple II computers with a Super Serial Card or
+ADT 1.32 supports Apple II computers with a Super Serial Card or
 the IIgs modem port.  Also supported are cards that are hardware-
 compatible with SSC, built-in SSC-compatible serial port hardware.
-The IIc+ and //c include SSC-compatible serial ports.
+The IIc+ and //c include SSC-compatible serial ports.  ADT will
+scan for a suitable serial port and auto-select it if a custom
+configuration has not been saved.
 
 Note that the ADTPro server, written in Java, will service ADT 
 clients while running on a broader range of operating systems.
@@ -24,6 +26,19 @@ See: http://adtpro.sourceforge.net
 
 ADT is freeware.
 
+
+                                * * *
+
+Note: June 2007
+
+ADT client has been updated to automatically scan slots for
+a suitable serial device and auto-select it.  Slot scans
+are executed from highest to lowest slot, and the last one
+wins.  If there are both SSC card(s) and an IIgs modem port,
+the lowest SSC card will still win.  SSC cards are given 
+priority over the IIgs modem port.
+
+David Schmidt
 
                                 * * *
 

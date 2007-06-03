@@ -4,7 +4,7 @@ Apple Disk Transfer
 Created by Paul Guertin (pg@sff.net)
 1995 ...
 
-ref: ADT_2006.zip
+ref: ADT_2007.zip
 
 
 What is "ADT"?
@@ -38,13 +38,13 @@ winADT (v1.23) and dosADT (v1.23). To do the dir command correctly buffering
 had to be added for the 115,200 baudrate (v1.24).
 
 
-The 2006 Distribution
+The 2007 Distribution
 
 This distribution is a rework of the 2005 distribution. Updates include
 a consolidated SSC and IIgs ADT client, replacing the previously separate
 versions.
 
-ADT_2006 includes both the Windows and MS-DOS programs for the PC side
+ADT_2007 includes both the Windows and MS-DOS programs for the PC side
 (unchanged from the 2005 distributions) as well as the two most popular 
 Apple II-side programs:
 
@@ -60,7 +60,7 @@ o- MS-DOS version of PC-side program is now adtdos.exe.
 
 Apple II side 
 
-o- ADT- This is the original ADT (now at version 1.31). It is
+o- ADT- This is the original ADT (now at version 1.32). It is
 intended for use on an Apple II equipped with Apple's Super Serial
 Card (SSC) or a compatible card, or the IIgs.
 ref: ADT folder

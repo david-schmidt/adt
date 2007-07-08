@@ -1,0 +1,550 @@
+Apple Disk Transfer v1.31
+Windows version Copyright (C) 2000  Sean Gugler
+Released as freeware under GPL -- see GPL.TXT for details.
+
+Integration of IIgs and SSC code, built-in configuration save capability
+by David Schmidt, updated to v1.31 2006-12-20
+
+Higher baudrates added and updated to v1.23 by Knut Roll-Lund 2005-11-26
+Allowed longer filenames in ADTwin, minor corrections to manual v1.23 (2)
+by Knut Roll-Lund 2005-12-31
+
+
+Manual.txt -- full documentation, for new and experienced users alike
+
+
+Acknowledgements:  Much of the text below was written by Paul Guertin.
+It has been edited and reformatted for introduction of the Win32
+edition by Sean Gugler.
+
+
+
+=========================================================================
+                      --- 1.  TABLE OF CONTENTS ---
+
+1. TABLE OF CONTENTS
+2. INTRODUCTION
+3. INSTALLATION
+ 3.1  Hardware
+ 3.2  Software, PC side
+ 3.3  Software, Apple side
+4. USAGE
+ 4.1  PC side
+ 4.2  Apple side
+ 4.3  Commands
+ 4.3.1  send
+ 4.3.2  receive
+ 4.3.3  dir
+ 4.3.4  configure
+ 4.3.5  quit
+ 4.3.6  about
+ 4.4  Notes
+5. TECHNICAL REFERENCE
+ 5.1  MSVCRT40.DLL
+ 5.2  File Format
+ 5.3  Super Serial Card configuration
+ 5.4  Serial Cable Wiring
+ 5.5  History
+ 5.6  Contact the Authors
+
+=========================================================================
+                        --- 2.  INTRODUCTION ---
+
+Apple II <==> Windows 32-bit
+
+Apple Disk Transfer (ADT for short) is a set of two programs to
+transfer standard 16-sector Apple II disks to and from 140k files
+on a Windows computer.  The file format is compatible with many
+Apple II emulators.
+
+ADT 1.31 requires the Apple II to have either a Super Serial Card 
+(or compatible), or an Apple Communications Card (or compatible),
+or and IIgs.  Note that the IIc+ and //c include SSC-compatible
+serial ports.
+
+=========================================================================
+                        --- 3.  INSTALLATION ---
+
+----------------------------
+]  3.1  HARDWARE
+
+You will need a null-modem cable to connect the PC and the Apple II.
+If you don't have one, you can make your own (see section 5.4 "Serial
+Cable Wiring") or buy one at your local computer store.
+
+    SSC: If you have a genuine Apple Super Serial Card, you can use
+    a "straight-through" cable instead of a null-modem cable.  Simply
+    set the jumper on the card to "terminal" rather than "modem".
+    Thanks to Greg Bennett for this tip.
+    (If you use your SSC for a printer, chances are it will already
+    be set up this way.)
+
+----------------------------
+]  3.2  SOFTWARE, PC SIDE
+
+Unzip the distribution .zip file into a folder of your choice.  
+The executable file is ADT.EXE.
+
+Windows Explorer method:
+    Create a shortcut to ADT.EXE and move it to the directory where
+    you want your .DSK files.  (Or right-drag ADT.EXE to that
+    directory, and choose "Create Shortcut Here").  Double-click that
+    shortcut.
+
+Command Prompt method:
+    Copy ADT.EXE into a directory in your PATH, or add the ADT folder
+    to your PATH.  Change to the directory where you want your .DSK files
+    with the 'cd' command, then type 'ADT' or 'start ADT'.
+
+If you experience errors regarding missing DLL files, please see
+section 5.1 "MSVCRT40.DLL".
+
+----------------------------
+]  3.3  SOFTWARE, APPLE SIDE
+
+
+Boot any DOS 3.3 disk (or compatible, such as David-DOS) that will leave you
+with the familiar Applesoft ']' prompt.  Make sure your disk has at least 16
+free blocks, or insert one that does.  Type IN#x, where x is the
+slot your serial card is in (typically, x=2). Set the speed to 300 baud.
+
+    SSC: Set the speed by typing the characters "<ctrl-A>6B".
+    If your SSC card is in "terminal" mode, use <ctrl-I> instead
+    of <ctrl-A>.  (If you use your SSC for a printer, chances are
+    it will be in "terminal" mode.)
+    
+    IIgs: Set the speed by typing the characters "<ctrl-A>6B".
+
+Then, on the PC, start a comm program, set it for 300 baud N81 (no parity,
+8-bit data, 1 stop bit), and ASCII-upload (not Xmodem or any other protocol
+but a straight text upload) the appropriate dump file to the Apple.
+(Example: Using HyperTerm Under Windows 95, you would Send Text.)
+    adt_ss.dmp  <-- Super Serial Card
+    adt_cc.dmp  <-- Apple Communications Card
+
+Alternately, from a Command Prompt enter these two commands:
+    mode com1: baud=300 data=8 parity=n
+    type adt_ss.dmp > com1:
+Substitute "com2" for "com1" and "adt_cc.dmp" for "adt_ss.dmp" as necessary.
+
+    ACKNOWLEDGEMENT:  Thanks to "Delfs" for this tip.  Delfs tested this
+    procedure on an AT class PC with MSDOS6 and Win9x, with both Apple //e
+    and IIgs.  Information obtained from the official comp.sys.apple2
+    (Csa2) FAQ "Telecom-1 Hardware & Transfers", at tne end of question 003.
+    Copies available at Rubywand's excellent web site:
+        http://home.swbell.net/rubywand/Csa2T1TCOM.html
+
+During the transfer process, the program will enter itself into the
+Monitor and save itself to disk under the name "ADT.SS" or "ADT.CC",
+depending on which dump file you chose. Here are some tips to get this
+to work. If nothing seems to work, you can always type in the hex dump
+by hand (yep, it's getting longer with each new version, but it's
+still under 2.5k).
+
+     1. If you get a beep at every line, the PC comm program is
+        probably sending CRLFs to your Apple, which only likes
+        CRs. Turn on the "Strip linefeeds on output" option in
+        your comm program.
+
+     2. If you see total garbage on the Apple II screen, first be
+        sure that the SSC and the comm program agree on the
+        transfer speed. If they do, your comm program is probably
+        doing something funny with the high bit (aka bit 7) of
+        each character. Turn off the "Strip high bit on output"
+        option.
+
+     3. If you are uploading ADT to an unaccelerated Apple II,
+        you may need to slow down the transfer. Your comm program
+        probably allows you to set a fixed delay between each
+        line (aka "line pacing"). A 1.2-second pause worked well
+        with a 1 MHz Apple //c. [Note: disk transfers with ADT
+        are done at 19200 bps, even with a 1 MHz machine. The
+        slowness here is due to the way the Apple Monitor works.]
+
+=========================================================================
+                            --- 4.  USAGE ---
+
+Run the PC-side program first.  It acts as a server for the Apple-side
+program.
+
+Except for the PC configuration (serial port & speed), ADT operation
+is entirely controlled from the Apple II keyboard, so you can transfer
+many disks without having to go back and forth between the two
+computers.
+
+----------------------------
+]  4.1  PC-SIDE
+
+Choose a serial port (1=COM1, 2=COM2, ...) and speed (19200 recommended)
+then click "Connect".  Serial ports can only be used by one application
+at a time; if your chosen port is already in use you will be notified,
+and you should close whichever other application is using it.
+
+It's OK to change port and speed while the connection is open, but not
+while a transfer is in progress.
+
+You may click "Disconnect" to relinquish the port to another app if
+you wish, then click "Connect" to reclaim it.
+
+Press ESC or click the "Reset" button at any time to abort the current
+operation and return ADT to the "Ready" state.  See also "ABORTING" in
+section 4.4 "Notes".
+
+The serial port and speed may be specified as arguments when launching ADT.
+This can save you time if the defaults are not correct for your system.
+For example, to use port 2 at 9600 baud,
+    Command Prompt method:  type "ADT 2 9600"
+    Windows Explorer method:  view the Properties of your Windows
+        Shortcut, select the "Shortcut" pane, and change the "Target"
+        field to:  "C:\ADT\Adt.exe" 2 9600
+
+----------------------------
+]  4.2  APPLE-SIDE
+
+From a DOS 3.3 prompt, type the appropriate command:
+    BRUN ADT
+
+At the top of the Apple screen, you will see your current configuration
+info, which can be changed with the "Configure" command.
+
+    SSC:Sn,nnnnn        Serial card slot and comm speed
+    DISK:Sn,Dn          Disk drive slot and drive number
+
+At the bottom of the Apple screen, you will see the following menu:
+
+    Send, Receive, Dir, Configure, Quit?
+
+To select an item, simply type the first letter of the word. One
+keystroke is enough, you don't have to hit Return.
+
+
+----------------------------
+]  4.3  COMMANDS
+
+
+--> SEND
+
+ADT will ask for a PC-side filename.  It is recommended to end the
+filename with ".DSK" or ".dsk".  Lowercase letters are OK, if your
+Apple supports them.  Filenames up to 254 characters in length are
+accepted.
+
+ADT then reads the disk in the specified slot and drive and transmits
+it to the PC, which will store it in that file. ADT will not overwrite
+an existing file.  All files are stored in the current directory and
+are 143,360 bytes in length.  (See section 5.2 "File Format" for a
+description of its contents.)
+
+
+--> RECEIVE
+
+ADT will ask for a PC-side filename.  Lowercase letters are OK, if
+your Apple supports them, but case will likely be ignored by the PC.
+Filenames up to 254 characters in length are accepted.
+
+ADT will then receive that file from the PC's current directory and
+write it to the disk in the specified slot and drive, overwriting any
+data that may be on the disk.  THE DISK MUST ALREADY BE 16-SECTOR
+FORMATTED.  (You can use the Dos 3.3 "INIT" command to format a blank
+disk.)  Before transmission, ADT ensures that the file exists and
+is 143,360 bytes in length.
+
+
+--> DIR
+
+ADT will display a list of the files in the current Windows directory.
+There is currently no way to change directories from within ADT.
+
+
+--> CONFIGURE
+
+This takes you to the ADT configuration menu. Use the up and down
+arrow keys to select a parameter (Apple ][+ users, use space
+instead). The left and right arrow keys change the value of the
+current parameter. Return saves the displayed values and exits. Escape
+exits without saving the changes.  Ctrl-D resets all parameters to the
+default values (you can change the default values by using the BASIC
+program ADT CONFIGURATION).
+
+Here's an explanation of each parameter:
+
+    Disk slot, disk drive, Comms device: self-explanatory. The
+    defaults are slot 6, drive 1, and a Super Serial Card in slot 2.
+    Rotate through the options to get to the IIgs modem if you are
+    connecting via an IIgs.
+
+    Comms speed: use the highest speed that works. The default is
+    19200, and it works with my 1 MHz Apple //e.
+
+    Read retries: number of times RWTS will try to read a sector
+    before giving up. I suggest 1 or 2. If you have a
+    particularly weak disk, and don't mind the recalibrating
+    noise, you can increase it (also consider adjusting your
+    drive speed, and cleaning the drive head).
+
+    Write retries: same, but for writing to a disk. The default
+    is 0: if I have trouble writing to a disk, even only once, I
+    usually trash the disk. My data is worth more than $0.50.
+
+    Use checksums: DOS puts a checksum at the end of each sector
+    as an error-detection measure. If the checksum is wrong, it
+    means the data is probably corrupt and RWTS will issue an I/O
+    error. Setting this parameter to NO will defeat this check:
+    even if the checksum is wrong, the sector will be read
+    normally. This may be of some help in transferring very old
+    disks on which a few bits have rotted. It will also allow ADT to
+    copy disks where the only protection scheme is a different
+    checksum algorithm.
+
+        When you modify this parameter, ADT patches the copy of
+    DOS in memory. If you're using a non-standard version of DOS,
+    the code that checks for checksum errors may have been moved
+    to a different address. In that case, ADT will show the words
+    "DO NOT CHANGE" next to the parameter. (It will not prevent
+    you from changing it, however... If you really want to
+    overwrite two random bytes in your custom DOS, go ahead, but
+    you assume all the risks!)
+
+        This parameter was suggested by Andy McFadden.
+
+    Enable sounds: YES means ADT will beep when a transfer is
+    finished, and on some other occasions. If this parameter is
+    set to NO, ADT will be totally silent. By the way, some of
+    you old-timers may recognize the beep: it's the same beep
+    used in my all-time favorite word processor, Apple Writer II
+    by Paul Lutus.
+
+    Save config: set to YES and hit enter to BSAVE the running
+    copy of ADT back out to disk.
+
+--> QUIT
+
+This quits ADT, returning to DOS 3.3.
+
+
+--> ?
+
+Shows "About ADT" message.
+
+
+----------------------------
+]  4.4  NOTES
+
+Even though ADT runs under DOS 3.3, it will also transfer ProDOS disks
+as well as Pascal disks, because they are all in 16-sector format.
+
+ADT will not transfer Apple files singly; it is used solely for entire
+Apple disk images.
+
+ADT will not transfer DOS 3.2 (13-sector) disks to PC; and, it will not
+transfer protected disks to PC unless the protection scheme is based on
+the DOS checksums only (and even then, there's no guarantee the disk will
+work in an emulator).
+
+ADT will not correctly transfer ProDOS-order (.po) disk image files to
+the Apple II.  ADTPro (http://adtpro.sourceforge.net) will.
+
+Meaning of characters on the Apple II status display:
+    R: Reading from disk
+    W: Writing to disk
+    I: Receiving data from PC ("Input")
+    O: Sending data to PC ("Output")
+    .: Sector read or written correctly
+    *: Error while reading or writing sector
+
+ABORTING: You can press the escape key at any time during the transfer
+and everything will stop. You will be back to the ADT menu. This is
+true for the Apple and the PC. When you are aborting a transfer, stop
+the _sending_ computer first. If you first stop the receiving
+computer, it will continue to receive unexpected data and may become
+confused.
+
+
+=========================================================================
+                     --- 5.  TECHNICAL REFERENCE ---
+
+----------------------------
+]  5.1  MSVCRT40.DLL
+
+The files MFC40.DLL and MSVCRT40.DLL are required for the Win32
+Edition of ADT.  These files are bundled with Windows NT 4.0,
+Windows 98, and later versions.
+
+Windows 95 owners might see error messages mentioning these files,
+if they haven't been installed by any of the myriad other applications
+that also require them.  Technically, you should obtain them from
+me, and though I can supply them by email I would greatly appreciate
+it if you'd look for them on the web first.  There are plenty of sources,
+though legally I can't recommend any specific one.  Try searching Google:
+   http://www.google.com/search?query=mfc40.dll%20msvcrt40.dll%20download
+
+Once obtained, copy both files into your C:\WINDOWS\SYSTEM folder.
+It should not be necessary to restart Windows.
+
+
+----------------------------
+]  5.2  FILE FORMAT
+
+The .DSK file format was established for the apl2em emulator by
+Randy Spurlock.  Bytes are sequenced in the naive way, making
+indexing very simple in hexadecimal: byte number 0x000ttsbb
+stores Byte 'bb' of Sector 's' of Track 'tt', like so:
+
+   Byte #    Contents
+   -------------------------------------
+   0x00000   Track 00, Sector 0, Byte 00
+      :
+   0x000FF   Track 00, Sector 0, Byte FF
+
+   0x00100   Track 00, Sector 1, Byte 00
+      :
+   0x00FFF   Track 00, Sector F, Byte FF
+
+   0x01000   Track 01, Sector 0, Byte 00
+      :
+   0x22FFF   Track 22, Sector F, Byte FF
+
+.DSK files are exactly 143,360 bytes long (0x23000).  No signature
+bytes have been added by ADT, for compatibility's sake.
+
+The ordering of sectors is according to the DOS 3.3 RWTS routine,
+rather than the physical layout on the disk media.  ProDos maps
+the physical layout to an alternate sequencing scheme, which is
+not supported by this version of ADT.
+
+
+----------------------------
+]  5.3  SSC CONFIGURATION
+
+The Super Serial Card has one jumper marked "TERMINAL/MODEM" and two DIP
+switch banks, SW1 and SW2, with seven switches each. For typical ADT usage,
+you may set them as follows, for 19200 baud 8N1:
+
+  SW1-1 off      SW2-1 on
+    1-2 off        2-2 on
+    1-3 off        2-3 off
+    1-4 off        2-4 on
+    1-5 on         2-5 off
+    1-6 on         2-6 off
+    1-7 on         2-7 off
+
+Put the TERMINAL/MODEM jumper pointing up at 'MODEM' if you plan to use a
+null-modem cable. Set it to 'TERMINAL' to use a straight-through cable.
+
+SW2-6 Interrupt is a hard switch, disabling interrupt from the SSC to the
+CPU. ADT doesn't use interrupt so the suggested setting is 'off'. Some
+other comm programs using the SSC need interrupt so SW2-6 should then be
+on and actually this setting doesn't affect ADT so it is perfectly ok to
+have it on too. So the setting of SW2-6 is don't care but if you use no
+other comm program set it to off.
+
+See also the official comp.sys.apple2 (Csa2) FAQ, available at:
+http://home.swbell.net/rubywand/Csa2T1TCOM.html#018
+
+
+----------------------------
+]  5.4  SERIAL CABLE WIRING
+
+
+The Apple Super Serial Card has a Dsub-25 female connector.  The pins
+are numbered as follows, when viewed from the outside:
+
+ ,----------------------------------------. 
+ \ 13 12 11 10 09 08 07 06 05 04 03 02 01 / 
+  \  25 24 23 22 21 20 19 18 17 16 15 14 / 
+   `------------------------------------' 
+
+The assigments are:
+
+         1 Frame Ground 
+         2 TXD: Transmit Data
+         3 RXD: Receive Data
+         4 RTS: Request To Send
+         5 CTS: Clear To Send
+         6 DSR: Data Set Ready
+         7 GND: Signal Ground
+         8 DCD: Data Carrier Detect
+        19 CTS2: Alternate Clear To Send  (selected with DIP SW2-7)
+        20 DTR: Data Terminal Ready
+
+
+The PC connections are the same for a 25-pin connector.  Note that a
+male connector has the numbering mirrored left-to-right.  If you instead
+have a 9-pin connector, the numbering and assignments are (again, when
+viewing a female connector face-on):
+
+         ,----------------. 
+         \ 05 04 03 02 01 / 
+          \  09 08 07 06 / 
+           `------------' 
+
+         1 DCD: Data Carrier Detect
+         2 RXD: Receive Data
+         3 TXD: Transmit Data
+         4 DTR: Data Terminal Ready
+         5 GND: Signal Ground
+         6 DSR: Data Set Ready
+         7 RTS: Request To Send
+         8 CTS: Clear To Send
+         9 RI:  Ring Indicator
+
+If your SSC is configured as a terminal, simply make sure your pin
+assignments match.
+
+Otherwise, make a NULL-MODEM cable by connecting the following:
+        2 RXD <---- TXD 2 
+        3 TXD ----> RXD 3
+        4 DTR --+-> DSR 6
+                \-> DCD 8
+        5 GND ----- GND 7
+        1 DCD <-+-- DTR 20
+        6 DSR <-/
+        7 RTS ----> CTS 5
+        8 CTS <---- RTS 4
+
+
+ACKNOWLEDGEMENTS:  Information taken from the comp.sys.apple (Csa2) FAQ
+archive, available at:
+http://home.swbell.net/rubywand/Csa2T1TCOM.html#006
+and from David S. Lawyer's Text-Terminal-HOWTO document,
+11.3, available at:
+http://tldp.org/HOWTO/Text-Terminal-HOWTO.html
+
+
+----------------------------
+]  5.5  HISTORY
+
+Rich Williamson (glitch@eskimo.com) released SENDDISK on April 9, 1993.
+His Apple-side program read an entire disk with DOS' RWTS (Read Write
+Track Sector) routine, and transmitted the data through an Apple
+Super Serial Card in slot 1.  His PC-side program listened to COM1
+for such a data stream, and stored it in a .DSK file, in the format
+expected by the Apple II emulator "apl2em".
+
+Paul Guerton (pg@sff.net) released Apple Disk Transfer (ADT) on
+December 4th, 1995, and updated it July 14, 1999.  Starting with
+SENDDISK, Paul added a nice screen layout, configuration menus,
+error recovery, data stream compression, and the capability to
+receive .DSK images from the PC and write them back to an
+Apple II floppy disk.
+
+Paul Schlyter (pausch@saaf.se) released ADTcc on June 13, 2000.
+He modified ADT's Apple-side program to work with the older
+Apple Communications Card and compatibles.
+
+Sean Gugler (gugler-sean@cs.yale.edu) released ADT Win32 Edition on
+December 1, 2000.  He replaced the older PC-side DOS program with
+a Windows 32-bit API program of otherwise identical functionality.
+This brings ADT into the world of background multi-tasking, long
+file names, and support for Windows NT and its progeny.
+
+
+----------------------------
+]  5.6  CONTACT THE AUTHORS
+
+ADT has many contributors.  Consult the comp.sys.apple2 newsgroup 
+for the latest status.  The ADT project is hosted here:
+http://adt.berlios.de
+
+--
+2006-12-20

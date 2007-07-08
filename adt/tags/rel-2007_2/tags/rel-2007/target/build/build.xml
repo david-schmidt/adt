@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ADT" default="all" basedir="..">
+	<property name="assemblerPath" value="C:/dev/xassm/cc65/bin" />
+	<property name="dosVersionString" value="132" />
+	<property name="dosDistName" value="adt${dosVersionString}" />
+	<property name="builddir" value="${basedir}/build" />
+	<property name="acJar" value="${builddir}/AppleCommander-1.3.4d-ac.jar" />
+	<property name="proJar" value="${builddir}/ADTPro-0.1.3.jar" />
+	<taskdef name="appleDump" classname="org.adtpro.utilities.AppleDump" classpath="${proJar}"/>
+	<target name="all" depends="clean, assemble, builddsk">
+	</target>
+
+	<target name="clean">
+		<!--
+		Clean up everything
+		-->
+		<delete file="${basedir}/sscgs/src/adt" />
+		<delete file="${basedir}/sscgs/${dosDistName}.dsk" />
+		<delete>
+			<fileset dir="${basedir}/sscgs/src" includes="**/*.o"/>
+			<fileset dir="${basedir}/sscgs/src" includes="**/*.map"/>
+			<fileset dir="${basedir}/sscgs/src" includes="**/*.lst"/>
+			<fileset dir="${basedir}/sscgs" includes="**/adtdmp.*"/>
+		</delete>
+	</target>
+
+	<target name="assemble" depends="clean">
+		<!--
+		Assemble and link the ADT source
+		-->
+		<exec dir="${basedir}/sscgs/src" executable="${assemblerPath}/cl65">
+			<arg line="-l -t none adt.s" />
+		</exec>
+		<!--
+		Make a dumpable version
+		-->
+		<appleDump infilename="${basedir}/sscgs/src/adt" outfilename="${basedir}/sscgs/adt.dmp" applename="ADT" startaddrhex="803" numbyteswide="12" />
+		<copy file="${basedir}/sscgs/adt.dmp" tofile="${basedir}/sscgs/adtdmp.mac" />
+		<copy file="${basedir}/sscgs/adt.dmp" tofile="${basedir}/sscgs/adtdmp.unix" />
+		<copy file="${basedir}/sscgs/adt.dmp" tofile="${basedir}/sscgs/adtdmp.pc" />
+		<fixcrlf srcdir="${basedir}/sscgs" includes="adtdmp.mac" eol="mac" eof="remove" />
+		<fixcrlf srcdir="${basedir}/sscgs" includes="adtdmp.unix" eol="unix" eof="remove" />
+		<fixcrlf srcdir="${basedir}/sscgs" includes="adtdmp.pc" eol="dos"/>
+		<delete file="${basedir}/sscgs/adt.dmp" />
+	</target>
+
+	<target name="builddsk">
+		<!--
+		Start a .dsk image containing the release number
+		-->
+		<copy file="${builddir}/ADTBase.dsk" tofile="${basedir}/sscgs/${dosDistName}.dsk" />
+		<!--
+		Put the assembled DOS ADT program on the .dsk image
+		-->
+		<exec dir="${basedir}/sscgs" executable="java" input="${basedir}/sscgs/src/ADT">
+			<arg line="-jar ${acJar} -p ADT bin 2051 ${dosDistName}.dsk" />
+		</exec>
+		<!--
+		Put a backup DOS ADT program on the .dsk image
+		-->
+		<exec dir="${basedir}/sscgs" executable="java" input="${basedir}/sscgs/src/ADT">
+			<arg line="-jar ${acJar} -p ADT.BACKUP bin 2051 ${dosDistName}.dsk" />
+		</exec>
+		<!--
+		Lock the backup version
+		-->
+		<exec dir="${basedir}/sscgs" executable="java">
+			<arg line="-jar ${acJar} -k ADT.BACKUP ${dosDistName}.dsk" />
+		</exec>
+	</target>
+
+</project>

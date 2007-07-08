@@ -1,0 +1,287 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif\r\n"
+    "#include ""res\\ADT.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\ADT.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 217, 62
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About Apple Disk Transfer"
+FONT 8, "MS Sans Serif"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "Apple Disk Transfer    version 1.23 (2)",IDC_STATIC,40,
+                    10,127,8,SS_NOPREFIX
+    LTEXT           "Released under GNU General Public License",IDC_STATIC,
+                    39,47,171,8
+    DEFPUSHBUTTON   "OK",IDOK,178,7,32,14,WS_GROUP
+    LTEXT           "Win32 edition Copyright © 2000  Sean Gugler\nMinor modification by Knut Roll-Lund 2005",
+                    IDC_STATIC,39,30,171,18
+END
+
+IDD_ADT_DIALOG DIALOGEX 0, 0, 185, 98
+STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "Apple Disk Transfer"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "&Port",IDC_STATIC,7,3,14,8
+    COMBOBOX        IDC_COMBO_PORT,7,12,35,64,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "&Speed",IDC_STATIC,68,3,22,8
+    COMBOBOX        IDC_COMBO_SPEED,67,12,48,78,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP,WS_EX_RIGHT
+    PUSHBUTTON      "OK",IDOK,122,13,50,14,NOT WS_VISIBLE
+    DEFPUSHBUTTON   "&Connect",IDC_CONNECT,128,11,50,14
+    PUSHBUTTON      "&Reset (ESC)",IDCANCEL,114,37,64,14
+    LTEXT           "Status",IDC_STATUS,7,54,171,8
+    CONTROL         "Progress1",IDC_PROGRESS1,"msctls_progress32",WS_BORDER,
+                    7,65,171,6
+    CONTROL         "Progress1",IDC_PROGRESS2,"msctls_progress32",WS_BORDER,
+                    7,70,171,6
+    CONTROL         "Progress1",IDC_PROGRESS3,"msctls_progress32",WS_BORDER,
+                    7,75,171,6
+    CONTROL         "Progress1",IDC_PROGRESS4,"msctls_progress32",WS_BORDER,
+                    7,80,171,6
+    CONTROL         "Progress1",IDC_PROGRESS5,"msctls_progress32",WS_BORDER,
+                    7,85,171,6
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,23,2,0
+ PRODUCTVERSION 1,23,2,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "Comments", "Minor modifiation by Knut Roll-Lund 2005\0"
+            VALUE "CompanyName", "Dr. Guz Guild\0"
+            VALUE "FileDescription", "ADT Application\0"
+            VALUE "FileVersion", "1, 23, 2, 0\0"
+            VALUE "InternalName", "ADT\0"
+            VALUE "LegalCopyright", "Copyright © 2000 Sean Gugler\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "ADT.EXE\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "Apple Disk Transfer, Win32 Edition\0"
+            VALUE "ProductVersion", "1, 23, 2, 0\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 210
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 55
+    END
+
+    IDD_ADT_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 178
+        TOPMARGIN, 3
+        BOTTOMMARGIN, 91
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_ADT_DIALOG DLGINIT
+BEGIN
+    IDC_COMBO_PORT, 0x403, 2, 0
+0x0031, 
+    IDC_COMBO_PORT, 0x403, 2, 0
+0x0032, 
+    IDC_COMBO_PORT, 0x403, 2, 0
+0x0033, 
+    IDC_COMBO_PORT, 0x403, 2, 0
+0x0034, 
+    IDC_COMBO_SPEED, 0x403, 4, 0
+0x3033, 0x0030, 
+    IDC_COMBO_SPEED, 0x403, 5, 0
+0x3231, 0x3030, "\000" 
+    IDC_COMBO_SPEED, 0x403, 5, 0
+0x3432, 0x3030, "\000" 
+    IDC_COMBO_SPEED, 0x403, 5, 0
+0x3834, 0x3030, "\000" 
+    IDC_COMBO_SPEED, 0x403, 5, 0
+0x3639, 0x3030, "\000" 
+    IDC_COMBO_SPEED, 0x403, 6, 0
+0x3931, 0x3032, 0x0030, 
+    IDC_COMBO_SPEED, 0x403, 6, 0
+0x3833, 0x3034, 0x0030, 
+    IDC_COMBO_SPEED, 0x403, 6, 0
+0x3735, 0x3036, 0x0030, 
+    IDC_COMBO_SPEED, 0x403, 7, 0
+0x3131, 0x3235, 0x3030, "\000" 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ABOUTBOX            "&About ADT..."
+    IDS_CONNECT             "&Connect"
+    IDS_DISCONNECT          "Dis&connect"
+    IDS_ERR0005             "COM port is in use by another application."
+    IDS_ERR0002             "No such COM port on this system."
+    IDS_APPTITLE            "Apple Disk Transfer"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ADT_SENDFILE        "Sending %s"
+    IDS_ADT_CANTOPEN        "ERROR: %s can't be opened."
+    IDS_ADT_NOT140K         "ERROR: %s is not a 140K disk image."
+    IDS_ADT_BADHEADER       "ERROR: Bad header byte received."
+    IDS_ADT_CRCERR          "Track $%02X, sector $%01X: bad CRC"
+    IDS_ADT_RECEIVE_FILE    "Receiving %s"
+    IDS_ADT_EXISTS          "ERROR: %s already exists."
+    IDS_ADT_DISKFULL        "ERROR: %s doesn't fit on disk."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ADT_READY           "Ready."
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#endif
+#include "res\ADT.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

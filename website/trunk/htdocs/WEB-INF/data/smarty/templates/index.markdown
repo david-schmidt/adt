@@ -10,6 +10,10 @@ a PC's COM port with each computer running ADT.
 
 News
 ====
+**8 July 2007** ADT 2007_2 is released.  ADT now can operate with
+Laser 128 compatible computers.  MacADT has also been added to the 
+distribution.
+
 **3 June 2007** ADT 2007 is released.  ADT now automatically scans for
 and detects appropriate serial hardware.  Bootstrapping text files are
 included with different line endings (PC, Unix, Mac) though ADTPro's
@@ -30,24 +34,25 @@ page](http://developer.berlios.de/projects/adt/) for all the goodies.
 Setting Up and Using ADT
 ========================
 
-Download [ADT\_2007.zip](http://download.berlios.de/adt/ADT_2007.zip) and
-unzip the archive. The result is a folder named "ADT\_2007". This includes
-a Windows and MS-DOS program, as well as two popular Apple II-side
-programs.
+Download [ADT\_2007\_2.zip](http://download.berlios.de/adt/ADT_2007_2.zip) and
+unzip the archive. The result is a folder named "ADT\_2007\_2". This includes
+server programs for Windows, MS-DOS and MacOS, as well as two popular 
+Apple II-side programs.
 
-PC Side
+Host Side
 -------
 
 * `adt.exe`: A Windows32 version of the PC-side program by Sean Gugler.
 
 * `adtdos.exe`: An MS-DOS version of the PC-side program by Paul Guertin.
 
+* `MacADT.sit`: Stuffit archive of the host program by Hideki Naito.
+
 Apple II Side
 -------------
 
-* `ADT`: This is the original ADT (now at version 1.31). It is intended for
-  use on an Apple II equipped with Apple's Super Serial (SSC) or
-  compatible card, or the Apple IIgs.
+* `ADT`: This is the original ADT (now at version 1.33). It is intended for
+  use on an just about any Apple II or compatible.
 
 * `ADTcc`: This is an adaptation of ADT (now at version 1.21) intended 
   for use on an Apple II equipped with the Apple Communications Card 

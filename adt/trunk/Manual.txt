@@ -1,20 +1,8 @@
-Apple Disk Transfer v1.32
+Apple Disk Transfer v1.33
 Windows version Copyright (C) 2000  Sean Gugler
 Released as freeware under GPL -- see GPL.TXT for details.
 
-Automatic slot scanning capability by David Schmidt, updated to 
-v1.32 2007-6-2
-
-Integration of IIgs and SSC code, built-in configuration save capability
-by David Schmidt, updated to v1.31 2006-12-20
-
-Higher baudrates added and updated to v1.23 by Knut Roll-Lund 2005-11-26
-Allowed longer filenames in ADTwin, minor corrections to manual v1.23 (2)
-by Knut Roll-Lund 2005-12-31
-
-
 Manual.txt -- full documentation, for new and experienced users alike
-
 
 Acknowledgements:  Much of the text below was written by Paul Guertin.
 It has been edited and reformatted for introduction of the Win32

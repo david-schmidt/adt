@@ -4,7 +4,7 @@ Apple Disk Transfer
 Created by Paul Guertin (pg@sff.net)
 1995 ...
 
-ref: ADT_2007.zip
+ref: ADT_2007_2.zip
 
 
 What is "ADT"?
@@ -38,15 +38,16 @@ winADT (v1.23) and dosADT (v1.23). To do the dir command correctly buffering
 had to be added for the 115,200 baudrate (v1.24).
 
 
-The 2007 Distribution
+The 2007_2 Distribution
 
-This distribution is a rework of the 2005 distribution. Updates include
-a consolidated SSC and IIgs ADT client, replacing the previously separate
-versions.
+Updates include:
+o- Support for Laser 128 Apple II compatibles
 
-ADT_2007 includes both the Windows and MS-DOS programs for the PC side
-(unchanged from the 2005 distributions) as well as the two most popular 
-Apple II-side programs:
+o- MacADT for older Macs, updated with newer client software
+
+ADT_2007_2 includes Windows, MS-DOS and MacOS (not OSX) programs for
+the host side (unchanged from the 2005 distributions) as well as the
+two most popular Apple II-side programs.
 
 PC side 
 
@@ -58,13 +59,18 @@ o- MS-DOS version of PC-side program is now adtdos.exe.
    (by Paul Guertin; ADT creator)
    (now at version 1.23)
 
+o- Mac OS version is contained in a Stuffit Expander archive named
+   MacADT.sit.  Unstuff it on a classic Mac. 
+   (now at version 1.2.1)
+
 Apple II side 
 
-o- ADT- This is the original ADT (now at version 1.32). It is
+o- ADT- This is the original Apple DOS ADT. It is
 intended for use on an Apple II equipped with Apple's Super Serial
-Card (SSC) or a compatible card, or the IIgs.
+Card (SSC) or a compatible card, the IIc, IIgs, Laser 128, and other
+compatibles.
 ref: ADT folder
-dump file to transfer: adtpc.dmp
+dump file to transfer: adtdmp.{pc|mac|unix}
 
 o- ADTcc- This is an adaptation of ADT (now at version 1.21) intended
 for use on an Apple II equipped with the Apple Communications Card

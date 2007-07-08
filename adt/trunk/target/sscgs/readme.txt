@@ -1,7 +1,7 @@
 ADT (ssc + gs)
 
-ADT for Apple II with Super Serial Card or compatible, or IIgs
-version 1.32
+ADT for Apple II with Super Serial Card, IIgs or Laser 128
+version 1.33
 ref: ADT folder
 
 by Paul Guertin (pg@sff.net)
@@ -13,12 +13,10 @@ transfer a standard 16-sector Apple II disk to a 140k file on an
 MS-DOS or Windows computer, and transfer a standard disk image
 file to disk on an Apple II.
 
-ADT 1.32 supports Apple II computers with a Super Serial Card or
-the IIgs modem port.  Also supported are cards that are hardware-
-compatible with SSC, built-in SSC-compatible serial port hardware.
-The IIc+ and //c include SSC-compatible serial ports.  ADT will
+ADT 1.33 supports Apple II computers with a Super Serial Card,
+or built-in modem ports of the IIgs, IIc or Laser 128.  ADT will
 scan for a suitable serial port and auto-select it if a custom
-configuration has not been saved.
+configuration has not been saved yet.
 
 Note that the ADTPro server, written in Java, will service ADT 
 clients while running on a broader range of operating systems.
@@ -26,79 +24,12 @@ See: http://adtpro.sourceforge.net
 
 ADT is freeware.
 
-
                                 * * *
-
-Note: June 2007
-
-ADT client has been updated to automatically scan slots for
-a suitable serial device and auto-select it.  Slot scans
-are executed from highest to lowest slot, and the last one
-wins.  If there are both SSC card(s) and an IIgs modem port,
-the lowest SSC card will still win.  SSC cards are given 
-priority over the IIgs modem port.
-
-David Schmidt
-
-                                * * *
-
-Note: December 2006
-
-ADT client has been updated to work with both SSC and IIgs
-hardware.  The ability to save the current configuration
-has been built into the ADT program itself, rather than
-depending on a separate BASIC utility.  Also, a protocol
-error discovered by Joseph Oswalt has been corrected.
-
-David Schmidt
-
-                                * * *
-
-Note: December 30th 2005
-
-Windows version has been updated to allow longer filenames
-Some minor manual and readme corrections.
-
-Knut Roll-Lund
-
-                                * * *
-
-Note: November 2005
-
-Windows 32 version has been patched to include
- higher baud rates not thought possible using the
- A2.  Modification and compile by Knut Roll-Lund
-
-DOS version has been patched to include higher
- baud rates not thought possible using the A2.
- Modification and compile by Knut Roll-Lund
-
-The Apple II SSC version was updated by Knut Roll-Lund and EEastman
-
-ee
-
-                                * * *
-
-Note: April, 2004
-
-This package now includes both the MS-DOS and Windows versions
-of the part of ADT which runs on the PC:
-
-Windows32 version of PC-side program is adt.exe.
- (by Sean Gugler)
-
-MS-DOS version of PC-side program is now adtdos.exe.
- (by Paul Guertin; ADT creator)
-
-R/
-
-                                * * *
-
 
 Main contents of ADT distribution:
  adt.exe            -- Windows server executable
  manual.txt         -- ADT documentation
- ADT/adt131.dsk     -- Disk image containing ADT 1.31
+ ADT/adt133.dsk     -- Disk image containing ADT 1.33
  ADT/adtpc.dmp      -- Monitor dump format of ADT (PC format)
  ADT/adtmac.dmp     -- ... Mac line ending format
  ADT/adtunix.dmp    -- ... Unix line ending format
@@ -106,6 +37,17 @@ Main contents of ADT distribution:
                        Card version of ADT
 
                                 * * *
+
+What's new in version 1.33:
+
+    1. ADT supports the Laser 128 modem port (and any serial card
+       conforming to the Pascal entry point specification in slot 2)
+       at a maximum rate of 19,200 baud.
+
+What's new in version 1.32:
+
+    1. ADT will scan for a suitable serial port and auto-
+       select it if a custom configuration has not been saved yet.
 
 What's new in version 1.31:
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ADT" default="all" basedir="..">
 	<property name="assemblerPath" value="C:/dev/xassm/cc65/bin" />
-	<property name="dosVersionString" value="132" />
+	<property name="dosVersionString" value="133" />
 	<property name="dosDistName" value="adt${dosVersionString}" />
 	<property name="builddir" value="${basedir}/build" />
 	<property name="acJar" value="${builddir}/AppleCommander-1.3.4d-ac.jar" />
-	<property name="proJar" value="${builddir}/ADTPro-0.1.3.jar" />
+	<property name="proJar" value="${builddir}/ADTPro-1.0.1.jar" />
 	<taskdef name="appleDump" classname="org.adtpro.utilities.AppleDump" classpath="${proJar}"/>
 	<target name="all" depends="clean, assemble, builddsk">
 	</target>
@@ -34,7 +34,7 @@
 		<!--
 		Make a dumpable version
 		-->
-		<appleDump infilename="${basedir}/sscgs/src/adt" outfilename="${basedir}/sscgs/adt.dmp" applename="ADT" startaddrhex="803" numbyteswide="12" />
+		<appleDump infilename="${basedir}/sscgs/src/adt" outfilename="${basedir}/sscgs/adt.dmp" applename="ADT" startaddrhex="803" numbyteswide="11" />
 		<copy file="${basedir}/sscgs/adt.dmp" tofile="${basedir}/sscgs/adtdmp.mac" />
 		<copy file="${basedir}/sscgs/adt.dmp" tofile="${basedir}/sscgs/adtdmp.unix" />
 		<copy file="${basedir}/sscgs/adt.dmp" tofile="${basedir}/sscgs/adtdmp.pc" />

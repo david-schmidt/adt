@@ -10,11 +10,11 @@ a PC's COM port with each computer running ADT.
 
 News
 ====
-**8 July 2007** ADT 2007_2 is released.  ADT now can operate with
+**8 July 2007**: ADT 2007_2 is released.  ADT now can operate with
 Laser 128 compatible computers.  MacADT has also been added to the 
 distribution.
 
-**3 June 2007** ADT 2007 is released.  ADT now automatically scans for
+**3 June 2007**: ADT 2007 is released.  ADT now automatically scans for
 and detects appropriate serial hardware.  Bootstrapping text files are
 included with different line endings (PC, Unix, Mac) though ADTPro's
 [bootstrapping instructions](http://adtpro.sourceforge.net/bootstrap.html#Bootstrapping%20DOS)

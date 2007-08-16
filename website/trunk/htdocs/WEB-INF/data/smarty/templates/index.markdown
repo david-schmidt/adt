@@ -8,6 +8,10 @@ saved as .dsk disk image files. A typical ADT setup is an Apple II/IIe/IIc/IIgs
 with a serial card or built-in serial port connected via a NULL modem cable to
 a PC's COM port or a classic Mac's modem port with each computer running ADT.
 
+Download
+========
+Download ADT releases [here.](http://developer.berlios.de/project/showfiles.php?group_id=5617)
+
 News
 ====
 **8 July 2007**: ADT 2007_2 is released.  ADT now can operate with

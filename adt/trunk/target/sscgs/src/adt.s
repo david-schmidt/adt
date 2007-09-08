@@ -1639,6 +1639,10 @@ fnloop2:
 	bne	fnloop2
 
 getans2:  
+	lda	#$18
+	jsr	putc		; Send disk size lsb
+	lda	#$01
+	jsr	putc		; Send disk size msb
 ; for test only: activate next and deactivate line after
 ;	lda	#0		; Simulate ok
 	jsr	getc		; Answer from host should be 0
@@ -1662,6 +1666,7 @@ initsn2:
 ;---------------------------------------------------------
 snibtrak:
 	lda	#0		; a = 0
+	sta	iobsec		; Reset sector counter
 	sta	nibptr		; Init running ptr
 	lda	#>tracks	; Tracks address high
 	sta	nibptr+1
@@ -1701,6 +1706,7 @@ snibtr5:
 	lda	#_'O'
 	jsr	nibshow		; Show 'O' at current track
 	inc	nibptr+1	; Next page
+	inc	iobsec		; Increment sector counter
 	dec	nibpcnt		; Count
 	bne	snibtr1		; and back if more pages
 ; for test only: activate next and deactivate line after
@@ -1739,6 +1745,13 @@ snibpage:
 	sty	crc		; Zero crc
 	sty	crc+1
 	sty 	prev		; No previous character
+	lda	iobsec
+	jsr	putc		; Send the track number
+	lda	iobtrk
+	jsr	putc		; Send the sector number
+	lda	#$02
+	jsr	putc		; Send a protocol filler
+
 snibpag1:
 	lda	(nibptr),y	; Load byte to send
 	jsr	updcrc		; Update crc
@@ -2158,7 +2171,7 @@ mtspd:	asc	"        "
 	asc	"    DISK:S"
 mtslt:	asc	" ,D"
 mtdrv:	asc	" "
-	.byte	$8d,$8d,$8d
+	.byte	$8d,$8d
 	invcr	"  00000000000000001111111111111111222  "
 	inv	"  "
 hexnum: inv	"0123456789ABCDEF0123456789ABCDEF012  "

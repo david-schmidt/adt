@@ -75,7 +75,7 @@
 ; Version 1.00 - FIRST PUBLIC RELEASE
 
 ; The version number as a macro. Must not be more than 7 characters.
-.define		version_no	"2.2A1"
+.define		version_no	"V.R.M"
 
 ; CONSTANTS
 
@@ -2264,13 +2264,15 @@ msg20:	inv	"ADT "
 	.byte	$8d
 	asccr	"HALFTRACK SEND ADDED BY ERIC NEILSON"
 	.byte	$8d
+	asccr	"IIGS AND LASER SUPPORT BY DAVID SCHMIDT"
+	.byte	$8d
 	asc	"----------------------------------------"
 	asccr	"SENDS / RECEIVES APPLE II DISK IMAGES"
 	asccr	"VIA A SERIAL CONNECTION."
 	asccr	"REQUIRES A COMPATIBLE COMPANION PROGRAM"
-	asccr	"AT THE PC OR MAC SIDE."
+	asccr	"AT THE HOST SIDE."
 	.byte	$8d
-	asccr	"SSC, IIGS AND LASER COMPATIBLE."
+	asccr	"SSC, IIGS, IIC AND LASER COMPATIBLE."
 	asccr	"----------------------------------------"
 	ascz	"PRESS ANY KEY"
 

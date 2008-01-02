@@ -530,11 +530,12 @@ FindSlotLoop:
 	lda	(msgptr),y
 	cmp	#$31		; Is $Cn0C == $31?
 	bne	FindSlotNext
-; Ok, we have a set of signature bytes for a comms card, IIgs or Laser.
+; Ok, we have a set of signature bytes for a comms card (or IIc/IIgs, or Laser).
+; Remove more specific models/situations first.
 	ldy	#$1b		; Lookup offset
 	lda	(msgptr),y
-	cmp	#$eb		; Do we have a goofy XBA instruction?
-	bne	FoundNotIIgs	; If not, it's an SSC or a Laser.
+	cmp	#$eb		; Do we have a goofy XBA instruction in $C01B?
+	bne	FoundNotIIgs	; If not, it's not an IIgs.
 	cpx	#$02		; Only bothering to check IIgs Modem slot (2)
 	bne	FindSlotNext
 	lda	#$07		; We found the IIgs modem port, so store it
@@ -543,22 +544,36 @@ FindSlotLoop:
 FoundNotIIgs:
 	ldy	#$00
 	lda	(msgptr),y
-	cmp	#$da
-	bne	NotLaser
+	cmp	#$da		; Is $Cn00 == $DA?
+	bne	NotLaser	; If not, it's not a Laser 128.
 	cpx	#$02
 	bne	FindSlotNext
-	lda	#$09
+	lda	#$09		; Ok, this is a Laser 128.
 	sta	TempSlot
-	lda	pspeed
+	lda	pspeed		; Were we trying to go too fast (115.2k)?
 	cmp	#$06
 	bne	:+
-	lda	#$05
+	lda	#$05		; Yes, slow it down to 19200.
 	sta	pspeed
-	sta	default+3
+	sta	default+3	; And make that the default.
 :
 	jmp	FindSlotNext
 NotLaser:
+	ldy	#$0a
+	lda	(msgptr),y
+	cmp	#$0e		; Is this a newer IIc - $Cn07 == $0E?
+	bne	NotNewIIc
+Slot2Reentry:
+	cpx	#$02		; Only bothering to check IIc Modem slot (2)
+	bne	FindSlotNext
 	stx	TempSlot
+	jmp	FindSlotNext
+
+NotNewIIc:
+	cmp	#$25		; Is this an older IIc - $Cn07 == $25?
+	beq	Slot2Reentry
+	stx	TempSlot	; Nope, nothing special.  Just a Super Serial card.
+
 FindSlotNext:
 	dex
 	bne	FindSlotLoop
@@ -570,9 +585,10 @@ FindSlotNext:
 	stx	default+2	; Store the slot number discovered as default
 	rts
 :	lda	TempIIgsSlot
-	beq	FindSlotDone	; Didn't find either SSC or IIgs Modem
+	beq	FindSlotDone	; Didn't find either SSC or IIgs Modem, so leave carry set
 	sta	pssc
 	sta	default+2	; Store the slot number discovered as default
+	clc
 FindSlotDone:
 	rts
 TempSlot:	.byte 0

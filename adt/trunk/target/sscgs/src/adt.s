@@ -20,6 +20,7 @@
 ; David Schmidt
 ; - Nibble disk send by Gerard Putter
 ; - Half track disk send by Eric Neilson 
+; - Fix slot scan for IIc computers
 
 ; Version 1.33 July 2007
 ; David Schmidt
@@ -561,23 +562,24 @@ FoundNotIIgs:
 NotLaser:
 	ldy	#$0a
 	lda	(msgptr),y
-	cmp	#$0e		; Is this a newer IIc - $Cn07 == $0E?
-	bne	NotNewIIc
-Slot2Reentry:
+	cmp	#$0e		; Is this a newer IIc - $Cn0a == $0E?
+	beq	ProcessIIc
+NotNewIIc:
+	cmp	#$25		; Is this an older IIc - $Cn0a == $25?
+	bne	GenericSSC
+ProcessIIc:
 	cpx	#$02		; Only bothering to check IIc Modem slot (2)
 	bne	FindSlotNext
 	stx	TempSlot
-	jmp	FindSlotNext
-
-NotNewIIc:
-	cmp	#$25		; Is this an older IIc - $Cn07 == $25?
-	beq	Slot2Reentry
+	jmp	FindSlotBreak	; Don't check port #1 on an IIc - we don't care
+GenericSSC:
 	stx	TempSlot	; Nope, nothing special.  Just a Super Serial card.
 
 FindSlotNext:
 	dex
 	bne	FindSlotLoop
 ; All done now, so clean up
+FindSlotBreak:
 	ldx	TempSlot
 	beq	:+
 	dex			; Subtract 1 to match slot# to parm index
@@ -585,10 +587,9 @@ FindSlotNext:
 	stx	default+2	; Store the slot number discovered as default
 	rts
 :	lda	TempIIgsSlot
-	beq	FindSlotDone	; Didn't find either SSC or IIgs Modem, so leave carry set
+	beq	FindSlotDone	; Didn't find anything in particular
 	sta	pssc
 	sta	default+2	; Store the slot number discovered as default
-	clc
 FindSlotDone:
 	rts
 TempSlot:	.byte 0

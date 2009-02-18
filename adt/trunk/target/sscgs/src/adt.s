@@ -156,7 +156,10 @@
 ; Version History:
 ; ----------------
 
-; Version v.r.m Unreleased
+; Version 2.3 February 2009
+; - Add slot scan for Apple /// computers
+
+; Version 2.2 January 2008
 ; David Schmidt
 ; - Nibble disk send by Gerard Putter
 ; - Half track disk send by Eric Neilson 
@@ -216,7 +219,7 @@
 ; Version 1.00 - FIRST PUBLIC RELEASE
 
 ; The version number as a macro. Must not be more than 7 characters.
-.define		version_no	"V.R.M"
+.define		version_no	"2.3"
 
 ; Protocol number. Note it must be assigned a higher value when the protcol is
 ; modified, and must never be < $0101 or > $01FF
@@ -529,6 +532,7 @@ resetio:
 	bne	krecv		; Nope, try receive
 	ldy	#msendtype
 	jsr	showmsg
+sendtype:
 	jsr	rdkey		; GET ANSWER
 	and	#$df		; CONVERT TO UPPERCASE
 	cmp	#_'H'		; Half?
@@ -547,7 +551,9 @@ resetio:
 	bne	:+		; Nope, invalid input
 	jsr	send		; YES, DO SEND ROUTINE
 :
-	jmp	mainlup
+	cmp	#esc
+	beq	mainlup
+	jmp	sendtype
 
 krecv:	cmp	#_'R'		; RECEIVE?
 	bne	kdir		; NOPE, TRY DIR
@@ -2472,7 +2478,7 @@ msg20:	inv	"ADT "
 	.byte	$8d
 	asccr	"HALFTRACK SEND ADDED BY ERIC NEILSON"
 	.byte	$8d
-	asccr	"IIGS AND LASER SUPPORT BY DAVID SCHMIDT"
+	asccr	"IIGS,LASER,/// SUPPORT BY DAVID SCHMIDT"
 	.byte	$8d
 	asc	"----------------------------------------"
 	asccr	"SENDS / RECEIVES APPLE II DISK IMAGES"
@@ -2480,7 +2486,7 @@ msg20:	inv	"ADT "
 	asccr	"REQUIRES A COMPATIBLE COMPANION PROGRAM"
 	asccr	"AT THE HOST SIDE."
 	.byte	$8d
-	asccr	"SSC, IIGS, IIC AND LASER COMPATIBLE."
+	asccr	"SSC, IIGS, IIC, LASER & /// COMPATIBLE."
 	asccr	"----------------------------------------"
 	ascz	"PRESS ANY KEY"
 

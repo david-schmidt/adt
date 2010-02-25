@@ -156,6 +156,9 @@
 ; Version History:
 ; ----------------
 
+; Version x.y 
+; - Bug fix to allow Laser 128 machines to run at 115.2kbps
+
 ; Version 2.3 February 2009
 ; - Add slot scan for Apple /// computers
 
@@ -698,19 +701,7 @@ FoundNotIIgs:
 	ldy	#$00
 	lda	(msgptr),y
 	cmp	#$da		; Is $Cn00 == $DA?
-	bne	NotLaser	; If not, it's not a Laser 128.
-	cpx	#$02
-	bne	FindSlotNext
-	lda	#$09		; Ok, this is a Laser 128.
-	sta	TempSlot
-	lda	pspeed		; Were we trying to go too fast (115.2k)?
-	cmp	#$06
-	bne	:+
-	lda	#$05		; Yes, slow it down to 19200.
-	sta	pspeed
-	sta	default+3	; And make that the default.
-:
-	jmp	FindSlotNext
+	beq ProcessIIc		; Yes - it's a Laser 128.  Treat it like a IIc.
 NotLaser:
 	ldy	#$0a
 	lda	(msgptr),y
@@ -2542,7 +2533,7 @@ parmtxt:
 	ascz "SSC SLOT 6"
 	ascz "SSC SLOT 7"
 	ascz "IIGS MODEM"
-	ascz "LASER MODEM"
+	ascz "GENERIC SLOT 2"
 	ascz "300"
 	ascz "1200"
 	ascz "2400"

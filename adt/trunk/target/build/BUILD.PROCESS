@@ -1,0 +1,10 @@
+1. Make sure the version number is updated.  Places where 
+   the version number is encoded:
+   * target/build/build.xml: <property name="dosVersionString" value="v.r.m" />
+   * target/sscgs/src/adt.s: DOS version number, if necessary: version_no	"v.r.m"
+   * target/sscgs/readme.txt: "What's new" section
+
+2. Perform a build
+   * Ensure you are using the 'all' target.
+
+3. Commit all changes

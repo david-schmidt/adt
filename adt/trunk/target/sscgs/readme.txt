@@ -1,8 +1,6 @@
 ADT (ssc + gs)
 
 ADT for Apple II with Super Serial Card, IIgs or Laser 128
-version 1.33
-ref: ADT folder
 
 by Paul Guertin (pg@sff.net)
 
@@ -13,7 +11,7 @@ transfer a standard 16-sector Apple II disk to a 140k file on an
 MS-DOS or Windows computer, and transfer a standard disk image
 file to disk on an Apple II.
 
-ADT 1.33 supports Apple II computers with a Super Serial Card,
+ADT supports Apple II computers with a Super Serial Card,
 or built-in modem ports of the IIgs, IIc or Laser 128.  ADT will
 scan for a suitable serial port and auto-select it if a custom
 configuration has not been saved yet.
@@ -29,7 +27,7 @@ ADT is freeware.
 Main contents of ADT distribution:
  adt.exe            -- Windows server executable
  manual.txt         -- ADT documentation
- ADT/adt133.dsk     -- Disk image containing ADT 1.33
+ ADT/adt133.dsk     -- Disk image containing ADT client software
  ADT/adtpc.dmp      -- Monitor dump format of ADT (PC format)
  ADT/adtmac.dmp     -- ... Mac line ending format
  ADT/adtunix.dmp    -- ... Unix line ending format
@@ -37,6 +35,20 @@ Main contents of ADT distribution:
                        Card version of ADT
 
                                 * * *
+
+What's new in version 
+
+ - Bug fix to allow Laser 128 machines to run at 115.2kbps
+
+What's new in version 2.3 February 2009:
+
+ - Add slot scan for Apple /// computers
+
+What's new in version 2.2:
+
+ - Nibble disk send by Gerard Putter
+ - Half track disk send by Eric Neilson 
+ - Fix slot scan for IIc computers
 
 What's new in version 1.33:
 

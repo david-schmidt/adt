@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ADT" default="all" basedir="..">
-	<property name="assemblerPath" value="C:/dev/xassm/cc65/bin" />
+	<property name="builddir" value="${basedir}/build" />
+	<property file="${builddir}/ADTBuild.properties"/>
+	<property file="${builddir}/ADTBuild-default.properties"/>
 	<property name="dosVersionString" value="v.r.m" />
 	<property name="dosDistName" value="adt${dosVersionString}" />
-	<property name="builddir" value="${basedir}/build" />
 	<property name="acJar" value="${builddir}/AppleCommander-1.3.4d-ac.jar" />
 	<property name="proJar" value="${builddir}/ADTPro-1.0.1.jar" />
 	<taskdef name="appleDump" classname="org.adtpro.utilities.AppleDump" classpath="${proJar}"/>

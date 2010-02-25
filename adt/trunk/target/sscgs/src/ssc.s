@@ -1,6 +1,6 @@
 ;
 ; ADTPro - Apple Disk Transfer ProDOS
-; Copyright (C) 2006 by David Schmidt
+; Copyright (C) 2006 - 2010 by David Schmidt
 ; david__schmidt at users.sourceforge.net
 ;
 ; This program is free software; you can redistribute it and/or modify it 
@@ -54,9 +54,8 @@ putc1:	lda $C000
 	beq pabort
 
 mod1:	lda $C089	; Check status bits
-	and #$70
-	cmp #$10
-	bne putc1	; Output register is full, so loop
+	and #$10
+	beq putc1	; Output register is full, so loop
 	pla
 mod2:	sta $C088	; Put character
 	rts
@@ -71,9 +70,8 @@ sscget:
 	cmp #esc	; Escape = abort
 	beq pabort
 mod3:	lda $C089	; Check status bits
-	and #$68
-	cmp #$8
-	bne sscget	; Input register empty, loop
+	and #$8
+	beq sscget	; Input register empty, loop
 mod4:	lda $C088	; Get character
 	rts
 

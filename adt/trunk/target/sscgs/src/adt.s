@@ -701,7 +701,12 @@ FoundNotIIgs:
 	ldy	#$00
 	lda	(msgptr),y
 	cmp	#$da		; Is $Cn00 == $DA?
-	beq ProcessIIc		; Yes - it's a Laser 128.  Treat it like a IIc.
+	bne	NotLaser	; No - it's not a Laser 128
+	lda	#$10		; Yes - it's a Laser 128.  Set SSCPUT to ignore DSR.
+	sta	mod5+1
+	lda	#$08		; Set SSCGET to ignore DSR and DCD.
+	sta	mod6+1
+	jmp	ProcessIIc	; Now treat it like a IIc.
 NotLaser:
 	ldy	#$0a
 	lda	(msgptr),y
@@ -709,7 +714,12 @@ NotLaser:
 	beq	ProcessIIc
 NotNewIIc:
 	cmp	#$25		; Is this an older IIc - $Cn0a == $25?
-	bne	GenericSSC
+	beq	ProcessIIc	; Yes - treat it like a IIc.
+NotOldIIc:
+	ldy	#$01
+	lda	(msgptr),y
+	cmp	#$a7		; Is this a Franklin Ace 500 - $Cn01 == $A7?
+	bne	GenericSSC	; No - call it a generic SSC.  Yes - treat it like a IIc.
 ProcessIIc:
 	cpx	#$02		; Only bothering to check IIc Modem slot (2)
 	bne	FindSlotNext
@@ -717,6 +727,10 @@ ProcessIIc:
 	jmp	FindSlotBreak	; Don't check port #1 on an IIc - we don't care
 GenericSSC:
 	stx	TempSlot	; Nope, nothing special.  Just a Super Serial card.
+	lda	#$50		; Make sure we can watch for DSR
+	sta	mod5+1
+	lda	#$68		; Make sure we can watch for DSR and DCD
+	sta	mod6+1
 
 FindSlotNext:
 	dex
@@ -743,7 +757,11 @@ FindSlotMaybeIII:
 	lda	(msgptr),y
 	cmp	#$48		; Is $Cn0C == $48?
 	bne	FindSlotNext
-	jmp	GenericSSC	; It's an Apple /// SSC-like thing.
+	lda	#$10		; Yes - it's a Laser 128.  Set SSCPUT to ignore DSR.
+	sta	mod5+1
+	lda	#$08		; Set SSCGET to ignore DSR and DCD.
+	sta	mod6+1
+	jmp	FindSlotNext	; It's an Apple /// SSC-like thing.
 
 TempSlot:	.byte 0
 TempIIgsSlot:	.byte 0
@@ -1135,7 +1153,7 @@ parmint:
 	asl			; NOW $S0
 	sta	iobslt		; STORE IN IOB
 	adc	#$89		; NOW $89+S0
-	sta	mod5+1		; SELF-MOD FOR "DRIVES ON"
+	sta	drvmod+1	; SELF-MOD FOR "DRIVES ON"
 
 	ldy	pdrive		; GET DRIVE# (0..1)
 	iny			; NOW 1..2
@@ -1461,7 +1479,7 @@ srokay:
 	lda	savtrk		; BLOCK
 	cmp	#$1c
 	beq	notone
-mod5:	bit	$c089
+drvmod:	bit	$c089
 
 notone: dec	trkcnt
 	beq	srend
@@ -2601,3 +2619,4 @@ errors: .byte	$00		; NON-0 IF AT LEAST 1 DISK ERROR
 
 				; End of assembly; used to calculate
 endasm:				; length to BSAVE							
+	

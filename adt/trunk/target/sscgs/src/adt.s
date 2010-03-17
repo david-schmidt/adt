@@ -156,8 +156,9 @@
 ; Version History:
 ; ----------------
 
-; Version x.y 
-; - Bug fix to allow Laser 128 machines to run at 115.2kbps
+; Version 2.4 March 2010 
+; - Fix to allow Laser 128 machines to run at 115.2kbps
+; - Fix slot scan for Franklin Ace 500 computers
 
 ; Version 2.3 February 2009
 ; - Add slot scan for Apple /// computers
@@ -222,7 +223,7 @@
 ; Version 1.00 - FIRST PUBLIC RELEASE
 
 ; The version number as a macro. Must not be more than 7 characters.
-.define		version_no	"2.3"
+.define		version_no	"2.4"
 
 ; Protocol number. Note it must be assigned a higher value when the protcol is
 ; modified, and must never be < $0101 or > $01FF
@@ -2619,4 +2620,3 @@ errors: .byte	$00		; NON-0 IF AT LEAST 1 DISK ERROR
 
 				; End of assembly; used to calculate
 endasm:				; length to BSAVE							
-	

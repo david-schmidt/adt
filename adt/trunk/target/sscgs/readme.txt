@@ -36,9 +36,10 @@ Main contents of ADT distribution:
 
                                 * * *
 
-What's new in version 
+What's new in version 2.4 March 2010: 
 
- - Bug fix to allow Laser 128 machines to run at 115.2kbps
+ - Fix to allow Laser 128 machines to run at 115.2kbps
+ - Fix slot scan for Franklin Ace 500 computers
 
 What's new in version 2.3 February 2009:
 

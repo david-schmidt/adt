@@ -3,7 +3,7 @@ Apple Disk Transfer
 
 ADT is the "Apple Disk Transfer" utility. Paul Guertin originally developed
 ADT as a way to transfer 5.25" disk image files from PC directly to diskette
-on a 64k or larger Apple II and to send 5.25" diskettes to PC where they are
+on a 48k or larger Apple II and to send 5.25" diskettes to PC where they are
 saved as .dsk disk image files. A typical ADT setup is an Apple II/IIe/IIc/IIgs
 with a serial card or built-in serial port connected via a NULL modem cable to
 a PC's COM port or a classic Mac's modem port with each computer running ADT.

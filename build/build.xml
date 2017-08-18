@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ADT" default="all" basedir="..">
+	<property name="builddir" value="${basedir}/build" />
+	<property file="${builddir}/ADTBuild.properties"/>
+	<property file="${builddir}/ADTBuild-default.properties"/>
+	<property name="dosVersionString" value="v.rm" />
+	<property name="dosDistName" value="ADT_${dosVersionString}" />
+	<property name="acJarVersion" value="1.3.5.13-ac" />
+	<property name="acJarPath" value="${builddir}" />
+	<property name="acJar" value="AppleCommander-${acJarVersion}.jar" />
+	<property name="proJar" value="${builddir}/ADTPro-1.0.1.jar" />
+	<taskdef name="appleDump" classname="org.adtpro.utilities.AppleDump" classpath="${proJar}"/>
+	<taskdef name="appleCommander" classname="com.webcodepro.applecommander.ui.AntTask" classpath="${acJarPath}/${acJar}"/>
+	<target name="all" depends="clean, assemble, builddsk">
+	</target>
+
+	<target name="clean">
+		<!--
+		Clean up everything
+		-->
+
+		<!-- Add an output directory -->
+		<mkdir dir="${builddir}/${dosDistName}"/>
+
+		<delete file="${basedir}/src/client/adt" />
+		<delete file="${builddir}/${dosDistName}/${dosDistName}.dsk" />
+		<delete>
+			<fileset dir="${basedir}/src/client" includes="**/*.o"/>
+			<fileset dir="${basedir}/src/client" includes="**/*.map"/>
+			<fileset dir="${basedir}/src/client" includes="**/*.lst"/>
+			<fileset dir="${basedir}/src" includes="**/adtdmp.*"/>
+		</delete>
+	</target>
+
+	<target name="assemble" depends="clean">
+		<!--
+		Assemble and link the ADT source
+		-->
+		<exec dir="${basedir}/src/client" executable="${assemblerPath}/cl65">
+			<arg line="-t none -l adt.lst adt.s -o ADT" />
+		</exec>
+		<!--
+		Make a dumpable version
+		-->
+		<appleDump infilename="${basedir}/src/client/ADT" outfilename="${basedir}/src/client/adt.dmp" applename="ADT" startaddrhex="803" numbyteswide="11" />
+		<copy file="${basedir}/src/client/adt.dmp" tofile="${builddir}/${dosDistName}/adtdmp.mac" />
+		<copy file="${basedir}/src/client/adt.dmp" tofile="${builddir}/${dosDistName}/adtdmp.unix" />
+		<copy file="${basedir}/src/client/adt.dmp" tofile="${builddir}/${dosDistName}/adtdmp.pc" />
+		<fixcrlf srcdir="${builddir}/${dosDistName}" includes="adtdmp.mac" eol="mac" eof="remove" />
+		<fixcrlf srcdir="${builddir}/${dosDistName}" includes="adtdmp.unix" eol="unix" eof="remove" />
+		<fixcrlf srcdir="${builddir}/${dosDistName}" includes="adtdmp.pc" eol="dos"/>
+		<delete file="${basedir}/src/client/adt.dmp" />
+	</target>
+
+	<target name="builddsk">
+		<!--
+		Start a .dsk image containing the release number
+		-->
+		<copy file="${builddir}/ADTBase.dsk" tofile="${builddir}/${dosDistName}/${dosDistName}.dsk" />
+		<!--
+		Put the assembled DOS ADT program on the .dsk image
+		-->
+		<appleCommander command="p" input="${basedir}/src/client/ADT" imagename="${builddir}/${dosDistName}/${dosDistName}.dsk" filename="ADT" type="bin" address="2051"/>
+
+		<!--
+		Put a backup DOS ADT program on the .dsk image
+		-->
+		<appleCommander command="p" input="${basedir}/src/client/ADT" imagename="${builddir}/${dosDistName}/${dosDistName}.dsk" filename="ADT.BACKUP" type="bin" address="2051"/>
+
+		<!--
+		Lock the backup version
+		-->
+		<appleCommander command="k" input="${basedir}/src/client/ADT" imagename="${builddir}/${dosDistName}/${dosDistName}.dsk" filename="ADT.BACKUP" />
+	</target>
+
+</project>

@@ -1,5 +1,0 @@
-# Deny files that should not be shown
-<Files ~ "^\.|^_|RCS|CVS|,|~|#|WEB-INF">
-    Order Deny,Allow
-    Deny from All
-</Files>

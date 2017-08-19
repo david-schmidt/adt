@@ -11,19 +11,21 @@
 	<property name="proJar" value="${builddir}/ADTPro-1.0.1.jar" />
 	<taskdef name="appleDump" classname="org.adtpro.utilities.AppleDump" classpath="${proJar}"/>
 	<taskdef name="appleCommander" classname="com.webcodepro.applecommander.ui.AntTask" classpath="${acJarPath}/${acJar}"/>
-	<target name="all" depends="clean, assemble, builddsk">
+	<target name="all" depends="clean, assemble, builddsk, package">
 	</target>
 
-	<target name="clean">
+	<target name="clean" description="Clean up everything from a build">
 		<!--
 		Clean up everything
 		-->
 
-		<!-- Add an output directory -->
-		<mkdir dir="${builddir}/${dosDistName}"/>
+		<!-- Remove the output directory -->
+		<delete dir="${builddir}/${dosDistName}" />
+		<delete file="${builddir}/${dosDistName}.zip" />
 
 		<delete file="${basedir}/src/client/adt" />
 		<delete file="${builddir}/${dosDistName}/${dosDistName}.dsk" />
+		<delete file="${builddir}/${builddir}/${dosDistName}.zip" />
 		<delete>
 			<fileset dir="${basedir}/src/client" includes="**/*.o"/>
 			<fileset dir="${basedir}/src/client" includes="**/*.map"/>
@@ -32,7 +34,9 @@
 		</delete>
 	</target>
 
-	<target name="assemble" depends="clean">
+	<target name="assemble" depends="clean" description="Assemble the source code">
+		<!-- Add an output directory -->
+		<mkdir dir="${builddir}/${dosDistName}"/>
 		<!--
 		Assemble and link the ADT source
 		-->
@@ -52,7 +56,7 @@
 		<delete file="${basedir}/src/client/adt.dmp" />
 	</target>
 
-	<target name="builddsk">
+	<target name="builddsk" description="Build bootable disk image">
 		<!--
 		Start a .dsk image containing the release number
 		-->
@@ -71,6 +75,18 @@
 		Lock the backup version
 		-->
 		<appleCommander command="k" input="${basedir}/src/client/ADT" imagename="${builddir}/${dosDistName}/${dosDistName}.dsk" filename="ADT.BACKUP" />
+	</target>
+
+	<target name="package" description="Zip up a downloadable package">
+		<!--
+		Copy over some items for packaging
+		-->
+		<copy file="${basedir}/LICENSE.TXT" tofile="${builddir}/${dosDistName}/LICENSE.TXT" />
+		<copy file="${basedir}/doc/readme.txt" tofile="${builddir}/${dosDistName}/readme.txt" />
+		<!-- zip up the whole sheebang -->
+		<zip destfile="${builddir}/${dosDistName}.zip"
+			basedir="${builddir}"
+			includes="${dosDistName}/**"/>
 	</target>
 
 </project>

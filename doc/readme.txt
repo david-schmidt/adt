@@ -4,8 +4,6 @@ ADT for Apple II with Super Serial Card, IIgs, Laser 128, or Apple ///
 
 by Paul Guertin (pg@sff.net)
 
-December 4th, 1995 - 1999 ...
-
 Apple Disk Transfer (ADT for short) is a set of two programs to
 transfer a standard 16-sector Apple II disk to a 140k file on an
 MS-DOS or Windows computer, and transfer a standard disk image
@@ -25,16 +23,19 @@ ADT is freeware.
                                 * * *
 
 Main contents of ADT distribution:
- adt.exe            -- Windows server executable
- manual.txt         -- ADT documentation
- ADT/adt133.dsk     -- Disk image containing ADT client software
- ADT/adtpc.dmp      -- Monitor dump format of ADT (PC format)
- ADT/adtmac.dmp     -- ... Mac line ending format
- ADT/adtunix.dmp    -- ... Unix line ending format
- ADTcc/ADTcc.dmp    -- Object code for Communications 
-                       Card version of ADT
+ readme.txt         -- This documentation
+ ADT_2.41.dsk       -- Disk image containing ADT client software
+ adtdmp.pc          -- Monitor dump format of ADT (PC format)
+ adtdmp.mac         -- ... Mac line ending format
+ adtdmp.unix        -- ... Unix line ending format
+ LICENSE.TXT        -- GNU GPL License version 2
 
                                 * * *
+
+What's new in version 2.41 August 2017: 
+
+ - Leave the final screen up after a disk transfer
+ - Set default speed at 115.2k
 
 What's new in version 2.4 March 2010: 
 
@@ -450,4 +451,4 @@ other comm programs set SW2-6 on.
 
                                 * * *
 
-ADT is maintained at https://github.com/david-schmidt/ADT
+ADT is maintained at https://github.com/david-schmidt/adt

@@ -1,6 +1,6 @@
-ADT (ssc + gs)
+ADT
 
-ADT for Apple II with Super Serial Card, IIgs or Laser 128
+ADT for Apple II with Super Serial Card, IIgs, Laser 128, or Apple ///
 
 by Paul Guertin (pg@sff.net)
 
@@ -11,14 +11,14 @@ transfer a standard 16-sector Apple II disk to a 140k file on an
 MS-DOS or Windows computer, and transfer a standard disk image
 file to disk on an Apple II.
 
-ADT supports Apple II computers with a Super Serial Card,
-or built-in modem ports of the IIgs, IIc or Laser 128.  ADT will
+ADT supports Apple II computers with a Super Serial Card, or built-in
+modem ports of the IIgs, IIc or Laser 128, and the Apple ///.  ADT will
 scan for a suitable serial port and auto-select it if a custom
 configuration has not been saved yet.
 
-Note that the ADTPro server, written in Java, will service ADT 
-clients while running on a broader range of operating systems.
-See: http://adtpro.sourceforge.net
+Note that the ADTPro server, written in Java, will service ADT clients
+while running on a broader range of operating systems.
+See: http://adtpro.com
 
 ADT is freeware.
 
@@ -450,6 +450,4 @@ other comm programs set SW2-6 on.
 
                                 * * *
 
-ADT is maintained at http://adt.berlios.de.
-
-=EOF=
+ADT is maintained at https://github.com/david-schmidt/ADT

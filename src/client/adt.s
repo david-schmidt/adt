@@ -156,6 +156,10 @@
 ; Version History:
 ; ----------------
 
+; Version 2.41 August 2017 
+; - Leave the final screen up after a disk transfer
+; - Set default speed at 115.2k
+
 ; Version 2.4 March 2010 
 ; - Fix to allow Laser 128 machines to run at 115.2kbps
 ; - Fix slot scan for Franklin Ace 500 computers
@@ -223,7 +227,7 @@
 ; Version 1.00 - FIRST PUBLIC RELEASE
 
 ; The version number as a macro. Must not be more than 7 characters.
-.define		version_no	"2.4"
+.define		version_no	"2.41"
 
 ; Protocol number. Note it must be assigned a higher value when the protcol is
 ; modified, and must never be < $0101 or > $01FF
@@ -975,11 +979,11 @@ curparm:
 	.byte	$00		; Active parameter
 curval: .byte	$00		; Value of active parameter
 default:
-	.byte	5,0,1,5,1,0,0,0,1 ; DEFAULT PARM VALUES
+	.byte	5,0,1,6,1,0,0,0,1 ; DEFAULT PARM VALUES
 oldparm:
 	.res	parmnum		; Old parameters saved here
 svspeed:
-	.byte	$05		; Storage for speed setting
+	.byte	$06		; Storage for speed setting
 
 ;---------------------------------------------------------
 ; bsave - Save a copy of ADT in memory
@@ -1368,7 +1372,9 @@ recvlup:
 	jsr	putc
 	lda	errors
 	jsr	putc		; SEND ERROR FLAG TO HOST
-	jmp	awbeep		; BEEP AND END
+
+	jsr	awbeep
+	jmp	pause		; WAIT FOR KEY AND END
 
 
 ;---------------------------------------------------------
@@ -1394,8 +1400,9 @@ sendlup:
 	bcc	sendlup
 	lda	errors
 	jsr	putc		; SEND ERROR FLAG TO HOST
-	jmp	awbeep		; BEEP AND END
 
+	jsr	awbeep
+	jmp	pause		; WAIT FOR KEY AND END
 
 ;---------------------------------------------------------
 ; SR7TRK - SEND (X=0) OR RECEIVE (X=1) 7 TRACKS
@@ -2575,7 +2582,7 @@ parms:
 pdslot: .byte	5		; DISK SLOT (6)
 pdrive: .byte	0		; DISK DRIVE (1)
 pssc:	.byte	1		; COMMS SLOT (2)
-pspeed: .byte	5		; COMMS SPEED (19200)
+pspeed: .byte	6		; COMMS SPEED (19200)
 pretry: .byte	1,0		; READ/WRITE MAX RETRIES (1,0)
 pcksum: .byte	0		; USE RWTS CHECKSUMS? (Y)
 psound: .byte	0		; SOUND AT END OF TRANSFER? (Y)

@@ -333,9 +333,6 @@ transfer protected disks to PC unless the protection scheme is based on
 the DOS checksums only (and even then, there's no guarantee the disk will
 work in an emulator).
 
-ADT will not correctly transfer ProDOS-order (.po) disk image files to
-the Apple II.  ADTPro (http://adtpro.sourceforge.net) will.
-
 Meaning of characters on the Apple II status display:
     R: Reading from disk
     W: Writing to disk
@@ -541,5 +538,4 @@ for automatic slot selection.  Release 1.31 came out December 27,
 
 ADT has many contributors.  Consult the comp.sys.apple2 newsgroup 
 for the latest status.  The ADT project is hosted here:
-http://adt.berlios.de
-
+https://github.com/david-schmidt/ADT
